@@ -1,0 +1,123 @@
+/**
+first component
+*/
+
+.first-div {
+  display: flex;
+  color: whitesmoke;
+  justify-content: space-between;
+
+  width: fit-content;
+  margin: 8rem auto;
+}
+.first-div-div {
+  width: 28rem;
+  height: 30rem;
+  padding: 1rem;
+  margin: 1rem;
+  text-align: center;
+  background-color: #191919;
+
+  transition: all 100ms;
+}
+.first-div-div > div {
+  height: 7rem;
+  display: flex;
+  justify-content: center;
+  align-items: last baseline;
+}
+.first-div-div:hover {
+  transform: scale(1.01);
+  cursor: pointer;
+}
+.first-div-div img {
+  width: 100%;
+  height: 20rem;
+}
+@media screen and (max-width: 1450px) {
+  .first-div-div {
+    width: 25rem;
+    height: 28rem;
+  }
+  .first-div-div > div {
+    height: 5rem;
+  }
+}
+@media screen and (max-width: 1335px) {
+  .first-div-div {
+    width: 23rem;
+    height: 28rem;
+  }
+  .first-div-div > div {
+    height: 5rem;
+  }
+}
+@media screen and (max-width: 1250px) {
+  .first-div-div {
+    width: 21rem;
+    height: 26rem;
+  }
+  .first-div-div > div {
+    height: 4rem;
+  }
+}
+@media screen and (max-width: 1150px) {
+  .first-div {
+    padding: 0;
+  }
+  .first-div-div {
+    width: 25rem;
+    height: 28rem;
+    margin: 0.5rem;
+  }
+  .first-div-div > div {
+    height: 5rem;
+  }
+}
+@media screen and (max-width: 950px) {
+  .first-div {
+    padding: 0;
+  }
+}
+@media screen and (max-width: 800px) {
+  .first-div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .first-div-div {
+    width: 27rem;
+    height: 28rem;
+    margin: 0.5rem;
+  }
+}
+@media screen and (max-width: 730px) {
+  .first-div-div {
+    width: 25rem;
+    height: 28rem;
+    margin: 0.5rem;
+  }
+}
+@media screen and (max-width: 668px) {
+  .first-div {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+  .first-div-div {
+    width: 25rem;
+    height: 28rem;
+    margin: 0.5rem;
+  }
+  .first-div-div > div {
+    height: 5rem;
+  }
+}
+@media screen and (max-width: 550px) {
+  .first-div-div {
+    width: 23rem;
+    height: 28rem;
+    margin: 0.5rem;
+  }
+  .first-div-div > div {
+    height: 5rem;
+  }
+}
