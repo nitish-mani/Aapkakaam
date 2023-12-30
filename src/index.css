@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap");
+
 * {
   margin: 0;
   padding: 0;
@@ -6,10 +8,11 @@
 html {
   font-size: 62.5%;
   /* max-width: 2500px; */
+  --primary-color: rgb(17, 97, 228);
 }
 
 .main-div {
-  font-family: "Basis Grotesque Pro", Arial, sans-serif;
+  font-family: "Lato", Arial, sans-serif;
   font-size: 18px;
   font-weight: 700;
   line-height: 24px;

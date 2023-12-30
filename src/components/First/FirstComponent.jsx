@@ -1,3 +1,4 @@
+import axios from "axios";
 import "./FirstComponent.css";
 import { useState } from "react";
 
@@ -18,6 +19,12 @@ export default function FirstComponent() {
   function handleClicked2() {
     setBtnClicked2(true);
     setTimeout(() => setBtnClicked2(false), 100);
+    setTimeout(() => {
+      axios
+        .get("http://localhost:3000/vendor/getAll/electrician")
+        .then((result) => console.log(result))
+        .catch((err) => console.log(err.response.data.message));
+    }, 200);
   }
   function handleClicked3() {
     setBtnClicked3(true);

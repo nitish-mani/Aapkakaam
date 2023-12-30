@@ -11,54 +11,58 @@ first component
   margin: 8rem auto;
 }
 .first-div-div {
-  width: 28rem;
-  height: 30rem;
-  padding: 1rem;
+  position: relative;
+  width: 25rem;
+  height: 25rem;
   margin: 1rem;
   text-align: center;
-  background-color: #191919;
-
   transition: all 100ms;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgb(0 0 0 / 33%);
+  cursor: pointer;
+  /* z-index: 1; */
 }
 .first-div-div > div {
-  height: 7rem;
   display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(to top, #000000b0, transparent);
   justify-content: center;
-  align-items: last baseline;
+  align-items: flex-end;
+  border-radius: 20px;
+  padding-bottom: 2rem;
 }
-.first-div-div:hover {
-  transform: scale(1.01);
+.first-div-div:hover img {
+  transform: scale(1.2);
   cursor: pointer;
 }
 .first-div-div img {
   width: 100%;
-  height: 20rem;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+  transition: 0.3s;
 }
 @media screen and (max-width: 1450px) {
   .first-div-div {
     width: 25rem;
-    height: 28rem;
-  }
-  .first-div-div > div {
-    height: 5rem;
+    height: 25rem;
   }
 }
 @media screen and (max-width: 1335px) {
   .first-div-div {
     width: 23rem;
-    height: 28rem;
-  }
-  .first-div-div > div {
-    height: 5rem;
+    height: 25rem;
   }
 }
 @media screen and (max-width: 1250px) {
   .first-div-div {
     width: 21rem;
-    height: 26rem;
-  }
-  .first-div-div > div {
-    height: 4rem;
+    height: 25rem;
   }
 }
 @media screen and (max-width: 1150px) {
@@ -67,16 +71,25 @@ first component
   }
   .first-div-div {
     width: 25rem;
-    height: 28rem;
+    height: 25rem;
     margin: 0.5rem;
   }
-  .first-div-div > div {
-    height: 5rem;
+}
+@media screen and (max-width: 1050px) {
+  .first-div {
+    padding: 0;
+  }
+  .first-div-div {
+    width: 20rem;
+    height: 24rem;
+    margin: 0.5rem;
   }
 }
 @media screen and (max-width: 950px) {
-  .first-div {
-    padding: 0;
+  .first-div-div {
+    width: 18rem;
+    height: 22rem;
+    margin: 0.5rem;
   }
 }
 @media screen and (max-width: 800px) {
@@ -99,25 +112,58 @@ first component
 }
 @media screen and (max-width: 668px) {
   .first-div {
-    margin-left: 1rem;
-    margin-right: 1rem;
+    margin-left: auto;
+    margin-right: auto;
   }
   .first-div-div {
     width: 25rem;
     height: 28rem;
     margin: 0.5rem;
   }
-  .first-div-div > div {
-    height: 5rem;
-  }
 }
 @media screen and (max-width: 550px) {
   .first-div-div {
     width: 23rem;
-    height: 28rem;
+    height: 25rem;
     margin: 0.5rem;
   }
-  .first-div-div > div {
-    height: 5rem;
+}
+@media screen and (max-width: 500px) {
+  .first-div-div {
+    width: 22rem;
+    height: 24rem;
+    margin: 0.5rem;
   }
+}
+@media screen and (max-width: 460px) {
+  .first-div-div {
+    width: 20rem;
+    height: 24rem;
+    margin: 0.5rem;
+  }
+}
+@media screen and (max-width: 400px) {
+  .first-div-div {
+    width: 18rem;
+    height: 23rem;
+    margin: 0.5rem;
+  }
+}
+@media screen and (max-width: 360px) {
+  .first-div-div {
+    width: 15rem;
+    height: 20rem;
+    margin: 0.5rem;
+  }
+}
+@media screen and (max-width: 300px) {
+  .first-div-div {
+    width: 13rem;
+    height: 18rem;
+    margin: 0.5rem;
+  }
+}
+
+.navbar button:hover {
+  background-color: #1161e4;
 }
