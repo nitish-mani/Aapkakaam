@@ -1,12 +1,16 @@
 import axios from "axios";
 import "./FirstComponent.css";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function FirstComponent() {
   const [btnClicked, setBtnClicked] = useState(false);
   const [btnClicked1, setBtnClicked1] = useState(false);
   const [btnClicked2, setBtnClicked2] = useState(false);
   const [btnClicked3, setBtnClicked3] = useState(false);
+
+  const userData = useSelector((store) => store.user.data);
+  const token = `Bearer ${userData[0]?.token}`;
 
   function handleClicked() {
     setBtnClicked(true);
@@ -21,7 +25,9 @@ export default function FirstComponent() {
     setTimeout(() => setBtnClicked2(false), 100);
     setTimeout(() => {
       axios
-        .get("http://localhost:3000/vendor/getAll/electrician")
+        .get("http://localhost:3000/vendor/getAll/electrician", {
+          headers: { Authorization: token },
+        })
         .then((result) => console.log(result))
         .catch((err) => console.log(err.response.data.message));
     }, 200);

@@ -4,16 +4,25 @@ import aapkaKaam_logo from "../../resources/svg/AapkaKaam_full2.svg";
 import menu from "../../resources/svg/burger-simple-svgrepo-com.svg";
 import cross from "../../resources/svg/multiply-svgrepo-com.svg";
 import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { clearData } from "../../utils/userslice";
 
 export default function NavBar() {
   const [btnClicked, setBtnClicked] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const userData = useSelector((store) => store.user.data);
+  console.log(userData);
 
   function handleLogin() {
     setBtnClicked(true);
     setTimeout(() => setBtnClicked(false), 100);
-    navigate('/login')
+    if (userData.length === 0) navigate("/login");
+    else {
+      dispatch(clearData());
+    }
   }
   function handleIconChane() {
     setIsVisible(() => !isVisible);
@@ -86,7 +95,7 @@ export default function NavBar() {
           onClick={handleLogin}
           style={{ transform: btnClicked ? "translateY(5px)" : "" }}
         >
-          Login
+          {userData.length ? "Logout" : "Login"}
         </button>
       </div>
     </div>

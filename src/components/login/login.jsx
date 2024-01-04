@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import eye from "../../resources/svg/eye-svgrepo-com.svg";
 import line from "../../resources/svg/line-svgrepo-com.svg";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addData } from "../../utils/userslice";
 
 export default function Login({ category = "User" }) {
   const navigate = useNavigate();
@@ -14,6 +16,8 @@ export default function Login({ category = "User" }) {
   const [success, setSuccess] = useState("");
   const [isEmailEmpty, setIsEmailEmpty] = useState(true);
   const [isPassEmpty, setIsPassEmpty] = useState(true);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setIsEmailEmpty(true);
@@ -39,11 +43,11 @@ export default function Login({ category = "User" }) {
         password: pass,
       })
       .then((result) => {
-        setSuccess(result.data),
-          setTimeout(() => {
-            setSuccess("");
-            navigate("/");
-          }, 5000);
+        setSuccess(result.data), dispatch(addData(result.data));
+        setTimeout(() => {
+          setSuccess("");
+          navigate("/");
+        }, 5000);
       })
       .catch((err) => {
         setErr(err.response.data.message);
