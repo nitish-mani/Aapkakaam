@@ -43,7 +43,16 @@ export default function Login({ category = "User" }) {
         password: pass,
       })
       .then((result) => {
-        setSuccess(result.data), dispatch(addData(result.data));
+        setSuccess(result.data),
+          dispatch(addData(result.data)),
+          localStorage.setItem("token", result.data.token),
+          localStorage.setItem("name", result.data.name),
+          localStorage.setItem("email", result.data.email),
+          localStorage.setItem("phoneNo", result.data.phoneNo),
+          localStorage.setItem("orders", result.data.orders),
+          localStorage.setItem("share", result.data.share),
+          localStorage.setItem("balance", result.data.balance),
+          console.log(result.data);
         setTimeout(() => {
           setSuccess("");
           navigate("/");
