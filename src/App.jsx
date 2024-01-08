@@ -5,6 +5,7 @@ import Login from "./components/login/login";
 import SignUp from "./components/signup/signup";
 import { Provider } from "react-redux";
 import store from "./utils/store";
+import ViewOrders from "./components/veiw/viewOrders";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -23,6 +24,10 @@ export default function App() {
         {
           path: "/signup",
           element: <SignUp />,
+        },
+        {
+          path: "/viewOrders",
+          element: <ViewOrders />,
         },
       ],
     },

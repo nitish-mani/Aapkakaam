@@ -4,6 +4,7 @@ import "./signup.css";
 import eye from "../../resources/svg/eye-svgrepo-com.svg";
 import line from "../../resources/svg/line-svgrepo-com.svg";
 import axios from "axios";
+import { SERVER_URL } from "../../utils/base";
 
 export default function SignUp({ category = "User" }) {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ export default function SignUp({ category = "User" }) {
 
   const [isPassValid, setIsPassValid] = useState(true);
   const [isNumValid, setIsNumValid] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [isNameEmpty, setIsNameEmpty] = useState(true);
   const [isEmailEmpty, setIsEmailEmpty] = useState(true);
@@ -66,14 +68,16 @@ export default function SignUp({ category = "User" }) {
       return;
     }
 
+    setIsLoading(true);
     axios
-      .post("http://localhost:3000/user/signup", {
+      .post(`${SERVER_URL}/user/signup`, {
         name: name,
         email: email,
         phoneNo: phoneNo,
         password: pass,
       })
       .then((result) => {
+        setIsLoading(false);
         setSuccess(result.data.message),
           setTimeout(() => {
             setSuccess("");
@@ -81,17 +85,13 @@ export default function SignUp({ category = "User" }) {
           }, 5000);
       })
       .catch((err) => {
+        setIsLoading(false);
         setErr(err.response.data.message);
         setTimeout(() => {
           setErr("");
         }, 10000);
       });
 
-    setName("");
-    setEmail("");
-    setPass("");
-    setRePass("");
-    setPhoneNo("");
   }
 
   function handleLogin() {
@@ -223,14 +223,20 @@ export default function SignUp({ category = "User" }) {
         )}
 
         <button className="btn" onClick={handleSignup}>
-          Signup
+          {isLoading ? <div className="loading"></div> : "Signup"}
         </button>
 
         <div>
-          <h5>Already Have an Account?</h5>
-          <button className="btn" onClick={handleLogin}>
-            Login
-          </button>
+          <h5>
+            Already Have an Account?
+            <span
+              className="verify-btn forgetPass"
+              onClick={handleLogin}
+              style={{ border: "none" }}
+            >
+              Login
+            </span>
+          </h5>
         </div>
       </div>
     </div>

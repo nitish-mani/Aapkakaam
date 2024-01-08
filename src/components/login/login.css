@@ -29,6 +29,15 @@
   border-radius: 1rem;
   width: 100%;
 }
+.forgetPass {
+  width: fit-content;
+  color: rgba(0, 0, 255, 0.744);
+  margin: 0 auto;
+  cursor: pointer;
+}
+.forgetPass:hover {
+  color: blue;
+}
 @media screen and (max-width: 350px) {
   .login {
     width: 27rem;

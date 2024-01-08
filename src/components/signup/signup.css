@@ -99,6 +99,9 @@
   border: none;
   font-family: inherit;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .btn:hover {
   background-color: blue;

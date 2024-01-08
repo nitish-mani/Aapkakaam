@@ -4,6 +4,8 @@ const userSlice = createSlice({
   name: "user",
   initialState: {
     data: [],
+    isVisible: true,
+    isPrVisible: false,
   },
   reducers: {
     addData: (state, action) => {
@@ -12,8 +14,15 @@ const userSlice = createSlice({
     clearData: (state, action) => {
       state.data = [];
     },
+    setIsVisible: (state, action) => {
+      state.isVisible = action.payload;
+    },
+    setPrIsVisible: (state, action) => {
+      state.isPrVisible = action.payload;
+    },
   },
 });
 
-export const { addData, clearData } = userSlice.actions;
+export const { addData, clearData, setIsVisible, setPrIsVisible } =
+  userSlice.actions;
 export default userSlice.reducer;

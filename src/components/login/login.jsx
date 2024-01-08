@@ -6,6 +6,7 @@ import line from "../../resources/svg/line-svgrepo-com.svg";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addData } from "../../utils/userslice";
+import { SERVER_URL } from "../../utils/base";
 
 export default function Login({ category = "User" }) {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ export default function Login({ category = "User" }) {
   const [success, setSuccess] = useState("");
   const [isEmailEmpty, setIsEmailEmpty] = useState(true);
   const [isPassEmpty, setIsPassEmpty] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -36,29 +38,34 @@ export default function Login({ category = "User" }) {
       setIsPassEmpty(false);
       return;
     }
+    setIsLoading(true);
 
     axios
-      .post("http://localhost:3000/user/login", {
+      .post(`${SERVER_URL}/user/login`, {
         email: email,
         password: pass,
       })
       .then((result) => {
-        setSuccess(result.data),
-          dispatch(addData(result.data)),
-          localStorage.setItem("token", result.data.token),
-          localStorage.setItem("name", result.data.name),
-          localStorage.setItem("email", result.data.email),
-          localStorage.setItem("phoneNo", result.data.phoneNo),
-          localStorage.setItem("orders", result.data.orders),
-          localStorage.setItem("share", result.data.share),
-          localStorage.setItem("balance", result.data.balance),
-          console.log(result.data);
+        setSuccess(result.data);
+        localStorage.setItem("token", result.data.token);
+        localStorage.setItem("userId", result.data.userId);
+        localStorage.setItem("verifyPhoneNo", result.data.verifyPhoneNo);
+        localStorage.setItem("verifyEmail", result.data.verifyEmail);
+        localStorage.setItem("name", result.data.name);
+        localStorage.setItem("email", result.data.email);
+        localStorage.setItem("phoneNo", result.data.phoneNo);
+        localStorage.setItem("orders", result.data.orders);
+        localStorage.setItem("share", result.data.share);
+        localStorage.setItem("balance", result.data.balance);
+        setIsLoading(false);
         setTimeout(() => {
           setSuccess("");
           navigate("/");
+          dispatch(addData(result.data));
         }, 5000);
       })
       .catch((err) => {
+        setIsLoading(false);
         setErr(err.response.data.message);
         setTimeout(() => {
           setErr("");
@@ -124,13 +131,22 @@ export default function Login({ category = "User" }) {
         </div>
 
         <button className="btn" onClick={handleLogin}>
-          Login
+          {isLoading ? <div className="loading"></div> : "Login"}
         </button>
+        <div className="forgetPass">
+          <h5>Forget Password?</h5>
+        </div>
         <div>
-          <h5>Don't Have an Account?</h5>
-          <button className="btn" onClick={handleSignup}>
-            Signup
-          </button>
+          <h5>
+            Don't Have an Account?{" "}
+            <span
+              className="verify-btn forgetPass"
+              onClick={handleSignup}
+              style={{ border: "none" }}
+            >
+              Signup
+            </span>
+          </h5>
         </div>
       </div>
     </div>

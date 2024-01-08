@@ -1,0 +1,27 @@
+.views {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  margin: 10rem auto;
+  width: 80vw;
+  justify-content: space-between;
+  position: relative;
+}
+.views > img {
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  top: -1rem;
+  right: 1rem;
+  cursor: pointer;
+}
+.views-children {
+  border: 2px solid #dee2e6;
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+.views-children div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 1rem;
+}
