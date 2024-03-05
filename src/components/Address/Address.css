@@ -3,7 +3,7 @@
   background-color: var(--primary-color);
   text-align: center;
   box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.367);
-  margin: 10rem auto;
+  margin: 14rem auto;
 }
 .address__1stChild {
   color: #fff;
@@ -26,6 +26,14 @@
   border: 1px solid #dee2e6;
   border-radius: 1rem;
   width: 100%;
+}
+.post-select {
+  height: 4.5rem;
+  padding-left: 1.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: 1rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
 }
 @media screen and (max-width: 350px) {
   .address {

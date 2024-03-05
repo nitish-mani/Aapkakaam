@@ -1,0 +1,30 @@
+div.rating-container {
+  width: 8rem;
+}
+div.rating {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+div.rating svg {
+  height: 100%;
+  stroke: green;
+}
+div.rating-container {
+  position: relative;
+}
+div.rating.empty svg {
+  fill: transparent;
+}
+div.rating.filled {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  overflow: hidden;
+}
+div.rating.filled svg {
+  fill: green;
+  flex-shrink: 0;
+  height: 100%;
+}

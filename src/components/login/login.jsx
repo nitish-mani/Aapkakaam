@@ -1,15 +1,19 @@
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import "./login.css";
 import { useEffect, useState } from "react";
 import eye from "../../resources/svg/eye-svgrepo-com.svg";
 import line from "../../resources/svg/line-svgrepo-com.svg";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { addData } from "../../utils/userslice";
+import { addDataUser } from "../../utils/userslice";
 import { SERVER_URL } from "../../utils/base";
+import { addDataVendor } from "../../utils/vendorslice";
 
-export default function Login({ category = "User" }) {
+export default function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const location = useLocation();
+
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [isEyeClicked, setIsEyeClicked] = useState(false);
@@ -19,7 +23,23 @@ export default function Login({ category = "User" }) {
   const [isPassEmpty, setIsPassEmpty] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const dispatch = useDispatch();
+  let category = location.state.category;
+  let cd = location.state.cd;
+  let id = location.state.id;
+
+  const address =
+    category === "user"
+      ? JSON.parse(localStorage.getItem(category))?.address
+      : JSON.parse(localStorage.getItem(category))?.address;
+
+  const profile_category = category;
+  let category_result = "";
+  for (let i = 0; i < profile_category.length; i++) {
+    if (i == 0) category_result += profile_category.charAt(i).toUpperCase();
+    else {
+      category_result += profile_category.charAt(i);
+    }
+  }
 
   useEffect(() => {
     setIsEmailEmpty(true);
@@ -41,27 +61,19 @@ export default function Login({ category = "User" }) {
     setIsLoading(true);
 
     axios
-      .post(`${SERVER_URL}/user/login`, {
+      .post(`${SERVER_URL}/${category}/login`, {
         email: email,
         password: pass,
       })
       .then((result) => {
         setSuccess(result.data);
-        localStorage.setItem("token", result.data.token);
-        localStorage.setItem("userId", result.data.userId);
-        localStorage.setItem("verifyPhoneNo", result.data.verifyPhoneNo);
-        localStorage.setItem("verifyEmail", result.data.verifyEmail);
-        localStorage.setItem("name", result.data.name);
-        localStorage.setItem("email", result.data.email);
-        localStorage.setItem("phoneNo", result.data.phoneNo);
-        localStorage.setItem("orders", result.data.orders);
-        localStorage.setItem("share", result.data.share);
-        localStorage.setItem("balance", result.data.balance);
+        localStorage.setItem(category, JSON.stringify(result.data));
         setIsLoading(false);
         setTimeout(() => {
           setSuccess("");
           navigate("/");
-          dispatch(addData(result.data));
+          if (category === "user") dispatch(addDataUser(result.data));
+          else if (category === "vendor") dispatch(addDataVendor(result.data));
         }, 5000);
       })
       .catch((err) => {
@@ -74,7 +86,7 @@ export default function Login({ category = "User" }) {
   }
 
   function handleSignup() {
-    navigate("/signup");
+    navigate("/signup", { state: { category: category, cd, id } });
   }
 
   function handleEyeClicked() {
@@ -96,7 +108,7 @@ export default function Login({ category = "User" }) {
         {success.message}
       </div>
       <div className="login__1stChild">
-        <h3>{category} Login</h3>
+        <h3>{category_result} Login</h3>
       </div>
       <div className="login__2ndChild">
         <div>

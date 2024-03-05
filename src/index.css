@@ -5,10 +5,19 @@
   padding: 0;
   box-sizing: border-box;
 }
+*::-webkit-scrollbar {
+  display: none;
+}
 html {
   font-size: 62.5%;
   /* max-width: 2500px; */
   --primary-color: rgb(17, 97, 228);
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .main-div {
@@ -19,6 +28,17 @@ html {
   letter-spacing: -0.3px;
   color: rgba(2, 6, 12, 0.75);
   position: relative;
+}
+.popup {
+  position: absolute;
+  top: 8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  border: 1px solid black;
+  padding: 1rem;
+  border-radius: 5px;
+  background-color: #fff;
 }
 .loading {
   /* border: 1px solid blue; */

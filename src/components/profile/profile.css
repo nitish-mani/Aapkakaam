@@ -29,6 +29,24 @@
   justify-content: center;
   align-items: center;
 }
+.btn1 {
+  background-color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+  color: #fff;
+}
+
+.profile .vendor-registration {
+  color: black;
+  /* border: 1px solid black; */
+  width: fit-content;
+  padding: 0 0.2rem;
+  margin: 1rem auto;
+}
+.profile .vendor-registration:hover {
+  color: blue;
+  cursor: pointer;
+}
+
 @media screen and (max-width: 500px) {
   .profile {
     overflow: scroll;
@@ -46,6 +64,7 @@
 @media screen and (max-width: 350px) {
   .profile {
     text-align: center;
+    width: 20rem;
   }
   .profile div {
     font-size: 1.2rem;

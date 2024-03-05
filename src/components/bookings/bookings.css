@@ -1,0 +1,59 @@
+.bookings {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+}
+.bookings > .viewNow {
+  width: 40rem;
+  height: 42rem;
+  border: 1px solid #dee2e6;
+  overflow: auto;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  text-align: center;
+  padding-top: 1rem;
+  margin: 1rem;
+}
+.bookings > .viewNow > h3 {
+  position: sticky;
+  top: 0;
+  left: 50%;
+  transform: translateY(-50%);
+  background-color: #748ffc;
+  height: 3.7rem;
+  padding: 1rem;
+  color: #fff;
+}
+.book-now {
+  display: flex;
+  flex-direction: column;
+  width: 30rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.367);
+}
+.book-now > input {
+  height: 2.5rem;
+  margin: 1rem;
+  padding: 2rem;
+  border: 1px solid #dee2e6;
+  border-radius: 1rem;
+  width: 90%;
+}
+
+@media screen and (max-width: 630px) {
+  .bookings {
+    flex-direction: column;
+  }
+  .bookings > div:first-child {
+    order: 2;
+  }
+}
+
+@media screen and (max-width: 368px) {
+  .bookings > div:first-child {
+    font-size: 1.5rem;
+    width: 27rem;
+  }
+}

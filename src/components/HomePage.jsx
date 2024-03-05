@@ -4,35 +4,31 @@ import Footer from "./Footer/Footer";
 import NavBar from "./NavBar/NavBar";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { addData, clearData } from "../utils/userslice";
+import { addDataUser, clearDataUser } from "../utils/userslice";
+import { addDataVendor, clearDataVendor } from "../utils/vendorslice";
+import { setCategory } from "../utils/categoryslice";
 
 export default function Homepage() {
   const dispatch = useDispatch();
+  const category = localStorage.getItem("category");
 
   useEffect(() => {
-    dispatch(clearData());
-    const token = localStorage.getItem("token");
+    if (category === "user") dispatch(clearDataUser());
+    else if (category === "vendor") dispatch(clearDataVendor());
+    const token = JSON.parse(localStorage.getItem(category))?.token;
     if (token) {
-      dispatch(
-        addData({
-          userId: localStorage.getItem("userId"),
-          name: localStorage.getItem("name"),
-          email: localStorage.getItem("email"),
-          verifyEmail: localStorage.getItem("verifyEmail"),
-          phoneNo: localStorage.getItem("phoneNo"),
-          verifyPhoneNo: localStorage.getItem("verifyPhoneNo"),
-          orders: localStorage.getItem("orders"),
-          share: localStorage.getItem("share"),
-          balance: localStorage.getItem("balance"),
-          token: localStorage.getItem("token"),
-        })
-      );
+      if (category === "user")
+        dispatch(addDataUser(JSON.parse(localStorage.getItem(category))));
+      else if (category === "vendor")
+        dispatch(addDataVendor(JSON.parse(localStorage.getItem(category))));
+      dispatch(setCategory(localStorage.getItem("category")));
     }
   }, []);
 
   return (
     <div className="main-div">
       <NavBar />
+
       <Outlet></Outlet>
       <Footer />
     </div>

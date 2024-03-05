@@ -1,0 +1,26 @@
+.available-vendor__child {
+  width: 70%;
+  height: fit-content;
+  padding: 1rem;
+  display: flex;
+  background-color: #f8f9fa;
+  box-shadow: 0 2px 8px #f8f9fa;
+  border-radius: 5px;
+  position: relative;
+  gap: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#profilePic {
+  width: 20%;
+  margin-left: 1rem;
+}
+.available-vendor__child div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.available-vendor__child div button {
+  width: 10rem;
+}

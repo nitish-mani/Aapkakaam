@@ -1,38 +1,74 @@
 import "./profile.css";
 import { useDispatch, useSelector } from "react-redux";
-import { addData, clearData, setPrIsVisible } from "../../utils/userslice";
 import cross from "../../resources/svg/multiply-svgrepo-com.svg";
+import male from "../../resources/svg/male-svgrepo-com.svg";
+import female from "../../resources/svg/female-svgrepo-com.svg";
 import { useState } from "react";
 import axios from "axios";
 import { SERVER_URL } from "../../utils/base";
 import { useNavigate } from "react-router";
+import {
+  addDataUser,
+  clearDataUser,
+  setPrIsVisibleUser,
+} from "../../utils/userslice";
+import {
+  addDataVendor,
+  clearDataVendor,
+  setPrIsVisibleVendor,
+} from "../../utils/vendorslice";
+import CamleCase from "../camleCase/camleCase";
+
 export default function Profile() {
   const [nameEdit, setNameEdit] = useState(false);
   const [emailEdit, setEmailEdit] = useState(false);
   const [phoneNoEdit, setPhoneNoEdit] = useState(false);
+  const [shareEdit, setShareEdit] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const category = localStorage.getItem("category");
 
-  const userData = useSelector((store) => store.user.data);
-  const isVisible = useSelector((store) => store.user.isVisible);
-  const isPrVisible = useSelector((store) => store.user.isPrVisible);
+  const userData =
+    category === "user"
+      ? useSelector((store) => store.user.data)
+      : useSelector((store) => store.vendor.data);
+  const isVisible =
+    category === "user"
+      ? useSelector((store) => store.user.isVisibleUser)
+      : useSelector((store) => store.vendor.isVisibleVendor);
+  const isPrVisible =
+    category === "user"
+      ? useSelector((store) => store.user.isPrVisibleUser)
+      : useSelector((store) => store.vendor.isPrVisibleVendor);
 
   const token = `Bearer ${userData[0]?.token}`;
 
-  const [isLoading, setIsLoading] = useState({name:false,email:false,phoneNo:false});
+  const [isLoading, setIsLoading] = useState({
+    name: false,
+    email: false,
+    phoneNo: false,
+    shareNo: false,
+  });
+
   const [name, setName] = useState(userData[0]?.name);
   const [email, setEmail] = useState(userData[0]?.email);
   const [phoneNo, setPhoneNo] = useState(userData[0]?.phoneNo);
+  const [shareNo, setShareNo] = useState("");
 
   function handleLogout() {
-    dispatch(clearData());
-    dispatch(setPrIsVisible(false));
+    if (category === "user") dispatch(clearDataUser());
+    else if (category === "vendor") dispatch(clearDataVendor());
+
+    if (category === "user") dispatch(setPrIsVisibleUser(false));
+    else if (category === "vendor") dispatch(setPrIsVisibleVendor(false));
+
     localStorage.clear();
   }
 
   function handleCrossInProfile() {
-    dispatch(setPrIsVisible(false));
+    if (category === "user") dispatch(setPrIsVisibleUser(false));
+    else if (category === "vendor") dispatch(setPrIsVisibleVendor(false));
     setNameEdit(false);
   }
 
@@ -46,28 +82,54 @@ export default function Profile() {
     setNameEdit(true);
 
     if (nameEdit) {
-      setIsLoading((state)=>({...state,name:true}));
-      axios
-        .patch(
-          `${SERVER_URL}/user/edit/name`,
+      setIsLoading((state) => ({ ...state, name: true }));
+      if (category === "user") {
+        axios
+          .patch(
+            `${SERVER_URL}/${category}/edit/name`,
 
-          {
-            name: name,
-            userId: userData[0].userId,
-            token: userData[0].token,
-          },
-          {
-            headers: { Authorization: token },
-          }
-        )
-        .then((result) => {
-          dispatch(clearData());
-          dispatch(addData(result.data));
-          localStorage.setItem("name", name);
-          setNameEdit(false);
-          setIsLoading((state)=>({...state,name:false}));
-        })
-        .catch((err) => console.log(err));
+            {
+              name: name,
+              userId: userData[0].userId,
+              token: userData[0].token,
+            },
+            {
+              headers: { Authorization: token },
+            }
+          )
+          .then((result) => {
+            dispatch(clearDataUser());
+            dispatch(addDataUser(result.data));
+            localStorage.setItem(category, JSON.stringify(result.data));
+
+            setNameEdit(false);
+            setIsLoading((state) => ({ ...state, name: false }));
+          })
+          .catch((err) => console.log(err));
+      } else if (category === "vendor") {
+        axios
+          .patch(
+            `${SERVER_URL}/${category}/edit/name`,
+
+            {
+              name: name,
+              vendorId: userData[0].vendorId,
+              token: userData[0].token,
+            },
+            {
+              headers: { Authorization: token },
+            }
+          )
+          .then((result) => {
+            dispatch(clearDataVendor());
+            dispatch(addDataVendor(result.data));
+            localStorage.setItem(category, JSON.stringify(result.data));
+
+            setNameEdit(false);
+            setIsLoading((state) => ({ ...state, name: false }));
+          })
+          .catch((err) => console.log(err));
+      }
     }
   }
 
@@ -81,28 +143,55 @@ export default function Profile() {
     setPhoneNoEdit(true);
 
     if (phoneNoEdit) {
-      setIsLoading((state)=>({...state,phoneNo:true}));
-      axios
-        .patch(
-          `${SERVER_URL}/user/edit/phoneNo`,
+      setIsLoading((state) => ({ ...state, phoneNo: true }));
 
-          {
-            phoneNo: phoneNo,
-            userId: userData[0].userId,
-            token: userData[0].token,
-          },
-          {
-            headers: { Authorization: token },
-          }
-        )
-        .then((result) => {
-          dispatch(clearData());
-          dispatch(addData(result.data));
-          localStorage.setItem("phoneNo", phoneNo);
-          setPhoneNoEdit(false);
-          setIsLoading((state)=>({...state,phoneNo:false}));
-        })
-        .catch((err) => console.log(err));
+      if (category === "user") {
+        axios
+          .patch(
+            `${SERVER_URL}/${category}/edit/phoneNo`,
+
+            {
+              phoneNo: phoneNo,
+              userId: userData[0].userId,
+              token: userData[0].token,
+            },
+            {
+              headers: { Authorization: token },
+            }
+          )
+          .then((result) => {
+            dispatch(clearDataUser());
+            dispatch(addDataUser(result.data));
+            localStorage.setItem(category, JSON.stringify(result.data));
+
+            setPhoneNoEdit(false);
+            setIsLoading((state) => ({ ...state, phoneNo: false }));
+          })
+          .catch((err) => console.log(err));
+      } else if (category === "vendor") {
+        axios
+          .patch(
+            `${SERVER_URL}/${category}/edit/phoneNo`,
+
+            {
+              phoneNo: phoneNo,
+              vendorId: userData[0].vendorId,
+              token: userData[0].token,
+            },
+            {
+              headers: { Authorization: token },
+            }
+          )
+          .then((result) => {
+            dispatch(clearDataVendor());
+            dispatch(addDataVendor(result.data));
+            localStorage.setItem(category, JSON.stringify(result.data));
+
+            setPhoneNoEdit(false);
+            setIsLoading((state) => ({ ...state, phoneNo: false }));
+          })
+          .catch((err) => console.log(err));
+      }
     }
   }
 
@@ -116,43 +205,147 @@ export default function Profile() {
     setEmailEdit(true);
 
     if (emailEdit) {
-      setIsLoading((state)=>({...state,email:true}));
-      axios
-        .patch(
-          `${SERVER_URL}/user/edit/email`,
+      setIsLoading((state) => ({ ...state, email: true }));
 
-          {
-            email: email,
-            userId: userData[0].userId,
-            token: userData[0].token,
-          },
-          {
-            headers: { Authorization: token },
-          }
-        )
-        .then((result) => {
-          dispatch(clearData());
-          dispatch(addData(result.data));
-          localStorage.setItem("email", email);
-          setEmailEdit(false);
-          setIsLoading((state)=>({...state,email:false}));
-        })
-        .catch((err) => console.log(err));
+      if (category === "user") {
+        axios
+          .patch(
+            `${SERVER_URL}/${category}/edit/email`,
+
+            {
+              email: email,
+              userId: userData[0].userId,
+              token: userData[0].token,
+            },
+            {
+              headers: { Authorization: token },
+            }
+          )
+          .then((result) => {
+            dispatch(clearDataUser());
+            dispatch(addDataUser(result.data));
+            localStorage.setItem(category, JSON.stringify(result.data));
+
+            setEmailEdit(false);
+            setIsLoading((state) => ({ ...state, email: false }));
+          })
+          .catch((err) => console.log(err));
+      } else if (category === "vendor") {
+        axios
+          .patch(
+            `${SERVER_URL}/${category}/edit/email`,
+
+            {
+              email: email,
+              vendorId: userData[0].vendorId,
+              token: userData[0].token,
+            },
+            {
+              headers: { Authorization: token },
+            }
+          )
+          .then((result) => {
+            dispatch(clearDataVendor());
+            dispatch(addDataVendor(result.data));
+            localStorage.setItem(category, JSON.stringify(result.data));
+
+            setEmailEdit(false);
+            setIsLoading((state) => ({ ...state, email: false }));
+          })
+          .catch((err) => console.log(err));
+      }
     }
   }
 
-  function handleOrdersView() {
-    navigate("/viewOrders");
-    
-    dispatch(setPrIsVisible(false));
+  {
+    /********************************
+     ******handle Orders View*********
+     ********************************/
   }
+
+  function handleOrdersView() {
+    navigate("/viewOrders", { state: { category: category } });
+
+    if (category === "user") dispatch(setPrIsVisibleUser(false));
+    else if (category === "vendor") dispatch(setPrIsVisibleVendor(false));
+  }
+
+  {
+    /********************************
+     ******handle Share View*********
+     ********************************/
+  }
+
+  function handleShareView() {
+    navigate("/viewShare", { state: { category: category } });
+
+    if (category === "user") dispatch(setPrIsVisibleUser(false));
+    else if (category === "vendor") dispatch(setPrIsVisibleVendor(false));
+  }
+
+  {
+    /****************************
+     ******handle Share**********
+     ****************************/
+  }
+  function handleShare() {
+    navigate("/share");
+    if (category === "user") dispatch(setPrIsVisibleUser(false));
+    else if (category === "vendor") dispatch(setPrIsVisibleVendor(false));
+  }
+
+  {
+    /***********************************
+     ******handle Bookings View*********
+     ***********************************/
+  }
+  function handleBookingsView() {
+    navigate("/viewBookings", { state: { bookingsType: "view" } });
+    dispatch(setPrIsVisibleVendor(false));
+  }
+
+  {
+    /*******************************
+     ******handle bookings**********
+     *******************************/
+  }
+  function handleBookings() {
+    navigate("/bookNow", { state: { bookingsType: "book" } });
+    dispatch(setPrIsVisibleVendor(false));
+  }
+
+  {
+    /**********************************
+     ******handle add address**********
+     **********************************/
+  }
+  function handleAddAddress() {
+    navigate("/address");
+    dispatch(setPrIsVisibleVendor(false));
+    dispatch(setPrIsVisibleUser(false));
+  }
+
+  /***
+   *******************************************************************
+   *******************************************************************
+   *************************              ****************************
+   *************************   Main Code  ****************************
+   *************************              ****************************
+   *******************************************************************
+   *******************************************************************
+   */
 
   return (
     <div
       className="profile"
       style={{ display: isPrVisible ? "block" : "none" }}
     >
-      <h2>Profile</h2>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <img src={female} alt="" style={{ width: "5rem" }} />
+      </div>
+      <h2>
+        <CamleCase element={category} /> Profile
+      </h2>
       <img
         src={cross}
         alt="cross"
@@ -191,7 +384,7 @@ export default function Profile() {
               }}
             />
           ) : (
-            userData[0]?.name
+            <CamleCase element={userData[0]?.name} />
           )}
 
           {/***** Name Edit btn  *****/}
@@ -225,7 +418,7 @@ export default function Profile() {
        **************************/}
 
       <div>
-        <span className="border-bottom">Mobile No</span>{" "}
+        <span className="border-bottom">Mobile No</span>
         <span className="span email-grid">
           {phoneNoEdit ? (
             <input
@@ -361,7 +554,7 @@ export default function Profile() {
       <div>
         <span className="border-bottom">Orders </span>
         <span className="span email-grid">
-          <span>{userData[0]?.orders?.length}</span>
+          <span>{userData[0]?.orders}</span>
 
           {/***** Orders View btn  *****/}
 
@@ -376,15 +569,50 @@ export default function Profile() {
        ************************/}
 
       <div>
-        <span className="border-bottom">Share </span>
+        <span className="border-bottom">Share</span>
         <span className="span email-grid">
-          <span>{userData[0]?.share?.length}</span>
+          <span>{userData[0]?.share}</span>
 
           {/***** Share View btn  *****/}
 
-          <span className="verify-btn">view</span>
+          <span className="verify-btn" onClick={handleShareView}>
+            view
+          </span>
+
+          {/***** Share share btn  *****/}
+
+          <span className="verify-btn btn1" onClick={handleShare}>
+            Share
+          </span>
         </span>
       </div>
+
+      {/************************************
+       ******  Bookings for vendor *********
+       *************************************/}
+
+      {category === "vendor" ? (
+        <div>
+          <span className="border-bottom">Bookings </span>
+          <span className="span email-grid">
+            <span>{userData[0]?.bookings}</span>
+
+            {/***** Bookings View btn  *****/}
+
+            <span className="verify-btn" onClick={handleBookingsView}>
+              view
+            </span>
+
+            {/***** Bookings bookings btn  *****/}
+
+            <span className="verify-btn btn1" onClick={handleBookings}>
+              Book Now
+            </span>
+          </span>
+        </div>
+      ) : (
+        ""
+      )}
 
       {/*************************
        ******  Balance  *********
@@ -396,12 +624,55 @@ export default function Profile() {
       </div>
 
       {/*************************
+       ******  Address  *********
+       **************************/}
+
+      <div>
+        <span className="span ">Address </span>
+        {userData[0]?.address[0] ? (
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <div>{userData[0]?.address[0].vill}</div>
+            <div>{userData[0]?.address[0].post}</div>
+            <div>{userData[0]?.address[0].dist}</div>
+            <div>{userData[0]?.address[0].state}</div>
+            <div>{userData[0]?.address[0].pincode}</div>
+          </div>
+        ) : (
+          <button
+            className="verify-btn btn1"
+            onClick={handleAddAddress}
+            style={{ marginBottom: "1rem" }}
+          >
+            Add Address
+          </button>
+        )}{" "}
+      </div>
+
+      {/****************************************
+       ******  Job Profile for Vendor  *********
+       *****************************************/}
+
+      {category === "vendor" ? (
+        <div>
+          <span className="border-bottom">Job Profile </span>
+          <span className="span email-grid">
+            <span style={{ color: "blue" }}>
+              <CamleCase element={userData[0]?.type} />
+            </span>
+          </span>
+        </div>
+      ) : (
+        ""
+      )}
+
+      {/*************************
        ******  Log Out  btn *********
        **************************/}
 
       <button className="btn" onClick={handleLogout}>
         Logout
       </button>
+      {/* <h3 className="vendor-registration">Register As a Vendor</h3> */}
     </div>
   );
 }

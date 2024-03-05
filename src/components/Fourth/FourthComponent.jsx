@@ -1,7 +1,12 @@
+import { useNavigate } from "react-router";
 import "../Second/SecondComponent.css";
 import { useState } from "react";
 
 export default function FourthComponent() {
+  const navigate = useNavigate();
+  const category = localStorage.getItem("category");
+  const token = JSON.parse(localStorage.getItem(category))?.token;
+
   const [btnClicked, setBtnClicked] = useState(false);
   const [btnClicked1, setBtnClicked1] = useState(false);
   const [btnClicked2, setBtnClicked2] = useState(false);
@@ -10,18 +15,37 @@ export default function FourthComponent() {
   function handleClicked() {
     setBtnClicked(true);
     setTimeout(() => setBtnClicked(false), 100);
+    setTimeout(() => {
+      if (token)
+        navigate("/checkBookingDate", { state: { jobType: "carpenter" } });
+      else navigate("/category");
+    }, 200);
   }
   function handleClicked1() {
     setBtnClicked1(true);
     setTimeout(() => setBtnClicked1(false), 100);
+    setTimeout(() => {
+      if (token)
+        navigate("/checkBookingDate", { state: { jobType: "laptop repaire" } });
+      else navigate("/category");
+    }, 200);
   }
   function handleClicked2() {
     setBtnClicked2(true);
     setTimeout(() => setBtnClicked2(false), 100);
+    setTimeout(() => {
+      if (token)
+        navigate("/checkBookingDate", { state: { jobType: "washer man" } });
+      else navigate("/category");
+    }, 200);
   }
   function handleClicked3() {
     setBtnClicked3(true);
     setTimeout(() => setBtnClicked3(false), 100);
+    setTimeout(() => {
+      if (token) navigate("/checkBookingDate", { state: { jobType: "cook" } });
+      else navigate("/category");
+    }, 200);
   }
   return (
     <div className="second-div">

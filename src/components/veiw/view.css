@@ -1,12 +1,10 @@
-.views {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+.views-P {
+  position: relative;
   margin: 10rem auto;
   width: 80vw;
-  justify-content: space-between;
-  position: relative;
 }
-.views > img {
+
+.views-P > img {
   width: 2rem;
   height: 2rem;
   position: absolute;
@@ -14,14 +12,70 @@
   right: 1rem;
   cursor: pointer;
 }
+
+.views {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  min-height: 40rem;
+
+  justify-content: space-between;
+  position: relative;
+}
+
 .views-children {
   border: 2px solid #dee2e6;
+  height: max-content;
   margin: 1rem;
   padding: 1rem;
   border-radius: 0.5rem;
+  box-shadow: 0 2px 8px #dee2e6;
 }
 .views-children div {
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin: 1rem;
+}
+
+@media screen and (max-width: 1160px) {
+  .views {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media screen and (max-width: 800px) {
+  .views {
+    font-size: 1.5rem;
+  }
+}
+@media screen and (max-width: 665px) {
+  .views {
+    font-size: 1.3rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .views {
+    display: grid;
+    grid-template-columns: 1fr;
+    font-size: 1.7rem;
+  }
+  .bookings > div:first-child {
+    width: 30rem;
+    font-size: 1.5rem;
+  }
+}
+@media screen and (max-width: 368px) {
+  .views {
+    font-size: 1.5rem;
+  }
+}
+@media screen and (max-width: 338px) {
+  .views {
+    font-size: 1.3rem;
+  }
+}
+@media screen and (max-width: 297px) {
+  .views {
+    font-size: 1.1rem;
+  }
 }

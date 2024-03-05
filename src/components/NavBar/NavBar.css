@@ -26,8 +26,13 @@
   border-radius: 15px;
   padding: 8px;
 }
-.navbar__search-container div:first-child {
-  border-right: 1px solid #c5c5c5;
+.svg {
+  width: 2rem;
+  height: 2rem;
+  color: #c5c5c5;
+}
+.cls-1 {
+  color: #c5c5c5;
 }
 .navbar__search-container div {
   display: flex;

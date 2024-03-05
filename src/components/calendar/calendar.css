@@ -1,0 +1,103 @@
+.calendar {
+  display: flex;
+  flex-direction: column;
+  width: 35rem;
+  padding: 1rem;
+  text-align: center;
+  font-size: 1.4rem;
+  border-radius: 1rem;
+  border: 2px solid #dee2e6;
+}
+
+.calendar__header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  width: 100%;
+  margin: 0.5rem auto;
+  padding: 0.5rem 1rem;
+}
+.calendar__header .month {
+  background-color: rgba(240, 248, 255, 0.852);
+  margin: auto 0.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.calendar__header .month:hover {
+  background-color: rgba(196, 197, 199, 0.852);
+}
+.calendar__header .year {
+  /* border: 1px solid black; */
+  background-color: aliceblue;
+  margin: auto 0.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.calendar__header .year:hover {
+  background-color: rgba(196, 197, 199);
+}
+.calendar__header .year-month {
+  grid-column-start: 3;
+  grid-column-end: 5;
+}
+.calendar__body {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+.calendar__body div {
+  margin: 0.3rem;
+}
+
+.calendar__body .date:hover {
+  background-color: #ffec99;
+  color: #000;
+}
+.calendar__body .isCurrentDay {
+  background-color: #228be6;
+  color: #fff;
+}
+
+.calendar__body .isBooked {
+  background-color: #2f9e44;
+  color: #fff;
+}
+.calendar__colorDetailing {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid black;
+  display: flex;
+  justify-content: space-between;
+}
+.calendar__colorDetailing .calendar__colorDetailing-1st {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.calendar__colorDetailing .calendar__colorDetailing-2nd {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-basis: 80%;
+}
+.calendar__colorDetailing div .calendar__colorDetailing--today {
+  background-color: #228be6;
+  width: 1.4rem;
+  height: 1.2rem;
+}
+.calendar__colorDetailing div .calendar__colorDetailing--booked {
+  background-color: #2f9e44;
+  width: 1.4rem;
+  height: 1.2rem;
+}
+
+@media screen and (max-width: 720px) {
+  .calendar {
+    font-size: 1.2rem;
+  }
+}
+@media screen and (max-width: 370px) {
+  .calendar {
+    font-size: 1rem;
+    width: 27rem;
+  }
+}

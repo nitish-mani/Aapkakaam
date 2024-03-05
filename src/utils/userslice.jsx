@@ -4,25 +4,29 @@ const userSlice = createSlice({
   name: "user",
   initialState: {
     data: [],
-    isVisible: true,
-    isPrVisible: false,
+    isVisibleUser: true,
+    isPrVisibleUser: false,
   },
   reducers: {
-    addData: (state, action) => {
+    addDataUser: (state, action) => {
       state.data.push(action.payload);
     },
-    clearData: (state, action) => {
+    clearDataUser: (state, action) => {
       state.data = [];
     },
-    setIsVisible: (state, action) => {
-      state.isVisible = action.payload;
+    setIsVisibleUser: (state, action) => {
+      state.isVisibleUser = action.payload;
     },
-    setPrIsVisible: (state, action) => {
-      state.isPrVisible = action.payload;
+    setPrIsVisibleUser: (state, action) => {
+      state.isPrVisibleUser = action.payload;
     },
   },
 });
 
-export const { addData, clearData, setIsVisible, setPrIsVisible } =
-  userSlice.actions;
+export const {
+  addDataUser,
+  clearDataUser,
+  setIsVisibleUser,
+  setPrIsVisibleUser,
+} = userSlice.actions;
 export default userSlice.reducer;
