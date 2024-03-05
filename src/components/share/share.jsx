@@ -15,7 +15,7 @@ const Share = () => {
       ? JSON.parse(localStorage.getItem(category)).userId
       : JSON.parse(localStorage.getItem(category)).vendorId;
 
-  const url = `localhost:5173/category/${category}/${userId}`;
+  const url = `aapkakaam.com/category/${category}/${userId}`;
   const text = `Shared by ${JSON.parse(localStorage.getItem(category)).name}`;
   const phoneNumber = JSON.parse(localStorage.getItem(category)).phoneNo;
 
