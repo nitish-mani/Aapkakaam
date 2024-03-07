@@ -98,10 +98,6 @@ export default function NavBar() {
       </div>
 
       <div className="navbar__action-container">
-        <div className="navbar__menu" onClick={handleIconChane}>
-          <img src={menu} alt="menu" />
-        </div>
-
         <button
           className="navbar__login"
           onClick={handleLogin}
@@ -119,24 +115,7 @@ export default function NavBar() {
         </button>
       </div>
 
-      {userData?.length ? (
-        <Profile />
-      ) : (
-        <button
-          className="btn"
-          onClick={handleLogin}
-          style={{
-            display: isVisible ? "none" : "block",
-            transform: btnClicked ? "translateY(5px)" : "",
-            position: "absolute",
-            top: "8rem",
-            right: "2rem",
-            width: "fit-content",
-          }}
-        >
-          Login
-        </button>
-      )}
+      {userData?.length ? <Profile /> : ""}
     </div>
   );
 }

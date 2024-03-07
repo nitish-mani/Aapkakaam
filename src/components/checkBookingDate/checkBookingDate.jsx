@@ -4,11 +4,18 @@ import cross from "../../resources/svg/multiply-svgrepo-com.svg";
 import { useLocation, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { getCalendar } from "@skolacode/calendar-js";
+import { useSelector } from "react-redux";
 
 export default function CheckBookingDate() {
   const navigate = useNavigate();
   const location = useLocation();
   const jobType = location.state.jobType;
+
+  const isSelectedDateValid = useSelector(
+    (store) => store.category.isSelectedDateValid
+  );
+
+  const clearDateField = useSelector((store) => store.category.clearDateField);
 
   const months = [
     "January",
@@ -43,7 +50,9 @@ export default function CheckBookingDate() {
   const bookingUserData = [];
 
   useEffect(() => {
-    if (isDateClicked) setBooking_date(`${date} / ${month + 1} / ${year}`);
+    if (isSelectedDateValid && isDateClicked && clearDateField)
+      setBooking_date(`${date} / ${month + 1} / ${year}`);
+    else setBooking_date("");
   }, [date, month, year]);
 
   function hanldeCrossInShare() {
@@ -71,6 +80,16 @@ export default function CheckBookingDate() {
         Check Booking Date
       </h1>
       <div className="checkBookingDate">
+        <div
+          className="err"
+          style={{
+            opacity: isSelectedDateValid ? "" : "1",
+            border: "none",
+            marginTop: "1rem",
+          }}
+        >
+          You can't select previous date.
+        </div>
         <div>
           <input
             type="text"

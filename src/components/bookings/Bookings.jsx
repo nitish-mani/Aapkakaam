@@ -16,6 +16,12 @@ export default function Bookings() {
       ? useSelector((store) => store.user.data)
       : useSelector((store) => store.vendor.data);
 
+  const isSelectedDateValid = useSelector(
+    (store) => store.category.isSelectedDateValid
+  );
+
+  const clearDateField = useSelector((store) => store.category.clearDateField);
+
   const months = [
     "January",
     "February",
@@ -70,7 +76,9 @@ export default function Bookings() {
   const booked_date = new Date(`${year}/${month + 1}/${date}`).toDateString();
 
   useEffect(() => {
-    if (isDateClicked) setBooking_date(`${date} / ${month + 1} / ${year}`);
+    if (isSelectedDateValid && isDateClicked && clearDateField)
+      setBooking_date(`${date} / ${month + 1} / ${year}`);
+    else setBooking_date("");
   }, [date, month, year]);
 
   function handleBookingDate(year, month) {
@@ -290,6 +298,16 @@ export default function Bookings() {
           </div>
         ) : (
           <div className="book-now">
+            <div
+              className="err"
+              style={{
+                opacity: isSelectedDateValid ? "" : "1",
+                border: "none",
+                marginTop: "8rem",
+              }}
+            >
+              You can't select previous date.
+            </div>
             <input
               type="text"
               placeholder="Name"

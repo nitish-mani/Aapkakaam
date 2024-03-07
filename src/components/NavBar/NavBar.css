@@ -51,13 +51,7 @@
   width: 1.5rem;
   height: 1.5rem;
 }
-.navbar__action-container .navbar__menu {
-  display: none;
-}
-.navbar__action-container .navbar__menu img {
-  width: 3rem;
-  height: 3rem;
-}
+
 .navbar__action-container button {
   border-radius: 5px;
 }
@@ -81,12 +75,11 @@
   .navbar__logo img {
     width: 18rem;
   }
-  .navbar__action-container .navbar__menu {
-    display: block;
-    margin-left: 1rem;
-  }
   .navbar__action-container button {
-    display: none;
+    padding: 1rem;
+  }
+  .navbar__login {
+    font-size: 1.4rem;
   }
 }
 @media screen and (max-width: 550px) {
@@ -94,11 +87,15 @@
     font-size: 1rem;
     left: 2.5rem;
   }
+  .navbar__login {
+    font-size: 1.3rem;
+  }
 }
 @media screen and (max-width: 450px) {
   .navbar__logo img {
     width: 15rem;
   }
+
   .navbar__location input {
     font-size: 0.9rem;
     left: 2.5rem;
@@ -111,9 +108,15 @@
     width: 1.2rem;
     height: 1.2rem;
   }
-  .navbar__action-container .navbar__menu img {
-    width: 2rem;
-    height: 2rem;
+  .navbar__action-container button {
+    padding: 0.8rem;
+  }
+  .navbar__action-container button img {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+  .navbar__login {
+    font-size: 1.2rem;
   }
 }
 @media screen and (max-width: 400px) {
@@ -127,6 +130,13 @@
     font-size: 0.85rem;
     margin-left: 0.5rem;
   }
+  .navbar__action-container button {
+    padding: 0.6rem;
+    margin-left: 1rem;
+  }
+  .navbar__action-container button {
+    padding: 0.5rem;
+  }
 }
 @media screen and (max-width: 310px) {
   .navbar__logo img {
@@ -136,5 +146,12 @@
     height: 3rem;
     padding: 0.6rem;
     font-size: 0.8rem;
+  }
+  .navbar__action-container button {
+    padding: 0.4rem;
+  }
+  .navbar__action-container button img {
+    width: 1.6rem;
+    height: 1.6rem;
   }
 }

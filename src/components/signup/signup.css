@@ -6,32 +6,6 @@
   margin: 14rem auto;
   position: relative;
 }
-.success {
-  opacity: 0;
-  width: max-content;
-  color: green;
-  border: 2px solid green;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  position: absolute;
-  top: -6rem;
-  left: 50%;
-  transform: translateX(-50%);
-  transition: all 2s ease;
-}
-.err {
-  opacity: 0;
-  width: max-content;
-  color: red;
-  border: 2px solid red;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  position: absolute;
-  top: -6rem;
-  left: 50%;
-  transform: translateX(-50%);
-  transition: all 3s ease;
-}
 
 .signup__1stChild {
   color: #fff;

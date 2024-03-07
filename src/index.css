@@ -41,7 +41,6 @@ input::-webkit-inner-spin-button {
   background-color: #fff;
 }
 .loading {
-  /* border: 1px solid blue; */
   border-radius: 10rem;
   margin-left: auto;
   margin-right: auto;
@@ -78,6 +77,33 @@ input::-webkit-inner-spin-button {
 .btn:hover {
   background-color: blue;
 }
+.success {
+  opacity: 0;
+  width: max-content;
+  color: green;
+  border: 2px solid green;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  position: absolute;
+  top: -6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 2s ease;
+}
+.err {
+  opacity: 0;
+  width: max-content;
+  color: red;
+  border: 2px solid red;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  position: absolute;
+  top: -6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 2s ease;
+}
+
 @keyframes loading {
   from {
     transform: rotate(0turn);
@@ -86,6 +112,7 @@ input::-webkit-inner-spin-button {
     transform: rotate(1turn);
   }
 }
+
 .verify-btn {
   border: 2px solid black;
   border-radius: 0.5rem;

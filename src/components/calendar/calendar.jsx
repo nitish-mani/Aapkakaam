@@ -1,4 +1,9 @@
+import { useDispatch } from "react-redux";
 import "./calendar.css";
+import {
+  setClearDateField,
+  setIsSelectedDateValid,
+} from "../../utils/categoryslice";
 
 export default function Calendar({
   bookingDate,
@@ -11,6 +16,12 @@ export default function Calendar({
   calendar,
   setIsDateClicked,
 }) {
+  const current_date = new Date().getDate();
+  const current_month = new Date().getMonth();
+  const current_year = new Date().getFullYear();
+
+  const dispatch = useDispatch();
+
   function isCurrentDay(year, month, day) {
     let isCurrentDate;
     const date = new Date();
@@ -24,11 +35,14 @@ export default function Calendar({
 
     return isCurrentDate;
   }
+
   function handlePrevMonth() {
     if (month < 1) {
       setMonth(11);
       setYear(year - 1);
     } else setMonth(() => month - 1);
+    dispatch(setClearDateField(""));
+    if (year <= 2000) setYear(2000);
   }
 
   function handleNextMonth() {
@@ -36,22 +50,46 @@ export default function Calendar({
       setMonth(0);
       setYear(year + 1);
     } else setMonth(() => month + 1);
+
+    dispatch(setClearDateField(""));
   }
 
   function handlePrevYear() {
     if (year <= 2000) setYear(2000);
     else setYear(() => year - 1);
+
+    dispatch(setClearDateField(""));
   }
 
   function handleNextYear() {
     setYear(() => year + 1);
+
+    dispatch(setClearDateField(""));
   }
 
   function selectDate(date) {
     if (bookingDate.includes(date)) alert("Already Booked...");
     else {
-      setDate(date);
-      setIsDateClicked(true);
+      if (
+        (current_year == year &&
+          current_month == month &&
+          current_date <= date) ||
+        (current_year <= year && current_month < month) ||
+        current_year < year
+      ) {
+        setDate(date);
+        setIsDateClicked(true);
+
+        dispatch(setClearDateField(true));
+        dispatch(setIsSelectedDateValid(true));
+      } else {
+        dispatch(setIsSelectedDateValid(false));
+        setTimeout(() => {
+          dispatch(setIsSelectedDateValid(true));
+        }, 1000);
+
+        dispatch(setClearDateField(""));
+      }
     }
   }
 
