@@ -161,7 +161,11 @@ export default function VendorListItem({
         {success.message}
       </div>
       <div id="profilePic">
-        {i % 2 == 0 ? <img src={male} alt="" /> : <img src={female} alt="" />}
+        {data.gender == "male" ? (
+          <img src={male} alt="" />
+        ) : (
+          <img src={female} alt="" />
+        )}
       </div>
       <div>
         <div>
@@ -196,7 +200,7 @@ export default function VendorListItem({
         </div>
       </div>
 
-      <div>
+      <div className="vdldiv">
         <button
           className="btn"
           style={{ marginTop: "1rem" }}

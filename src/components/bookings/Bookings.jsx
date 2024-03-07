@@ -361,6 +361,7 @@ export default function Bookings() {
               type="text"
               placeholder="Select Date from calendar"
               value={booking_date}
+              readOnly
             />
             <div className="btn" onClick={handleBookings}>
               {isClicked ? <div className="loading"></div> : "Book Now"}

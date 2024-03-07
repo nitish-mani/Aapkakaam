@@ -6,3 +6,12 @@
   grid-template-columns: 1fr;
   gap: 2rem;
 }
+h1 {
+  display: flex;
+}
+
+@media screen and (max-width: 550px) {
+  h1 {
+    flex-direction: column;
+  }
+}

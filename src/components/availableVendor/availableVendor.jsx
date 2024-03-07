@@ -79,9 +79,9 @@ export default function AvailableVendor() {
           borderBottom: "1px solid rgba(105, 102, 102, 0.637)",
         }}
       >
-        <CamleCase element={jobType} /> List{" "}
+        <CamleCase element={jobType} /> List
         <h5 style={{ display: "inline", fontSize: "1.5rem" }}>
-          {" "}
+          
           (for date - {booked_date})
         </h5>
       </h1>

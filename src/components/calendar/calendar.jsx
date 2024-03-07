@@ -113,13 +113,13 @@ export default function Calendar({
         </div>
       </div>
       <div className="calendar__body">
-        <div>Mon</div>
-        <div>Tue</div>
-        <div>Wed</div>
-        <div>Thu</div>
-        <div>Fri</div>
-        <div>Sat</div>
-        <div>Sun</div>
+        <div key={"a"}>Mon</div>
+        <div key={"b"}>Tue</div>
+        <div key={"c"}>Wed</div>
+        <div key={"d"}>Thu</div>
+        <div key={"e"}>Fri</div>
+        <div key={"f"}>Sat</div>
+        <div key={"g"}>Sun</div>
 
         {calendar.map((data) => {
           return (
@@ -137,6 +137,7 @@ export default function Calendar({
                   cursor: "pointer",
                   borderRadius: "5px",
                 }}
+                key={data[0].day}
                 onClick={() => selectDate(data[0].day)}
               >
                 {data[0].day}
@@ -154,6 +155,7 @@ export default function Calendar({
                   cursor: "pointer",
                   borderRadius: "5px",
                 }}
+                key={data[1].day}
                 onClick={() => selectDate(data[1].day)}
               >
                 {data[1].day}
@@ -171,6 +173,7 @@ export default function Calendar({
                   cursor: "pointer",
                   borderRadius: "5px",
                 }}
+                key={data[2].day}
                 onClick={() => selectDate(data[2].day)}
               >
                 {data[2].day}
@@ -188,6 +191,7 @@ export default function Calendar({
                   cursor: "pointer",
                   borderRadius: "5px",
                 }}
+                key={data[3].day}
                 onClick={() => selectDate(data[3].day)}
               >
                 {data[3].day}
@@ -205,6 +209,7 @@ export default function Calendar({
                   cursor: "pointer",
                   borderRadius: "5px",
                 }}
+                key={data[4].day}
                 onClick={() => selectDate(data[4].day)}
               >
                 {data[4].day}
@@ -222,6 +227,7 @@ export default function Calendar({
                   cursor: "pointer",
                   borderRadius: "5px",
                 }}
+                key={data[5].day}
                 onClick={() => selectDate(data[5].day)}
               >
                 {data[5].day}
@@ -239,6 +245,7 @@ export default function Calendar({
                   cursor: "pointer",
                   borderRadius: "5px",
                 }}
+                key={data[6].day}
                 onClick={() => selectDate(data[6].day)}
               >
                 {data[6].day}
@@ -247,13 +254,14 @@ export default function Calendar({
           );
         })}
       </div>
+
       <div className="calendar__colorDetailing">
         <div className="calendar__colorDetailing-1st">
           <div>Today</div>
           <div>Booked</div>
         </div>
         <div className="calendar__colorDetailing-2nd">
-          <div className="calendar__colorDetailing--today"></div>{" "}
+          <div className="calendar__colorDetailing--today"></div>
           <div className="calendar__colorDetailing--booked"></div>
         </div>
       </div>

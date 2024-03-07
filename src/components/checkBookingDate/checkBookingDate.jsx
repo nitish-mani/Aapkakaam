@@ -95,6 +95,7 @@ export default function CheckBookingDate() {
             type="text"
             placeholder="Select Date From Calendar"
             value={booking_date}
+            readOnly
           />
           <button className="btn" onClick={handleCheckBookingDate}>
             Proceed
