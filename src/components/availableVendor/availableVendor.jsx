@@ -81,7 +81,6 @@ export default function AvailableVendor() {
       >
         <CamleCase element={jobType} /> List
         <h5 style={{ display: "inline", fontSize: "1.5rem" }}>
-          
           (for date - {booked_date})
         </h5>
       </h1>
@@ -118,6 +117,7 @@ export default function AvailableVendor() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              lineHeight: "5rem",
             }}
           >
             <CamleCase element={jobType} /> not found in your location :-

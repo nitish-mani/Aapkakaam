@@ -112,7 +112,7 @@ export default function VendorListItem({
         .post(
           `${SERVER_URL}/bookings/postToBookingsV`,
           {
-            userId: userData[0].userId,
+            userId: userData[0].vendorId,
             vendorId: vendorId,
             bookingDate: booked_date,
             pincode: userData[0].address[0].pincode,

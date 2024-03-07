@@ -4,7 +4,7 @@
   min-height: 40rem;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: 5rem;
 }
 h1 {
   display: flex;
