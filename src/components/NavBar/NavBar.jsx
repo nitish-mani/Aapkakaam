@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./NavBar.css";
 import aapkaKaam_logo from "../../resources/svg/AapkaKaam_full2.svg";
 import menu from "../../resources/svg/burger-simple-svgrepo-com.svg";
@@ -73,56 +73,35 @@ export default function NavBar() {
       <div className="navbar__logo" onClick={handleLogoClick}>
         <img src={aapkaKaam_logo} alt="logo" />
       </div>
-      <div className="navbar__search-container">
-        <div className="navbar__location">
+
+      <div className="navbar__location">
+        <div>
           <img src={locationPinn} alt="" className="svg" />
-          <input
-            type="text"
-            placeholder="Location"
-            className="input"
-            value={address}
-            readOnly
-          />
-          <button>
-            <img
-              src={magnifingGlass}
-              alt=""
-              className="svg"
-              onClick={handleOtherLocation}
-            />
-          </button>
         </div>
-        {/* <div className="navbar__search-services-search-box">
-          <input type="text" placeholder="Search Services" />
-          <button>
-            <svg
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              width="100%"
-              height="100%"
-              viewBox="0 0 32 32"
-              fill="#fff"
-            >
-              <path d="M31.008 27.231l-7.58-6.447c-0.784-0.705-1.622-1.029-2.299-0.998 1.789-2.096 2.87-4.815 2.87-7.787 0-6.627-5.373-12-12-12s-12 5.373-12 12 5.373 12 12 12c2.972 0 5.691-1.081 7.787-2.87-0.031 0.677 0.293 1.515 0.998 2.299l6.447 7.58c1.104 1.226 2.907 1.33 4.007 0.23s0.997-2.903-0.23-4.007zM12 20c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8z"></path>
-            </svg>
-          </button>
-        </div> */}
+
+        <input
+          type="text"
+          placeholder="Location"
+          className="input"
+          value={address}
+          readOnly
+        />
+
+        <div className="div">
+          <img
+            src={magnifingGlass}
+            alt=""
+            className="svg"
+            onClick={handleOtherLocation}
+          />
+        </div>
       </div>
+
       <div className="navbar__action-container">
         <div className="navbar__menu" onClick={handleIconChane}>
-          <img
-            src={menu}
-            alt="menu"
-            style={{ display: isVisible ? "block" : "none" }}
-          />
-          <img
-            src={cross}
-            alt="cross"
-            style={{
-              display: isVisible ? "none" : "block",
-            }}
-          />
+          <img src={menu} alt="menu" />
         </div>
+
         <button
           className="navbar__login"
           onClick={handleLogin}
@@ -139,6 +118,7 @@ export default function NavBar() {
           )}
         </button>
       </div>
+
       {userData?.length ? (
         <Profile />
       ) : (

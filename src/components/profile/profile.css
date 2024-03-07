@@ -8,6 +8,7 @@
   background-color: #fff;
   box-shadow: 0 5px 20px rgb(0 0 0/30%);
   border-radius: 1rem;
+  z-index: 1;
 }
 .profile > h2 {
   border-bottom: 1px solid #c5c5c5;
@@ -51,6 +52,7 @@
   .profile {
     overflow: scroll;
     height: 80vh;
+    padding-top: 2.5rem;
   }
   .profile div {
     display: grid;

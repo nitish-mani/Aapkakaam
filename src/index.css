@@ -61,6 +61,23 @@ input::-webkit-inner-spin-button {
   border-radius: 50%;
   animation: loading 0.75s ease infinite;
 }
+
+.btn {
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 1rem;
+  width: 100%;
+  border-radius: 0.5rem;
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn:hover {
+  background-color: blue;
+}
 @keyframes loading {
   from {
     transform: rotate(0turn);

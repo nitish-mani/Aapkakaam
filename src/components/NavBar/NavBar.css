@@ -1,71 +1,69 @@
 .navbar {
-  width: 100vw;
-  height: 7rem;
   display: flex;
-  justify-content: space-between;
-  padding: 1rem 2.5rem;
+  width: 100vw;
   align-items: center;
-  box-shadow: 0 2px 4px rgb(0 0 0 /20%);
+  justify-content: space-around;
+  margin: 0 auto;
+  padding: 1rem;
+  border-bottom: 2px solid #f1f3f5;
   position: fixed;
   top: 0;
   z-index: 1;
-  background-color: white;
-  border-top: 1px solid white;
+  background-color: #fff;
 }
-
 .navbar__logo img {
-  height: 5rem;
-  cursor: pointer;
+  width: 20rem;
 }
-
-.navbar__search-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: 1px solid #c5c5c5;
-  border-radius: 15px;
-  padding: 8px;
+.navbar__location {
+  position: relative;
+  width: 30vw;
+  height: 4.4rem;
+  padding: 1rem;
+  border-radius: 1.5rem;
+  border: 2px solid #f1f3f5;
 }
-.svg {
+.navbar__location div {
+  position: absolute;
+  left: 5px;
+  width: fit-content;
+}
+.navbar__location div img {
   width: 2rem;
   height: 2rem;
-  color: #c5c5c5;
 }
-.cls-1 {
-  color: #c5c5c5;
-}
-.navbar__search-container div {
-  display: flex;
-  align-items: center;
-}
-.navbar__location svg {
-  height: 2rem;
-}
-.navbar__search-container input {
-  border: none;
-  font-family: inherit;
+.navbar__location input {
   outline: none;
-  padding: 5px 10px;
-}
-
-.navbar__search-container button {
-  height: 3rem;
-  padding: 0.7rem;
-  border-radius: 7px;
+  width: 70%;
+  height: 50%;
   border: none;
-  outline: none;
-  background-color: var(--primary-color);
+  position: absolute;
+  left: 15%;
+}
+.navbar__location .div {
+  position: absolute;
+  left: 88%;
+  width: fit-content;
+  background-color: #fff;
   cursor: pointer;
 }
-.navbar__menu {
+
+.navbar__location .div img {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.navbar__action-container .navbar__menu {
   display: none;
+}
+.navbar__action-container .navbar__menu img {
   width: 3rem;
   height: 3rem;
-  margin-left: 1rem;
 }
-.navbar__menu > img {
-  width: 100%;
-  height: 100%;
+.navbar__action-container button {
+  border-radius: 5px;
+}
+.navbar__action-container button img {
+  width: 2rem;
+  height: 2rem;
 }
 .navbar__login {
   background-color: var(--primary-color);
@@ -79,65 +77,64 @@
   cursor: pointer;
   transition: all 100ms;
 }
-
-@media screen and (max-width: 761px) {
-  .navbar__search-container div:last-child {
-    display: none;
+@media screen and (max-width: 600px) {
+  .navbar__logo img {
+    width: 18rem;
   }
-  .navbar__search-container div:first-child {
-    border: none;
-  }
-}
-@media screen and (max-width: 555px) {
-  .navbar__login {
-    display: none;
-  }
-  .navbar__menu {
+  .navbar__action-container .navbar__menu {
     display: block;
+    margin-left: 1rem;
+  }
+  .navbar__action-container button {
+    display: none;
   }
 }
-@media screen and (max-width: 500px) {
-  .navbar {
-    padding-left: 0.5rem;
-  }
-
-  .navbar__search-container {
-    width: fit-content;
-  }
-  .navbar__search-container input {
-    padding: 0;
-    width: 10rem;
-  }
-
-  .navbar__logo img {
-    height: 3.5rem;
-  }
-}
-@media screen and (max-width: 350px) {
-  .navbar__search-container input {
-    padding: 0;
-    width: 8rem;
+@media screen and (max-width: 550px) {
+  .navbar__location input {
     font-size: 1rem;
-    border-radius: 1rem;
+    left: 2.5rem;
   }
-
-  .navbar__search-container {
-    padding: 0.5rem 1rem;
+}
+@media screen and (max-width: 450px) {
+  .navbar__logo img {
+    width: 15rem;
   }
-  .navbar__location svg {
-    height: 1.3rem;
+  .navbar__location input {
+    font-size: 0.9rem;
+    left: 2.5rem;
   }
+  .navbar__location div img {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .navbar__location .div img {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+  .navbar__action-container .navbar__menu img {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+@media screen and (max-width: 400px) {
+  .navbar__logo img {
+    width: 13rem;
+  }
+  .navbar__location {
+    width: 13rem;
+    height: 3.5rem;
+    padding: 0.6rem;
+    font-size: 0.85rem;
+    margin-left: 0.5rem;
+  }
+}
+@media screen and (max-width: 310px) {
   .navbar__logo img {
     width: 10rem;
   }
-  .navbar__menu {
-    height: 2rem;
-    width: 2rem;
-  }
-}
-@media screen and (max-width: 300px) {
-  .navbar__search-container input {
-    padding: 0;
-    width: 7rem;
+  .navbar__location {
+    height: 3rem;
+    padding: 0.6rem;
+    font-size: 0.8rem;
   }
 }

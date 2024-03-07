@@ -71,9 +71,7 @@ export default function SignUp() {
     setIsNumValid(true);
   }, [phoneNo]);
 
-  useEffect(() => {
-    setIsSharedBy(true);
-  }, [sharedBy]);
+  
 
   useEffect(() => {
     setIsGender(true);

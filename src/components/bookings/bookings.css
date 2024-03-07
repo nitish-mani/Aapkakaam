@@ -30,6 +30,7 @@
   flex-direction: column;
   width: 30rem;
   padding: 1rem;
+  margin-right: 1rem;
   border-radius: 0.5rem;
   box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.367);
 }
@@ -49,11 +50,36 @@
   .bookings > div:first-child {
     order: 2;
   }
+  .bookings .viewNow {
+    width: 35rem;
+  }
+  .bookings .book-now {
+    width: 35rem;
+    margin-bottom: 3rem;
+  }
 }
 
 @media screen and (max-width: 368px) {
   .bookings > div:first-child {
     font-size: 1.5rem;
     width: 27rem;
+  }
+  .bookings .viewNow {
+    width: 27rem;
+  }
+  .bookings .book-now {
+    width: 27rem;
+  }
+}
+@media screen and (max-width: 300px) {
+  .bookings > div:first-child {
+    font-size: 1.5rem;
+    width: 27rem;
+  }
+  .bookings .viewNow {
+    width: 24rem;
+  }
+  .bookings .book-now {
+    width: 24rem;
   }
 }

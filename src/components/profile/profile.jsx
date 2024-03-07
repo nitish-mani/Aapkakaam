@@ -340,7 +340,7 @@ export default function Profile() {
       className="profile"
       style={{ display: isPrVisible ? "block" : "none" }}
     >
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div style={{ display: "flex", justifyContent: "center",backgroundColor:"transparent" }}>
         <img src={female} alt="" style={{ width: "5rem" }} />
       </div>
       <h2>
@@ -350,7 +350,6 @@ export default function Profile() {
         src={cross}
         alt="cross"
         style={{
-          display: isVisible ? "block" : "none",
           width: "20px",
           position: "absolute",
           top: ".5rem",
