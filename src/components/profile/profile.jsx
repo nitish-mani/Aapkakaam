@@ -347,7 +347,7 @@ export default function Profile() {
           backgroundColor: "transparent",
         }}
       >
-        {userData[0].gender == "male" ? (
+        {userData[0].gender == "Male" ? (
           <img src={male} alt="" style={{ width: "5rem" }} />
         ) : (
           <img src={female} alt="" style={{ width: "5rem" }} />

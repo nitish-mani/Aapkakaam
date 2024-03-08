@@ -73,9 +73,6 @@ export default function Body() {
   function handleAddAddress() {
     navigate("/address");
   }
-  function handleCrossInPopUp() {
-    setIsPopedUp(false);
-  }
 
   return (
     <>

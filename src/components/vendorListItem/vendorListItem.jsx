@@ -161,7 +161,7 @@ export default function VendorListItem({
         {success.message}
       </div>
       <div id="profilePic">
-        {data.gender == "male" ? (
+        {data.gender == "Male" ? (
           <img src={male} alt="" />
         ) : (
           <img src={female} alt="" />
