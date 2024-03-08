@@ -21,3 +21,8 @@
 .share button img {
   width: 5rem;
 }
+@media screen and (max-width: 600px) {
+  .share {
+    margin-top: 18rem;
+  }
+}
