@@ -70,9 +70,9 @@ export default function Body() {
         });
     }
   }, []);
-function handleAddAddress(){
-  navigate('/address')
-}
+  function handleAddAddress() {
+    navigate("/address");
+  }
   function handleCrossInPopUp() {
     setIsPopedUp(false);
   }
@@ -83,13 +83,18 @@ function handleAddAddress(){
         <div style={{ marginTop: "8rem", textAlign: "center" }}>
           Your profile is not visible to user. Please Update Your Address to
           make your profile visible.
-          <span className="verify-btn forgetPass" style={{ border: "none" }} onClick={handleAddAddress}>
+          <span
+            className="verify-btn forgetPass"
+            style={{ border: "none" }}
+            onClick={handleAddAddress}
+          >
             Add
           </span>
         </div>
       ) : (
         ""
       )}
+      <div className="line"></div>
       <FirstComponent />
       <SecondComponent />
       <ThirdComponent />

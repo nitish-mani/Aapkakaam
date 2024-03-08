@@ -19,7 +19,17 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
+.line {
+  width: 100%;
+  border: 1px solid #fff;
+  margin-top: 8rem;
+  margin-bottom: 1rem;
+}
+@media screen and (max-width: 600px) {
+  .line {
+    margin-top: 13rem;
+  }
+}
 .main-div {
   font-family: "Lato", Arial, sans-serif;
   font-size: 18px;

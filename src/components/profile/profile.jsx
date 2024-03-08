@@ -341,7 +341,7 @@ export default function Profile() {
       style={{ display: isPrVisible ? "block" : "none" }}
     >
       <div style={{ display: "flex", justifyContent: "center",backgroundColor:"transparent" }}>
-        <img src={female} alt="" style={{ width: "5rem" }} />
+        {userData[0].gender=='male'?<img src={male} alt="" style={{ width: "5rem" }} />:<img src={female} alt="" style={{ width: "5rem" }} />}
       </div>
       <h2>
         <CamleCase element={category} /> Profile
@@ -635,7 +635,16 @@ export default function Profile() {
             <div>{userData[0]?.address[0].dist}</div>
             <div>{userData[0]?.address[0].state}</div>
             <div>{userData[0]?.address[0].pincode}</div>
+
+            <button
+            className="verify-btn btn1"
+            onClick={handleAddAddress}
+            style={{ margin:"0",width:"fit-content",padding:".4rem" }}
+          >
+            Change Address
+          </button>
           </div>
+          
         ) : (
           <button
             className="verify-btn btn1"

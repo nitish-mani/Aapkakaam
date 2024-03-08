@@ -22,7 +22,7 @@
   border-radius: 1.5rem;
   border: 2px solid #f1f3f5;
 }
-.navbar__location div {
+.navbar__location .div1 {
   position: absolute;
   left: 5px;
   width: fit-content;
@@ -41,7 +41,7 @@
 }
 .navbar__location .div {
   position: absolute;
-  left: 88%;
+  right: 1rem;
   width: fit-content;
   background-color: #fff;
   cursor: pointer;
@@ -72,6 +72,27 @@
   transition: all 100ms;
 }
 @media screen and (max-width: 600px) {
+  .navbar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 10rem;
+  }
+  .navbar__logo {
+    order: 0;
+  }
+  .navbar__action-container {
+    order: 1;
+    margin-left: 80%;
+  }
+  .navbar__location {
+    width: 200%;
+    order: 3;
+    grid-row-end: 3;
+  }
+  .navbar__location input {
+    left: 3rem;
+  }
   .navbar__logo img {
     width: 18rem;
   }
@@ -84,30 +105,20 @@
 }
 @media screen and (max-width: 550px) {
   .navbar__location input {
-    font-size: 1rem;
-    left: 2.5rem;
+    left: 3rem;
   }
   .navbar__login {
     font-size: 1.3rem;
   }
 }
 @media screen and (max-width: 450px) {
+  .navbar {
+    width: 100%;
+  }
   .navbar__logo img {
     width: 15rem;
   }
 
-  .navbar__location input {
-    font-size: 0.9rem;
-    left: 2.5rem;
-  }
-  .navbar__location div img {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-  .navbar__location .div img {
-    width: 1.2rem;
-    height: 1.2rem;
-  }
   .navbar__action-container button {
     padding: 0.8rem;
   }
@@ -120,32 +131,16 @@
   }
 }
 @media screen and (max-width: 400px) {
+  .navbar__action-container {
+    margin-left: 70%;
+  }
   .navbar__logo img {
     width: 13rem;
-  }
-  .navbar__location {
-    width: 13rem;
-    height: 3.5rem;
-    padding: 0.6rem;
-    font-size: 0.85rem;
-    margin-left: 0.5rem;
-  }
-  .navbar__action-container button {
-    padding: 0.6rem;
-    margin-left: 1rem;
-  }
-  .navbar__action-container button {
-    padding: 0.5rem;
   }
 }
 @media screen and (max-width: 310px) {
   .navbar__logo img {
     width: 10rem;
-  }
-  .navbar__location {
-    height: 3rem;
-    padding: 0.6rem;
-    font-size: 0.8rem;
   }
   .navbar__action-container button {
     padding: 0.4rem;

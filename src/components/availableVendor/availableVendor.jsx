@@ -24,12 +24,14 @@ export default function AvailableVendor() {
       ? useSelector((store) => store.user.data)
       : useSelector((store) => store.vendor.data);
 
-  const userId =
-    category === "user" ? userData[0]?.userId : userData[0]?.vendorId;
+  const pinLocation = useSelector((store) => store.category.location);
+  console.log(pinLocation);
 
   const token = `Bearer ${JSON.parse(localStorage.getItem(category)).token}`;
-  const pincode = JSON.parse(localStorage.getItem(category)).address[0]
-    ?.pincode;
+
+  const pincode =
+    pinLocation?.split("(")[1]?.split(")")[0] ||
+    JSON.parse(localStorage.getItem(category)).address[0]?.pincode;
 
   const [vendorPresent, setVendorPresent] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -121,7 +123,9 @@ export default function AvailableVendor() {
             }}
           >
             <CamleCase element={jobType} /> not found in your location :-
-            {userData[0]?.address[0]?.post} ({userData[0]?.address[0]?.pincode})
+            {pinLocation
+              ? pinLocation
+              : `${userData[0]?.address[0]?.post} (${userData[0]?.address[0]?.pincode})`}
           </h1>
         )}
       </div>
