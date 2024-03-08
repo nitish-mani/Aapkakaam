@@ -17,7 +17,7 @@ const Share = () => {
 
   const url = `aapkakaam.com/category/${category}/${userId}`;
   const text = `Shared by ${JSON.parse(localStorage.getItem(category)).name}`;
-  const phoneNumber = JSON.parse(localStorage.getItem(category)).phoneNo;
+  const phoneNumber = "";
 
   const shareOnTwitter = () => {
     const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
