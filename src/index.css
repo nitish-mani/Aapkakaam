@@ -113,6 +113,17 @@ input::-webkit-inner-spin-button {
   transform: translateX(-50%);
   transition: all 2s ease;
 }
+@media screen and (max-width: 600px) {
+  .line {
+    margin-top: 13rem;
+  }
+  .success {
+    top: -5rem;
+  }
+  .err {
+    top: -5rem;
+  }
+}
 
 @keyframes loading {
   from {

@@ -37,7 +37,6 @@ export default function SignUp() {
   let cd = location.state.cd;
   let id = location.state.id;
 
-
   const profile_category = category;
   let category_result = "";
   for (let i = 0; i < profile_category.length; i++) {
@@ -71,8 +70,6 @@ export default function SignUp() {
     setIsNumValid(true);
   }, [phoneNo]);
 
-  
-
   useEffect(() => {
     setIsGender(true);
   }, [gender]);
@@ -98,7 +95,7 @@ export default function SignUp() {
       setIsPassValid(false);
       return;
     }
-   
+
     if (gender.length === 0) {
       setIsGender(false);
       return;

@@ -35,7 +35,9 @@
   border: 2px solid var(--primary-color);
   color: #fff;
 }
-
+.b600 {
+  margin-bottom: 1rem;
+}
 .profile .vendor-registration {
   color: black;
   /* border: 1px solid black; */

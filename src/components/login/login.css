@@ -38,6 +38,11 @@
 .forgetPass:hover {
   color: blue;
 }
+@media screen and (max-width: 600px) {
+  .login {
+    margin-top: 18rem;
+  }
+}
 @media screen and (max-width: 350px) {
   .login {
     width: 27rem;

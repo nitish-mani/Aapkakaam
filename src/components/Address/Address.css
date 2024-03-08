@@ -35,6 +35,11 @@
   width: 100%;
   margin-bottom: 0.5rem;
 }
+@media screen and (max-width: 600px) {
+  .address {
+    margin-top: 18rem;
+  }
+}
 @media screen and (max-width: 350px) {
   .address {
     width: 27rem;

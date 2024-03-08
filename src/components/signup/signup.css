@@ -72,7 +72,11 @@
   width: 100%;
   color: #747575;
 }
-
+@media screen and (max-width: 600px) {
+  .signup {
+    margin-top: 18rem;
+  }
+}
 @media screen and (max-width: 350px) {
   .signup {
     width: 27rem;
