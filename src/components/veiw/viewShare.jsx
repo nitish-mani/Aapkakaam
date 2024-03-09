@@ -39,25 +39,29 @@ export default function ViewShare() {
           .get(`${SERVER_URL}/${category}/getShare/${userId}`, {
             headers: { Authorization: token },
           })
-          .then((result) => setShare(result.data.share))
+          .then((result) => {
+            setShare(result.data.share);
+            setIsLoading(false);
+          })
           .catch((err) => {
             dispatch(clearDataUser());
             localStorage.clear();
             navigate("/");
           });
-        setIsLoading(false);
       } else if (category === "vendor") {
         axios
           .get(`${SERVER_URL}/${category}/getShare/${userId}`, {
             headers: { Authorization: token },
           })
-          .then((result) => setShare(result.data.share))
+          .then((result) => {
+            setShare(result.data.share);
+            setIsLoading(false);
+          })
           .catch((err) => {
             dispatch(clearDataVendor());
             localStorage.clear();
             navigate("/");
           });
-        setIsLoading(false);
       }
     }, 3000);
   }, []);
