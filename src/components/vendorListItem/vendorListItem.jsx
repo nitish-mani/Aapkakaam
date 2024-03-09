@@ -127,7 +127,7 @@ export default function VendorListItem({
           setTimeout(() => {
             setSuccess("");
             setBookingHappen(!bookingHappen);
-          }, 5000);
+          }, 2000);
         })
         .catch((err) => {
           setErr("vendor already booked");

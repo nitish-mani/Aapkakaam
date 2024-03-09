@@ -52,7 +52,7 @@ export default function AvailableVendor() {
         )
         .then((result) => {
           setVendorPresent(result.data);
-          setTimeout(() => setIsLoading(false), 3000);
+          setTimeout(() => setIsLoading(false), 1000);
         })
         .catch((err) => {
           console.log(err.response.data.message);
