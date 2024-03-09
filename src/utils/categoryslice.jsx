@@ -6,7 +6,8 @@ const categorySlice = createSlice({
     category: "",
     isSelectedDateValid: true,
     clearDateField: "",
-    location: "",
+    location_pincode: "",
+    location_post: "",
   },
   reducers: {
     setCategory: (state, action) => {
@@ -18,8 +19,11 @@ const categorySlice = createSlice({
     setClearDateField: (state, action) => {
       state.clearDateField = action.payload;
     },
-    setLocation: (state, action) => {
-      state.location = action.payload;
+    setLocationPincode: (state, action) => {
+      state.location_pincode = action.payload;
+    },
+    setLocationPost: (state, action) => {
+      state.location_post = action.payload;
     },
   },
 });
@@ -28,6 +32,7 @@ export const {
   setCategory,
   setIsSelectedDateValid,
   setClearDateField,
-  setLocation,
+  setLocationPincode,
+  setLocationPost,
 } = categorySlice.actions;
 export default categorySlice.reducer;

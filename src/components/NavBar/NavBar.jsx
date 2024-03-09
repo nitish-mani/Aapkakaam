@@ -27,10 +27,11 @@ export default function NavBar() {
       ? useSelector((store) => store.user.data)
       : useSelector((store) => store.vendor.data);
 
-  const pinLocation = useSelector((store) => store.category.location);
+  const postLocation = useSelector((store) => store.category.location_post);
+  const pinLocation = useSelector((store) => store.category.location_pincode);
 
-  const address = pinLocation
-    ? pinLocation
+  const address = postLocation
+    ? `${postLocation}(${pinLocation})`
     : userData[0]?.address[0]
     ? `${userData[0]?.address[0]?.post} (${userData[0]?.address[0]?.pincode})`
     : "";

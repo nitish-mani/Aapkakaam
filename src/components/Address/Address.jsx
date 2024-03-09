@@ -6,7 +6,7 @@ import { addDataVendor, clearDataVendor } from "../../utils/vendorslice";
 import { SERVER_URL } from "../../utils/base";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router";
-import { setLocation } from "../../utils/categoryslice";
+import { setLocationPincode, setLocationPost } from "../../utils/categoryslice";
 
 export default function Address() {
   const dispatch = useDispatch();
@@ -94,7 +94,8 @@ export default function Address() {
         setPincodeEmpty(true);
         return;
       }
-      dispatch(setLocation(`${post}(${pincode})`));
+      dispatch(setLocationPincode(pincode));
+      dispatch(setLocationPost(post));
       navigate("/");
     } else {
       if (vill.length === 0) {
@@ -202,7 +203,7 @@ export default function Address() {
         className="success"
         style={{ opacity: success ? "1" : "", border: success ? "" : "none" }}
       >
-        {success.message} 
+        {success.message}
       </div>
       <div className="address__1stChild">
         {viewOnLocation ? (

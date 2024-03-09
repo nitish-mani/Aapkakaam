@@ -7,6 +7,8 @@ import { useNavigate } from "react-router";
 import male from "../../resources/svg/male-svgrepo-com.svg";
 import female from "../../resources/svg/female-svgrepo-com.svg";
 import Ratings from "../ratings/ratings";
+import { useSelector } from "react-redux";
+import store from "../../utils/store";
 
 export default function VendorListItem({
   data,
@@ -23,9 +25,12 @@ export default function VendorListItem({
   setBookingHappen,
 }) {
   const navigate = useNavigate();
+  const pinLocation = useSelector((store) => store.category.location_pincode);
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState("");
   const [success, setSuccess] = useState("");
+
+  const pincode = pinLocation || userData[0].address[0].pincode;
 
   function handleBookNow(vendorId) {
     setIsLoading(true);
@@ -39,7 +44,7 @@ export default function VendorListItem({
             vill: userData[0].address[0].vill,
             post: userData[0].address[0].post,
             dist: userData[0].address[0].dist,
-            pincode: userData[0].address[0].pincode,
+            pincode: pincode,
             date,
             month,
             year,
@@ -62,7 +67,7 @@ export default function VendorListItem({
             userId: userData[0].userId,
             vendorId: vendorId,
             bookingDate: booked_date,
-            pincode: userData[0].address[0].pincode,
+            pincode: pincode,
             type: jobType,
           },
           {
@@ -92,7 +97,7 @@ export default function VendorListItem({
             vill: userData[0].address[0].vill,
             post: userData[0].address[0].post,
             dist: userData[0].address[0].dist,
-            pincode: userData[0].address[0].pincode,
+            pincode:pincode,
             date,
             month,
             year,
@@ -115,7 +120,7 @@ export default function VendorListItem({
             userId: userData[0].vendorId,
             vendorId: vendorId,
             bookingDate: booked_date,
-            pincode: userData[0].address[0].pincode,
+            pincode:pincode,
             type: jobType,
           },
           {

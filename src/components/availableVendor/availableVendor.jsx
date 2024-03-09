@@ -24,13 +24,12 @@ export default function AvailableVendor() {
       ? useSelector((store) => store.user.data)
       : useSelector((store) => store.vendor.data);
 
-  const pinLocation = useSelector((store) => store.category.location);
-  console.log(pinLocation);
+  const pinLocation = useSelector((store) => store.category.location_pincode);
 
   const token = `Bearer ${JSON.parse(localStorage.getItem(category)).token}`;
 
   const pincode =
-    pinLocation?.split("(")[1]?.split(")")[0] ||
+    pinLocation ||
     JSON.parse(localStorage.getItem(category)).address[0]?.pincode;
 
   const [vendorPresent, setVendorPresent] = useState([]);
