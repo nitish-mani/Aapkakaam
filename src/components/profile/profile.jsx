@@ -18,12 +18,12 @@ import {
   setPrIsVisibleVendor,
 } from "../../utils/vendorslice";
 import CamleCase from "../camleCase/camleCase";
+import { setLocationPincode, setLocationPost } from "../../utils/categoryslice";
 
 export default function Profile() {
   const [nameEdit, setNameEdit] = useState(false);
   const [emailEdit, setEmailEdit] = useState(false);
   const [phoneNoEdit, setPhoneNoEdit] = useState(false);
-  const [shareEdit, setShareEdit] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -54,7 +54,6 @@ export default function Profile() {
   const [name, setName] = useState(userData[0]?.name);
   const [email, setEmail] = useState(userData[0]?.email);
   const [phoneNo, setPhoneNo] = useState(userData[0]?.phoneNo);
-  const [shareNo, setShareNo] = useState("");
 
   function handleLogout() {
     if (category === "user") dispatch(clearDataUser());
@@ -62,7 +61,8 @@ export default function Profile() {
 
     if (category === "user") dispatch(setPrIsVisibleUser(false));
     else if (category === "vendor") dispatch(setPrIsVisibleVendor(false));
-
+    dispatch(setLocationPincode(""));
+    dispatch(setLocationPost(""));
     localStorage.clear();
   }
 
@@ -70,6 +70,8 @@ export default function Profile() {
     if (category === "user") dispatch(setPrIsVisibleUser(false));
     else if (category === "vendor") dispatch(setPrIsVisibleVendor(false));
     setNameEdit(false);
+    setEmailEdit(false);
+    setPhoneNoEdit(false);
   }
 
   {
@@ -649,7 +651,7 @@ export default function Profile() {
             <button
               className="verify-btn btn1 b600"
               onClick={handleAddAddress}
-              style={{ padding: ".4rem" ,marginLeft:"0",marginRight:"0"}}
+              style={{ padding: ".4rem", marginLeft: "0", marginRight: "0" }}
             >
               Change Address
             </button>

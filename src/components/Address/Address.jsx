@@ -282,7 +282,8 @@ export default function Address() {
               cursor: "pointer",
             }}
             onClick={() => {
-              dispatch(setLocation(""));
+              dispatch(setLocationPincode(""));
+              dispatch(setLocationPost(""));
               navigate("/");
             }}
           >

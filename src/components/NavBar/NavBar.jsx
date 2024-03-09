@@ -4,15 +4,14 @@ import aapkaKaam_logo from "../../resources/svg/AapkaKaam_full2.svg";
 import user from "../../resources/svg/user-svgrepo-com.svg";
 import locationPinn from "../../resources/svg/location-pin-svgrepo-com.svg";
 import magnifingGlass from "../../resources/svg/magnifying-glass-svgrepo-com.svg";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import Profile from "../profile/profile";
-import { setIsVisibleUser, setPrIsVisibleUser } from "../../utils/userslice";
+import { setPrIsVisibleUser } from "../../utils/userslice";
 import {
   setIsVisibleVendor,
   setPrIsVisibleVendor,
 } from "../../utils/vendorslice";
-import store from "../../utils/store";
 
 export default function NavBar() {
   const [btnClicked, setBtnClicked] = useState(false);
@@ -21,6 +20,7 @@ export default function NavBar() {
   const dispatch = useDispatch();
 
   const category = localStorage.getItem("category");
+  const token = JSON.parse(localStorage.getItem(category))?.token;
 
   const userData =
     category === "user"
@@ -93,7 +93,7 @@ export default function NavBar() {
             border: userData?.length != 0 ? "1px solid #1161e4" : "",
           }}
         >
-          {userData?.length ? (
+          {token ? (
             <img src={user} alt="" style={{ width: "20px" }} />
           ) : (
             "Login"
