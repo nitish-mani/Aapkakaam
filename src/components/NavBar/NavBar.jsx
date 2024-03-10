@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Profile from "../profile/profile";
 import { setPrIsVisibleUser } from "../../utils/userslice";
 import {
-  setIsVisibleVendor,
   setPrIsVisibleVendor,
 } from "../../utils/vendorslice";
 

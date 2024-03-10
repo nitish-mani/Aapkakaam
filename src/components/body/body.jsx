@@ -8,7 +8,6 @@ import FourthComponent from "../Fourth/FourthComponent";
 import EighthComponent from "../Eighth/EighthComponent";
 import FifthComponent from "../Fifth/FifthComponent";
 import FirstComponent from "../First/FirstComponent";
-import cross from "../../resources/svg/multiply-svgrepo-com.svg";
 
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
@@ -23,8 +22,6 @@ export default function Body() {
   const navigate = useNavigate();
   const category = localStorage.getItem("category");
   const address = JSON.parse(localStorage.getItem(category))?.address;
-
-  const [isPopedUp, setIsPopedUp] = useState(true);
 
   useEffect(() => {
     if (category === "user") dispatch(clearDataUser());

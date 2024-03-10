@@ -35,6 +35,16 @@
   width: 100%;
 }
 
+.verify{
+  margin: .5rem 0;
+  padding: .3rem;
+  border: 1px solid blue;
+  border-radius: 5px;
+  color: blue;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
 .password {
   position: relative;
 }

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router";
 import "./signup.css";
 import eye from "../../resources/svg/eye-svgrepo-com.svg";
 import line from "../../resources/svg/line-svgrepo-com.svg";
+import rightTck from "../../resources/svg/sign-check-svgrepo-com.svg";
 import axios from "axios";
 import { SERVER_URL } from "../../utils/base";
 
@@ -13,15 +14,23 @@ export default function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
+  const [otp, setOtp] = useState("");
+  const [emailOtp, setEmailOtp] = useState("");
   const [pass, setPass] = useState("");
   const [rePass, setRePass] = useState("");
-  const [sharedBy, setSharedBy] = useState("");
   const [job, setJob] = useState("");
   const [gender, setGender] = useState("");
 
   const [isPassValid, setIsPassValid] = useState(true);
   const [isNumValid, setIsNumValid] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPhoneOtpLoading, setIsPhoneOtpLoading] = useState(false);
+  const [isEmailOtpLoading, setIsEmailOtpLoading] = useState(false);
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [isEmailOtpSent, setIsEmailOtpSent] = useState(false);
+
+  const [verifyPhoneNo, setVerifyPhoneNo] = useState(false);
+  const [verifyEmail, setVerifyEmail] = useState(false);
 
   const [isNameEmpty, setIsNameEmpty] = useState(true);
   const [isEmailEmpty, setIsEmailEmpty] = useState(true);
@@ -47,10 +56,6 @@ export default function SignUp() {
   }
 
   useEffect(() => {
-    setSharedBy(id);
-  }, []);
-
-  useEffect(() => {
     setIsPassValid(true);
   }, [pass]);
 
@@ -73,6 +78,73 @@ export default function SignUp() {
   useEffect(() => {
     setIsGender(true);
   }, [gender]);
+
+  useEffect(() => {
+    setErr("");
+  }, [otp]);
+
+  useEffect(() => {
+    setErr("");
+  }, [emailOtp]);
+
+  function handlePhoneVerify() {
+    setIsPhoneOtpLoading(true);
+    if (!isOtpSent)
+      axios
+        .post(`${SERVER_URL}/${category}/phoneVerification`, {
+          phoneNo,
+        })
+        .then((res) => {
+          setIsOtpSent(true);
+          setIsPhoneOtpLoading(false);
+        });
+    else {
+      axios
+        .post(`${SERVER_URL}/${category}/otpVerification`, {
+          otp,
+        })
+        .then((res) => {
+          console.log(res);
+          setVerifyPhoneNo(res.data.verify);
+          if (res.data.verify) {
+            setIsOtpSent(false);
+            setIsPhoneOtpLoading(false);
+          } else {
+            setErr(res.data.message);
+            setIsPhoneOtpLoading(false);
+          }
+        });
+    }
+  }
+  function handleEmailVerify() {
+    setIsEmailOtpLoading(true);
+    if (!isEmailOtpSent)
+      axios
+        .post(`${SERVER_URL}/${category}/emailVerification`, {
+          email,
+        })
+        .then((res) => {
+          setIsEmailOtpSent(true);
+          setIsEmailOtpLoading(false);
+        });
+    else {
+      axios
+        .post(`${SERVER_URL}/${category}/emailOtpVerification`, {
+          emailOtp,
+        })
+        .then((res) => {
+          console.log(res);
+          setVerifyEmail(res.data.verify);
+          if (res.data.verify) {
+            setIsEmailOtpSent(false);
+            setIsEmailOtpLoading(false);
+          } else {
+            setErr(res.data.message);
+            setIsEmailOtpLoading(false);
+          }
+        });
+    }
+  }
 
   function handleSignup() {
     if (name.length < 1) {
@@ -101,33 +173,39 @@ export default function SignUp() {
       return;
     }
 
-    setIsLoading(true);
-    axios
-      .post(`${SERVER_URL}/${category}/signup`, {
-        name: name,
-        email: email,
-        phoneNo: phoneNo,
-        password: pass,
-        sharedBy: id,
-        gender: gender,
-        type: job,
-        cd,
-      })
-      .then((result) => {
-        setIsLoading(false);
-        setSuccess(result.data.message),
+    if (verifyEmail && verifyPhoneNo) {
+      setIsLoading(true);
+      axios
+        .post(`${SERVER_URL}/${category}/signup`, {
+          name: name,
+          email: email,
+          phoneNo: phoneNo,
+          password: pass,
+          sharedBy: id,
+          gender: gender,
+          type: job,
+          cd,
+          verifyPhoneNo,
+          verifyEmail,
+        })
+        .then((result) => {
+          setIsLoading(false);
+          setSuccess(result.data.message),
+            setTimeout(() => {
+              setSuccess("");
+              navigate("/login", { state: { category: category } });
+            }, 5000);
+        })
+        .catch((err) => {
+          setIsLoading(false);
+          setErr(err.response.data.message);
           setTimeout(() => {
-            setSuccess("");
-            navigate("/login", { state: { category: category } });
-          }, 5000);
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        setErr(err.response.data.message);
-        setTimeout(() => {
-          setErr("");
-        }, 10000);
-      });
+            setErr("");
+          }, 10000);
+        });
+    } else {
+      setErr("Verify Mobile Number and Email");
+    }
   }
 
   function handleLogin() {
@@ -165,17 +243,61 @@ export default function SignUp() {
             style={{ border: isNameEmpty ? "" : "2px solid red" }}
           />
         </div>
-        <div>
-          <input
-            placeholder="Phone No."
-            type="number"
-            value={phoneNo}
-            onChange={(e) => setPhoneNo(e.target.value)}
-            style={{
-              marginBottom: isNumValid ? "" : "0",
-              border: isNumValid ? "" : "2px solid red",
-            }}
-          />
+        <div style={{ position: "relative" }}>
+          {isOtpSent ? (
+            <input
+              placeholder="Enter OTP"
+              type="number"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+            />
+          ) : (
+            <input
+              placeholder="Phone No."
+              type="number"
+              value={phoneNo}
+              onChange={(e) => setPhoneNo(e.target.value)}
+              style={{
+                marginBottom: isNumValid ? "" : "0",
+                border: isNumValid ? "" : "2px solid red",
+              }}
+            />
+          )}
+          {verifyPhoneNo ? (
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                right: "5px",
+                transform: "translateY(-40%)",
+              }}
+            >
+              <img
+                src={rightTck}
+                alt=""
+                style={{ width: "2rem", height: "2rem" }}
+              />
+            </div>
+          ) : (
+            ""
+          )}
+          {phoneNo.length === 10 && !verifyPhoneNo ? (
+            <div className="verify" onClick={handlePhoneVerify}>
+              {isOtpSent ? (
+                isPhoneOtpLoading ? (
+                  <div className="loading"></div>
+                ) : (
+                  "Verify OTP"
+                )
+              ) : isPhoneOtpLoading ? (
+                <div className="loading"></div>
+              ) : (
+                "Verify Mobile Number"
+              )}
+            </div>
+          ) : (
+            ""
+          )}
           <h6
             style={{
               display: isNumValid ? "none" : "",
@@ -186,14 +308,59 @@ export default function SignUp() {
             Incorrect Number
           </h6>
         </div>
-        <div>
-          <input
-            placeholder="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={{ border: isEmailEmpty ? "" : "2px solid red" }}
-          />
+        <div style={{ position: "relative" }}>
+          {isEmailOtpSent ? (
+            <input
+              placeholder="Enter OTP"
+              type="number"
+              value={emailOtp}
+              onChange={(e) => setEmailOtp(e.target.value)}
+            />
+          ) : (
+            <input
+              placeholder="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={{ border: isEmailEmpty ? "" : "2px solid red" }}
+            />
+          )}
+
+          {verifyEmail ? (
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                right: "5px",
+                transform: "translateY(-40%)",
+              }}
+            >
+              <img
+                src={rightTck}
+                alt=""
+                style={{ width: "2rem", height: "2rem" }}
+              />
+            </div>
+          ) : (
+            ""
+          )}
+          {email.length >= 7 && !verifyEmail ? (
+            <div className="verify" onClick={handleEmailVerify}>
+              {isEmailOtpSent ? (
+                isEmailOtpLoading ? (
+                  <div className="loading"></div>
+                ) : (
+                  "Verify OTP"
+                )
+              ) : isEmailOtpLoading ? (
+                <div className="loading"></div>
+              ) : (
+                "Verify Email"
+              )}
+            </div>
+          ) : (
+            ""
+          )}
         </div>
         <div className="password">
           <input
