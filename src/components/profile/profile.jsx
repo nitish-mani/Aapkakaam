@@ -481,12 +481,12 @@ export default function Profile() {
             className="verify-btn"
             style={{
               backgroundColor:
-                userData[0]?.verifyPhoneNo === "true" ? "green" : "",
-              color: userData[0]?.verifyPhoneNo === "true" ? "white" : "",
-              border: userData[0]?.verifyPhoneNo === "true" ? "none" : "",
+                userData[0]?.verifyPhoneNo === true ? "green" : "",
+              color: userData[0]?.verifyPhoneNo === true ? "white" : "",
+              border: userData[0]?.verifyPhoneNo === true ? "none" : "",
             }}
           >
-            {userData[0]?.verifyPhoneNo === "true" ? "Verified" : "Verify"}
+            {userData[0]?.verifyPhoneNo === true ? "Verified" : "Verify"}
           </span>
         </span>
       </div>
@@ -548,12 +548,12 @@ export default function Profile() {
             className="verify-btn"
             style={{
               backgroundColor:
-                userData[0]?.verifyEmail === "true" ? "green" : "",
-              color: userData[0]?.verifyEmail === "true" ? "white" : "",
-              border: userData[0]?.verifyEmail === "true" ? "none" : "",
+                userData[0]?.verifyEmail === true ? "green" : "",
+              color: userData[0]?.verifyEmail === true ? "white" : "",
+              border: userData[0]?.verifyEmail === true ? "none" : "",
             }}
           >
-            {userData[0]?.verifyEmail === "true" ? "Verified" : "Verify"}
+            {userData[0]?.verifyEmail === true ? "Verified" : "Verify"}
           </span>
         </span>
       </div>
