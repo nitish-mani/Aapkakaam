@@ -85,6 +85,10 @@ export default function Login() {
       });
   }
 
+  function handlePasswordChange() {
+    navigate("/editPhoneEmail", { state: { editType: "pass" } });
+  }
+
   function handleSignup() {
     navigate("/signup", { state: { category: category, cd, id } });
   }
@@ -145,7 +149,7 @@ export default function Login() {
         <button className="btn" onClick={handleLogin}>
           {isLoading ? <div className="loading"></div> : "Login"}
         </button>
-        <div className="forgetPass">
+        <div className="forgetPass" onClick={handlePasswordChange}>
           <h5>Forget Password?</h5>
         </div>
         <div>

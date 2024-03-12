@@ -33,10 +33,7 @@ export default function Profile() {
     category === "user"
       ? useSelector((store) => store.user.data)
       : useSelector((store) => store.vendor.data);
-  const isVisible =
-    category === "user"
-      ? useSelector((store) => store.user.isVisibleUser)
-      : useSelector((store) => store.vendor.isVisibleVendor);
+
   const isPrVisible =
     category === "user"
       ? useSelector((store) => store.user.isPrVisibleUser)
@@ -142,59 +139,9 @@ export default function Profile() {
   }
 
   function handlePhoneNoEdit() {
-    setPhoneNoEdit(true);
-
-    if (phoneNoEdit) {
-      setIsLoading((state) => ({ ...state, phoneNo: true }));
-
-      if (category === "user") {
-        axios
-          .patch(
-            `${SERVER_URL}/${category}/edit/phoneNo`,
-
-            {
-              phoneNo: phoneNo,
-              userId: userData[0].userId,
-              token: userData[0].token,
-            },
-            {
-              headers: { Authorization: token },
-            }
-          )
-          .then((result) => {
-            dispatch(clearDataUser());
-            dispatch(addDataUser(result.data));
-            localStorage.setItem(category, JSON.stringify(result.data));
-
-            setPhoneNoEdit(false);
-            setIsLoading((state) => ({ ...state, phoneNo: false }));
-          })
-          .catch((err) => console.log(err));
-      } else if (category === "vendor") {
-        axios
-          .patch(
-            `${SERVER_URL}/${category}/edit/phoneNo`,
-
-            {
-              phoneNo: phoneNo,
-              vendorId: userData[0].vendorId,
-              token: userData[0].token,
-            },
-            {
-              headers: { Authorization: token },
-            }
-          )
-          .then((result) => {
-            dispatch(clearDataVendor());
-            dispatch(addDataVendor(result.data));
-            localStorage.setItem(category, JSON.stringify(result.data));
-
-            setPhoneNoEdit(false);
-            setIsLoading((state) => ({ ...state, phoneNo: false }));
-          })
-          .catch((err) => console.log(err));
-      }
-    }
+    navigate("/editPhoneEmail", { state: { editType: "phoneNo" } });
+    if (category === "user") dispatch(setPrIsVisibleUser(false));
+    else if (category === "vendor") dispatch(setPrIsVisibleVendor(false));
   }
 
   {
@@ -204,59 +151,9 @@ export default function Profile() {
   }
 
   function handleEmailEdit() {
-    setEmailEdit(true);
-
-    if (emailEdit) {
-      setIsLoading((state) => ({ ...state, email: true }));
-
-      if (category === "user") {
-        axios
-          .patch(
-            `${SERVER_URL}/${category}/edit/email`,
-
-            {
-              email: email,
-              userId: userData[0].userId,
-              token: userData[0].token,
-            },
-            {
-              headers: { Authorization: token },
-            }
-          )
-          .then((result) => {
-            dispatch(clearDataUser());
-            dispatch(addDataUser(result.data));
-            localStorage.setItem(category, JSON.stringify(result.data));
-
-            setEmailEdit(false);
-            setIsLoading((state) => ({ ...state, email: false }));
-          })
-          .catch((err) => console.log(err));
-      } else if (category === "vendor") {
-        axios
-          .patch(
-            `${SERVER_URL}/${category}/edit/email`,
-
-            {
-              email: email,
-              vendorId: userData[0].vendorId,
-              token: userData[0].token,
-            },
-            {
-              headers: { Authorization: token },
-            }
-          )
-          .then((result) => {
-            dispatch(clearDataVendor());
-            dispatch(addDataVendor(result.data));
-            localStorage.setItem(category, JSON.stringify(result.data));
-
-            setEmailEdit(false);
-            setIsLoading((state) => ({ ...state, email: false }));
-          })
-          .catch((err) => console.log(err));
-      }
-    }
+    navigate("/editPhoneEmail", { state: { editType: "email" } });
+    if (category === "user") dispatch(setPrIsVisibleUser(false));
+    else if (category === "vendor") dispatch(setPrIsVisibleVendor(false));
   }
 
   {
@@ -547,8 +444,7 @@ export default function Profile() {
           <span
             className="verify-btn"
             style={{
-              backgroundColor:
-                userData[0]?.verifyEmail === true ? "green" : "",
+              backgroundColor: userData[0]?.verifyEmail === true ? "green" : "",
               color: userData[0]?.verifyEmail === true ? "white" : "",
               border: userData[0]?.verifyEmail === true ? "none" : "",
             }}

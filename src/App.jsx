@@ -13,6 +13,7 @@ import Address from "./components/Address/Address";
 import AvailableVendor from "./components/availableVendor/availableVendor";
 import CheckBookingDate from "./components/checkBookingDate/checkBookingDate";
 import Share from "./components/share/share";
+import ChangePhoneEmailPassword from "./components/changePhoneEmail&Password/changePhoneEmail&Password";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -71,6 +72,10 @@ export default function App() {
         {
           path: "/share",
           element: <Share />,
+        },
+        {
+          path: "/editPhoneEmail",
+          element: <ChangePhoneEmailPassword />,
         },
       ],
     },

@@ -97,7 +97,7 @@ export default function VendorListItem({
             vill: userData[0].address[0].vill,
             post: userData[0].address[0].post,
             dist: userData[0].address[0].dist,
-            pincode:pincode,
+            pincode: pincode,
             date,
             month,
             year,
@@ -120,7 +120,7 @@ export default function VendorListItem({
             userId: userData[0].vendorId,
             vendorId: vendorId,
             bookingDate: booked_date,
-            pincode:pincode,
+            pincode: pincode,
             type: jobType,
           },
           {

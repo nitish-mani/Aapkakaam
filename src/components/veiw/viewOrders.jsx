@@ -67,7 +67,6 @@ export default function ViewOrders() {
 
   function hanldeCrossInOrders() {
     navigate("/");
-    JSON.parse(localStorage.getItem(category));
   }
 
   return (

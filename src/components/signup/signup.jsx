@@ -89,16 +89,38 @@ export default function SignUp() {
 
   function handlePhoneVerify() {
     setIsPhoneOtpLoading(true);
-    if (!isOtpSent)
+    if (!isOtpSent) {
+      if (phoneNo.length != 10) {
+        setIsPhoneOtpLoading(false);
+        setErr("Mobile Number must be 10 digits");
+        setTimeout(() => {
+          setErr("");
+        }, 3000);
+        return;
+      }
       axios
         .post(`${SERVER_URL}/${category}/phoneVerification`, {
           phoneNo,
         })
         .then((res) => {
-          setIsOtpSent(true);
-          setIsPhoneOtpLoading(false);
+          if (res.data.return) {
+            setIsOtpSent(true);
+            setIsPhoneOtpLoading(false);
+            setSuccess("OTP sent successfully");
+            setTimeout(() => {
+              setSuccess("");
+            }, 2000);
+          } else {
+            setErr(
+              "Too many otp request has been sent on this number. Try after 30 minutes"
+            );
+            setIsPhoneOtpLoading(false);
+            setTimeout(() => {
+              setErr("");
+            }, 15000);
+          }
         });
-    else {
+    } else {
       axios
         .post(`${SERVER_URL}/${category}/otpVerification`, {
           otp,
@@ -109,6 +131,10 @@ export default function SignUp() {
           if (res.data.verify) {
             setIsOtpSent(false);
             setIsPhoneOtpLoading(false);
+            setSuccess("OTP verified successfully");
+            setTimeout(() => {
+              setSuccess("");
+            }, 2000);
           } else {
             setErr(res.data.message);
             setIsPhoneOtpLoading(false);
@@ -124,8 +150,20 @@ export default function SignUp() {
           email,
         })
         .then((res) => {
-          setIsEmailOtpSent(true);
-          setIsEmailOtpLoading(false);
+          if (res.data.verified) {
+            setIsEmailOtpSent(true);
+            setIsEmailOtpLoading(false);
+            setSuccess("OTP sent successfully");
+            setTimeout(() => {
+              setSuccess("");
+            }, 2000);
+          } else {
+            setErr("Something bad happens");
+            setIsEmailOtpLoading(false);
+            setTimeout(() => {
+              setErr("");
+            }, 3000);
+          }
         });
     else {
       axios
@@ -138,6 +176,10 @@ export default function SignUp() {
           if (res.data.verify) {
             setIsEmailOtpSent(false);
             setIsEmailOtpLoading(false);
+            setSuccess("OTP verified successfully");
+            setTimeout(() => {
+              setSuccess("");
+            }, 2000);
           } else {
             setErr(res.data.message);
             setIsEmailOtpLoading(false);
