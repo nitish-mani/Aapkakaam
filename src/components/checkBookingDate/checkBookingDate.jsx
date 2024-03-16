@@ -112,6 +112,7 @@ export default function CheckBookingDate() {
           setYear={setYear}
           calendar={calendar}
           setIsDateClicked={setIsDateClicked}
+          setBooking_date={setBooking_date}
         />
       </div>
     </div>

@@ -16,6 +16,7 @@ export default function Calendar({
   setYear,
   calendar,
   setIsDateClicked,
+  setBooking_date = () => {},
 }) {
   const current_date = new Date().getDate();
   const current_month = new Date().getMonth();
@@ -79,6 +80,7 @@ export default function Calendar({
         current_year < year
       ) {
         setDate(date);
+        setBooking_date(`${date} / ${month + 1} / ${year}`);
         setIsDateClicked(true);
 
         dispatch(setClearDateField(true));
@@ -372,7 +374,7 @@ export default function Calendar({
             className="calendar__colorDetailing--today"
             style={{
               boxShadow: "0 0 0 2px black",
-              borderRadius:"5px"
+              borderRadius: "5px",
             }}
           ></div>
           {orderStatus == "complete" ? (
