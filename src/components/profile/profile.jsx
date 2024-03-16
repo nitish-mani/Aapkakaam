@@ -576,7 +576,9 @@ export default function Profile() {
       {category === "vendor" ? (
         <div>
           <span className="span email-grid">Ratings</span>
-          <span style={{color:"green"}}>{`${userData[0]?.rating} / 5 (${userData[0]?.ratingCount})`}</span>
+          <span
+            style={{ color: "green" }}
+          >{`${userData[0]?.rating} / 5 (${userData[0]?.ratingCount})`}</span>
         </div>
       ) : (
         ""
@@ -586,7 +588,7 @@ export default function Profile() {
        ******  WageRate for Vendor *********
        ***********************************/}
 
-{category === "vendor" ? (
+      {category === "vendor" ? (
         <div>
           <span>Wage-rate</span>
           <span className="span email-grid">
@@ -652,8 +654,6 @@ export default function Profile() {
           </button>
         )}{" "}
       </div>
-
-      
 
       {/****************************************
        ******  Job Profile for Vendor  *********

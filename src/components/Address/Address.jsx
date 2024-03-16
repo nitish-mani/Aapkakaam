@@ -115,13 +115,12 @@ export default function Address() {
 
       if (!isDisable) {
         setIsClicked(true);
-        const vill1 = <CamleCase element={vill} />;
         if (category === "user") {
           axios
             .patch(
               `${SERVER_URL}/${category}/update/address`,
               {
-                vill: vill,
+                vill: CamleCase(vill),
                 post,
                 dist,
                 state,
@@ -156,7 +155,7 @@ export default function Address() {
             .patch(
               `${SERVER_URL}/${category}/update/address`,
               {
-                vill: vill,
+                vill: CamleCase(vill),
                 post,
                 dist,
                 state,

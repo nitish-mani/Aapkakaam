@@ -28,7 +28,6 @@ export default function Homepage() {
   return (
     <div className="main-div">
       <NavBar />
-
       <Outlet></Outlet>
       <Footer />
     </div>

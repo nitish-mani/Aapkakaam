@@ -8,9 +8,7 @@ import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import Profile from "../profile/profile";
 import { setPrIsVisibleUser } from "../../utils/userslice";
-import {
-  setPrIsVisibleVendor,
-} from "../../utils/vendorslice";
+import { setPrIsVisibleVendor } from "../../utils/vendorslice";
 
 export default function NavBar() {
   const [btnClicked, setBtnClicked] = useState(false);
