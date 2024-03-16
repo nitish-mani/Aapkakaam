@@ -52,12 +52,21 @@
   color: #000;
 }
 .calendar__body .isCurrentDay {
-  background-color: #228be6;
-  color: #fff;
+  box-shadow: 0 0 0 2px black;
+  /* background-color: #228be6; */
+  /* color: #fff; */
 }
 
+.calendar__body .isPending {
+  background-color: blue;
+  color: #fff;
+}
 .calendar__body .isBooked {
   background-color: #2f9e44;
+  color: #fff;
+}
+.calendar .isCanceled {
+  background-color: red;
   color: #fff;
 }
 .calendar__colorDetailing {
@@ -78,16 +87,31 @@
   justify-content: space-around;
   align-items: flex-start;
   flex-basis: 80%;
+  margin-left: 2rem;
 }
 .calendar__colorDetailing div .calendar__colorDetailing--today {
-  background-color: #228be6;
+  /* background-color: #228be6; */
   width: 1.4rem;
   height: 1.2rem;
+  border-radius: 5px;
+}
+.calendar__colorDetailing div .calendar__colorDetailing--pending {
+  background-color: blue;
+  width: 1.4rem;
+  height: 1.2rem;
+  border-radius: 5px;
 }
 .calendar__colorDetailing div .calendar__colorDetailing--booked {
   background-color: #2f9e44;
   width: 1.4rem;
   height: 1.2rem;
+  border-radius: 5px;
+}
+.calendar__colorDetailing div .calendar__colorDetailing--canceled {
+  background-color: red;
+  width: 1.4rem;
+  height: 1.2rem;
+  border-radius: 5px;
 }
 
 @media screen and (max-width: 720px) {

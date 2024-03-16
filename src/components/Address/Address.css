@@ -4,6 +4,7 @@
   text-align: center;
   box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.367);
   margin: 14rem auto;
+  position: relative;
 }
 .address__1stChild {
   color: #fff;

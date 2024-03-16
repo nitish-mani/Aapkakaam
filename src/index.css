@@ -39,17 +39,7 @@ input::-webkit-inner-spin-button {
   color: rgba(2, 6, 12, 0.75);
   position: relative;
 }
-.popup {
-  position: absolute;
-  top: 8rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-  border: 1px solid black;
-  padding: 1rem;
-  border-radius: 5px;
-  background-color: #fff;
-}
+
 .loading {
   border-radius: 10rem;
   margin-left: auto;
@@ -95,6 +85,7 @@ input::-webkit-inner-spin-button {
   border-radius: 0.5rem;
   padding: 1rem;
   position: absolute;
+  text-align: center;
   top: -6rem;
   left: 50%;
   transform: translateX(-50%);

@@ -158,7 +158,6 @@ export default function Ratings({ rating = 4 }) {
         </svg>
          
       </div>
-        
     </div>
   );
 }

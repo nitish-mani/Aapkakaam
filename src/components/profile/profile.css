@@ -1,5 +1,7 @@
 .profile {
   position: absolute;
+  max-height: 60rem;
+  overflow: scroll;
   right: 2rem;
   top: 8rem;
   text-align: center;

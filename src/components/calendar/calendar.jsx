@@ -7,6 +7,7 @@ import {
 
 export default function Calendar({
   bookingDate,
+  orderStatus,
   months,
   month,
   year,
@@ -128,8 +129,22 @@ export default function Calendar({
                 className={`date ${
                   isCurrentDay(year, month, data[0].day) ? "isCurrentDay" : ""
                 } ${
-                  bookingDate.includes(data[0].day) && data[0].isCurrentMonth
+                  bookingDate.includes(data[0].day) &&
+                  data[0].isCurrentMonth &&
+                  orderStatus == "complete"
                     ? "isBooked"
+                    : ""
+                } ${
+                  bookingDate.includes(data[0].day) &&
+                  data[0].isCurrentMonth &&
+                  orderStatus == "cancel"
+                    ? "isCanceled"
+                    : ""
+                } ${
+                  bookingDate.includes(data[0].day) &&
+                  data[0].isCurrentMonth &&
+                  orderStatus == "pending"
+                    ? "isPending"
                     : ""
                 }`}
                 style={{
@@ -146,8 +161,22 @@ export default function Calendar({
                 className={`date ${
                   isCurrentDay(year, month, data[1].day) ? "isCurrentDay" : ""
                 } ${
-                  bookingDate.includes(data[1].day) && data[1].isCurrentMonth
+                  bookingDate.includes(data[1].day) &&
+                  data[1].isCurrentMonth &&
+                  orderStatus == "complete"
                     ? "isBooked"
+                    : ""
+                } ${
+                  bookingDate.includes(data[1].day) &&
+                  data[1].isCurrentMonth &&
+                  orderStatus == "cancel"
+                    ? "isCanceled"
+                    : ""
+                } ${
+                  bookingDate.includes(data[1].day) &&
+                  data[1].isCurrentMonth &&
+                  orderStatus == "pending"
+                    ? "isPending"
                     : ""
                 }`}
                 style={{
@@ -164,8 +193,22 @@ export default function Calendar({
                 className={`date ${
                   isCurrentDay(year, month, data[2].day) ? "isCurrentDay" : ""
                 } ${
-                  bookingDate.includes(data[2].day) && data[2].isCurrentMonth
+                  bookingDate.includes(data[2].day) &&
+                  data[2].isCurrentMonth &&
+                  orderStatus == "complete"
                     ? "isBooked"
+                    : ""
+                } ${
+                  bookingDate.includes(data[2].day) &&
+                  data[2].isCurrentMonth &&
+                  orderStatus == "cancel"
+                    ? "isCanceled"
+                    : ""
+                } ${
+                  bookingDate.includes(data[2].day) &&
+                  data[2].isCurrentMonth &&
+                  orderStatus == "pending"
+                    ? "isPending"
                     : ""
                 }`}
                 style={{
@@ -182,8 +225,22 @@ export default function Calendar({
                 className={`date ${
                   isCurrentDay(year, month, data[3].day) ? "isCurrentDay" : ""
                 } ${
-                  bookingDate.includes(data[3].day) && data[3].isCurrentMonth
+                  bookingDate.includes(data[3].day) &&
+                  data[3].isCurrentMonth &&
+                  orderStatus == "complete"
                     ? "isBooked"
+                    : ""
+                } ${
+                  bookingDate.includes(data[3].day) &&
+                  data[3].isCurrentMonth &&
+                  orderStatus == "cancel"
+                    ? "isCanceled"
+                    : ""
+                } ${
+                  bookingDate.includes(data[3].day) &&
+                  data[3].isCurrentMonth &&
+                  orderStatus == "pending"
+                    ? "isPending"
                     : ""
                 }`}
                 style={{
@@ -200,8 +257,22 @@ export default function Calendar({
                 className={`date ${
                   isCurrentDay(year, month, data[4].day) ? "isCurrentDay" : ""
                 } ${
-                  bookingDate.includes(data[4].day) && data[4].isCurrentMonth
+                  bookingDate.includes(data[4].day) &&
+                  data[4].isCurrentMonth &&
+                  orderStatus == "complete"
                     ? "isBooked"
+                    : ""
+                } ${
+                  bookingDate.includes(data[4].day) &&
+                  data[4].isCurrentMonth &&
+                  orderStatus == "cancel"
+                    ? "isCanceled"
+                    : ""
+                } ${
+                  bookingDate.includes(data[4].day) &&
+                  data[4].isCurrentMonth &&
+                  orderStatus == "pending"
+                    ? "isPending"
                     : ""
                 }`}
                 style={{
@@ -218,8 +289,22 @@ export default function Calendar({
                 className={`date ${
                   isCurrentDay(year, month, data[5].day) ? "isCurrentDay" : ""
                 } ${
-                  bookingDate.includes(data[5].day) && data[5].isCurrentMonth
+                  bookingDate.includes(data[5].day) &&
+                  data[5].isCurrentMonth &&
+                  orderStatus == "complete"
                     ? "isBooked"
+                    : ""
+                } ${
+                  bookingDate.includes(data[5].day) &&
+                  data[5].isCurrentMonth &&
+                  orderStatus == "cancel"
+                    ? "isCanceled"
+                    : ""
+                } ${
+                  bookingDate.includes(data[5].day) &&
+                  data[5].isCurrentMonth &&
+                  orderStatus == "pending"
+                    ? "isPending"
                     : ""
                 }`}
                 style={{
@@ -236,8 +321,22 @@ export default function Calendar({
                 className={`date ${
                   isCurrentDay(year, month, data[6].day) ? "isCurrentDay" : ""
                 } ${
-                  bookingDate.includes(data[6].day) && data[6].isCurrentMonth
+                  bookingDate.includes(data[6].day) &&
+                  data[6].isCurrentMonth &&
+                  orderStatus == "complete"
                     ? "isBooked"
+                    : ""
+                } ${
+                  bookingDate.includes(data[6].day) &&
+                  data[6].isCurrentMonth &&
+                  orderStatus == "cancel"
+                    ? "isCanceled"
+                    : ""
+                } ${
+                  bookingDate.includes(data[6].day) &&
+                  data[6].isCurrentMonth &&
+                  orderStatus == "pending"
+                    ? "isPending"
                     : ""
                 }`}
                 style={{
@@ -258,11 +357,33 @@ export default function Calendar({
       <div className="calendar__colorDetailing">
         <div className="calendar__colorDetailing-1st">
           <div>Today</div>
-          <div>Booked</div>
+          <div>
+            {orderStatus == "complete"
+              ? "Completed"
+              : orderStatus == "cancel"
+              ? "Canceled"
+              : orderStatus == "pending"
+              ? "Pending"
+              : ""}
+          </div>
         </div>
         <div className="calendar__colorDetailing-2nd">
-          <div className="calendar__colorDetailing--today"></div>
-          <div className="calendar__colorDetailing--booked"></div>
+          <div
+            className="calendar__colorDetailing--today"
+            style={{
+              boxShadow: "0 0 0 2px black",
+              borderRadius:"5px"
+            }}
+          ></div>
+          {orderStatus == "complete" ? (
+            <div className="calendar__colorDetailing--booked"></div>
+          ) : orderStatus == "cancel" ? (
+            <div className="calendar__colorDetailing--canceled"></div>
+          ) : orderStatus == "pending" ? (
+            <div className="calendar__colorDetailing--pending"></div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>

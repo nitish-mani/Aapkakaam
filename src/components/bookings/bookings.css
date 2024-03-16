@@ -12,25 +12,30 @@
   border-radius: 5px;
   font-size: 1.5rem;
   text-align: center;
-  padding-top: 1rem;
-  margin: 1rem;
+  margin-right: 3rem;
+  margin-top: 5rem;
+  position: relative;
+}
+.bookings > .viewNow > #bookingView {
+  display: flex;
+  justify-content: space-between;
 }
 .bookings > .viewNow > h3 {
   position: sticky;
   top: 0;
-  left: 50%;
-  transform: translateY(-50%);
   background-color: #748ffc;
   height: 3.7rem;
   padding: 1rem;
   color: #fff;
+  /* border: 1px solid black; */
 }
 .book-now {
   display: flex;
   flex-direction: column;
   width: 30rem;
   padding: 1rem;
-  margin-right: 1rem;
+  margin-right: 3rem;
+  /* margin-top: 5rem; */
   border-radius: 0.5rem;
   box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.367);
 }
@@ -43,7 +48,7 @@
   width: 90%;
 }
 
-@media screen and (max-width: 630px) {
+@media screen and (max-width: 730px) {
   .bookings {
     flex-direction: column;
   }
@@ -52,11 +57,15 @@
   }
   .bookings .viewNow {
     width: 35rem;
+    margin: 0;
+    margin-bottom: 3rem;
   }
   .bookings .book-now {
     width: 35rem;
     margin: 0;
     margin-bottom: 3rem;
+
+    margin-top: 5rem;
   }
 }
 
@@ -72,13 +81,18 @@
     width: 27rem;
   }
 }
-@media screen and (max-width: 300px) {
+@media screen and (max-width: 305px) {
   .bookings > div:first-child {
     font-size: 1.5rem;
     width: 27rem;
   }
   .bookings .viewNow {
     width: 24rem;
+    height: 60rem;
+  }
+  .bookings .viewNow #bookingView {
+    display: grid;
+    grid-template-columns: 1fr;
   }
   .bookings .book-now {
     width: 24rem;

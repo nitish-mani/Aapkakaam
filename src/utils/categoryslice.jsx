@@ -8,6 +8,7 @@ const categorySlice = createSlice({
     clearDateField: "",
     location_pincode: "",
     location_post: "",
+    cancelOrder: false,
   },
   reducers: {
     setCategory: (state, action) => {
@@ -25,6 +26,9 @@ const categorySlice = createSlice({
     setLocationPost: (state, action) => {
       state.location_post = action.payload;
     },
+    setCancelOrder: (state, action) => {
+      state.cancelOrder = action.payload;
+    },
   },
 });
 
@@ -34,5 +38,6 @@ export const {
   setClearDateField,
   setLocationPincode,
   setLocationPost,
+  setCancelOrder,
 } = categorySlice.actions;
 export default categorySlice.reducer;

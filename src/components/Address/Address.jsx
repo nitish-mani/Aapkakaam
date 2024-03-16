@@ -7,6 +7,8 @@ import { SERVER_URL } from "../../utils/base";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router";
 import { setLocationPincode, setLocationPost } from "../../utils/categoryslice";
+import cross from "../../resources/svg/multiply-svgrepo-com.svg";
+import CamleCase from "../camleCase/camleCase";
 
 export default function Address() {
   const dispatch = useDispatch();
@@ -36,6 +38,7 @@ export default function Address() {
   const [pincodeEmpty, setPincodeEmpty] = useState(false);
   const [success, setSuccess] = useState("");
   const [isDisable, setIsDisable] = useState(true);
+  const [isAddressLoading, setIsAddressLoading] = useState(false);
 
   const token = `Bearer ${userData[0]?.token}`;
 
@@ -48,12 +51,17 @@ export default function Address() {
     setPostEmpty(false);
     setErr("");
   }, [post]);
+  useEffect(() => {
+    setDist("");
+    setState("");
+  }, [pincode]);
 
   useEffect(() => {
     setPostOfficeDetails([{ Name: "Select Post Office" }]);
     setErr("");
     setPincodeEmpty(false);
     if (pincode.length === 6) {
+      setIsAddressLoading(true);
       axios
         .get(`https://api.postalpincode.in/pincode/${pincode}`)
         .then((result) => {
@@ -65,27 +73,18 @@ export default function Address() {
             setDist(() => result.data[0]?.PostOffice[0]?.District);
             setState(() => result.data[0]?.PostOffice[0]?.State);
             setIsDisable(false);
+            setIsAddressLoading(false);
           } else {
             setErr("Enter Valid Pincode");
+            setIsAddressLoading(false);
           }
         })
         .catch((err) => {
           setErr("Enter Valid Pincode");
+          setIsAddressLoading(false);
         });
     }
   }, [pincode]);
-
-  function camleCase(element) {
-    const profession = element;
-    let result = "";
-    for (let i = 0; i < profession?.length; i++) {
-      if (i == 0) result += profession.charAt(i).toUpperCase();
-      else {
-        result += profession.charAt(i);
-      }
-    }
-    return result;
-  }
 
   function handleSubmitAddress() {
     if (viewOnLocation) {
@@ -116,12 +115,13 @@ export default function Address() {
 
       if (!isDisable) {
         setIsClicked(true);
+        const vill1 = <CamleCase element={vill} />;
         if (category === "user") {
           axios
             .patch(
               `${SERVER_URL}/${category}/update/address`,
               {
-                vill: camleCase(vill),
+                vill: vill,
                 post,
                 dist,
                 state,
@@ -156,7 +156,7 @@ export default function Address() {
             .patch(
               `${SERVER_URL}/${category}/update/address`,
               {
-                vill: camleCase(vill),
+                vill: vill,
                 post,
                 dist,
                 state,
@@ -190,9 +190,26 @@ export default function Address() {
       }
     }
   }
-
+  function handleCrossInAddress() {
+    navigate("/");
+  }
   return (
     <div className="address">
+      <img
+        src={cross}
+        alt="cross"
+        style={{
+          width: "20px",
+          position: "absolute",
+          top: ".5rem",
+          right: ".5rem",
+          cursor: "pointer",
+          backgroundColor: "#fff",
+          borderRadius: "5px",
+        }}
+        onClick={handleCrossInAddress}
+      />
+
       <div
         className="err"
         style={{ opacity: err ? "1" : "", border: err ? "" : "none" }}
@@ -209,7 +226,9 @@ export default function Address() {
         {viewOnLocation ? (
           <h3>Location</h3>
         ) : (
-          <h3>{camleCase(category)} Address</h3>
+          <h3>
+            <CamleCase element={category} /> Address
+          </h3>
         )}
       </div>
       <div className="address__2ndChild">
@@ -253,16 +272,32 @@ export default function Address() {
             </select>
           ) : (
             <div>
-              <input placeholder="Post" type="text" />
+              <input
+                placeholder={isAddressLoading ? "Loading..." : "Post"}
+                style={{ textAlign: isAddressLoading ? "center" : "" }}
+                type="text"
+              />
             </div>
           )}
         </div>
 
         <div>
-          <input placeholder="District" type="text" value={dist} />
+          <input
+            placeholder={isAddressLoading ? "Loading..." : "District"}
+            style={{ textAlign: isAddressLoading ? "center" : "" }}
+            type="text"
+            value={dist}
+            readOnly
+          />
         </div>
         <div>
-          <input placeholder="State" type="text" value={state} />
+          <input
+            placeholder={isAddressLoading ? "Loading..." : "State"}
+            style={{ textAlign: isAddressLoading ? "center" : "" }}
+            type="text"
+            value={state}
+            readOnly
+          />
         </div>
 
         <button

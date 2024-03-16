@@ -22,6 +22,7 @@ export default function Body() {
   const navigate = useNavigate();
   const category = localStorage.getItem("category");
   const address = JSON.parse(localStorage.getItem(category))?.address;
+  const wageRate = JSON.parse(localStorage.getItem(category))?.wageRate;
 
   useEffect(() => {
     if (category === "user") dispatch(clearDataUser());
@@ -75,7 +76,7 @@ export default function Body() {
     <>
       {category === "vendor" && address?.length === 0 ? (
         <div style={{ marginTop: "8rem", textAlign: "center" }}>
-          Your profile is not visible to user. Please Update Your Address to
+          Your profile is not visible to User. Please Update Your Address to
           make your profile visible.
           <span
             className="verify-btn forgetPass"
@@ -84,6 +85,11 @@ export default function Body() {
           >
             Add
           </span>
+        </div>
+      ) : category === "vendor" && !wageRate ? (
+        <div style={{ marginTop: "8rem", textAlign: "center", color: "red" }}>
+          Your profile is not visible to User. Please Set Your{" "}
+          <span style={{ color: "blue" }}>Wage Rate</span> from Your Profile.
         </div>
       ) : (
         ""

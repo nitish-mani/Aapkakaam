@@ -11,6 +11,9 @@
   z-index: 1;
   background-color: #fff;
 }
+.navbar__logo {
+  cursor: pointer;
+}
 .navbar__logo img {
   width: 20rem;
 }

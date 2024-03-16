@@ -3,6 +3,8 @@
   /* height: fit-content; */
   padding: 1rem;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: #f8f9fa;
   box-shadow: 0 2px 8px #f8f9fa;
   border-radius: 5px;

@@ -24,6 +24,7 @@ export default function Profile() {
   const [nameEdit, setNameEdit] = useState(false);
   const [emailEdit, setEmailEdit] = useState(false);
   const [phoneNoEdit, setPhoneNoEdit] = useState(false);
+  const [wageRateEdit, setWageRateEdit] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -46,11 +47,13 @@ export default function Profile() {
     email: false,
     phoneNo: false,
     shareNo: false,
+    wageRate: false,
   });
 
   const [name, setName] = useState(userData[0]?.name);
   const [email, setEmail] = useState(userData[0]?.email);
   const [phoneNo, setPhoneNo] = useState(userData[0]?.phoneNo);
+  const [wageRate, setWageRate] = useState(userData[0]?.wageRate);
 
   function handleLogout() {
     if (category === "user") dispatch(clearDataUser());
@@ -222,6 +225,42 @@ export default function Profile() {
     navigate("/address");
     dispatch(setPrIsVisibleVendor(false));
     dispatch(setPrIsVisibleUser(false));
+  }
+
+  {
+    /**********************************
+     ******handle wage rate**********
+     **********************************/
+  }
+  function handleWageRate() {
+    setWageRateEdit(true);
+
+    if (wageRateEdit) {
+      setIsLoading((state) => ({ ...state, wageRate: true }));
+
+      axios
+        .patch(
+          `${SERVER_URL}/${category}/wageRate`,
+
+          {
+            wageRate: wageRate,
+            vendorId: userData[0].vendorId,
+            token: userData[0].token,
+          },
+          {
+            headers: { Authorization: token },
+          }
+        )
+        .then((result) => {
+          dispatch(clearDataVendor());
+          dispatch(addDataVendor(result.data));
+          localStorage.setItem(category, JSON.stringify(result.data));
+
+          setWageRateEdit(false);
+          setIsLoading((state) => ({ ...state, wageRate: false }));
+        })
+        .catch((err) => console.log(err));
+    }
   }
 
   /***
@@ -527,8 +566,59 @@ export default function Profile() {
 
       <div>
         <span className="span email-grid">Balance </span>{" "}
-        <span>Rs-{userData[0]?.balance}</span>
+        <span>{`Rs ${userData[0]?.balance}`}</span>
       </div>
+
+      {/**********************************
+       ******  Rating for Vendor *********
+       ***********************************/}
+
+      {category === "vendor" ? (
+        <div>
+          <span className="span email-grid">Ratings</span>
+          <span style={{color:"green"}}>{`${userData[0]?.rating} / 5 (${userData[0]?.ratingCount})`}</span>
+        </div>
+      ) : (
+        ""
+      )}
+
+      {/**********************************
+       ******  WageRate for Vendor *********
+       ***********************************/}
+
+{category === "vendor" ? (
+        <div>
+          <span>Wage-rate</span>
+          <span className="span email-grid">
+            <span>
+              {wageRateEdit ? (
+                <input
+                  type="Number"
+                  placeholder="Wage Rate"
+                  autoFocus
+                  value={wageRate}
+                  onChange={(e) => {
+                    setWageRate(e.target.value);
+                  }}
+                  style={{
+                    height: "2.5rem",
+                    border: "2px solid black",
+                    paddingLeft: "1rem",
+                    borderRadius: ".5rem",
+                  }}
+                />
+              ) : (
+                `Rs ${userData[0]?.wageRate} / Day`
+              )}
+            </span>
+            <span className="verify-btn btn1" onClick={handleWageRate}>
+              Set Wage Rate
+            </span>
+          </span>
+        </div>
+      ) : (
+        ""
+      )}
 
       {/*************************
        ******  Address  *********
@@ -562,6 +652,8 @@ export default function Profile() {
           </button>
         )}{" "}
       </div>
+
+      
 
       {/****************************************
        ******  Job Profile for Vendor  *********

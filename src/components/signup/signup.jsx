@@ -31,6 +31,7 @@ export default function SignUp() {
 
   const [verifyPhoneNo, setVerifyPhoneNo] = useState(false);
   const [verifyEmail, setVerifyEmail] = useState(false);
+  const [otpId, setOtpId] = useState("");
 
   const [isNameEmpty, setIsNameEmpty] = useState(true);
   const [isEmailEmpty, setIsEmailEmpty] = useState(true);
@@ -103,10 +104,11 @@ export default function SignUp() {
           phoneNo,
         })
         .then((res) => {
-          if (res.data.return) {
+          if (res.data.verified) {
+            setOtpId(res.data.otpId);
             setIsOtpSent(true);
             setIsPhoneOtpLoading(false);
-            setSuccess("OTP sent successfully");
+            setSuccess(res.data.message);
             setTimeout(() => {
               setSuccess("");
             }, 2000);
@@ -124,6 +126,7 @@ export default function SignUp() {
       axios
         .post(`${SERVER_URL}/${category}/otpVerification`, {
           otp,
+          otpId,
         })
         .then((res) => {
           console.log(res);
@@ -151,6 +154,7 @@ export default function SignUp() {
         })
         .then((res) => {
           if (res.data.verified) {
+            setOtpId(res.data.otpId);
             setIsEmailOtpSent(true);
             setIsEmailOtpLoading(false);
             setSuccess("OTP sent successfully");
@@ -169,6 +173,7 @@ export default function SignUp() {
       axios
         .post(`${SERVER_URL}/${category}/emailOtpVerification`, {
           emailOtp,
+          otpId,
         })
         .then((res) => {
           console.log(res);

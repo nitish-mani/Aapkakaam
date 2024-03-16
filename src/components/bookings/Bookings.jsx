@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
 import { getCalendar } from "@skolacode/calendar-js";
 import axios from "axios";
 import { SERVER_URL } from "../../utils/base";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import BookingList from "../bookingList/bookingList";
 
 export default function Bookings() {
   const category = localStorage.getItem("category");
@@ -67,12 +68,19 @@ export default function Bookings() {
   const [err, setErr] = useState("");
   const [success, setSuccess] = useState("");
 
-  const dispatch = useDispatch();
+  const [orderStatus, setOrderStatus] = useState("pending");
+
   const navigate = useNavigate();
   const location = useLocation();
   const bookingsType = location.state.bookingsType;
-  const bookingDate = [];
-  const bookingUserData = [];
+  const pendingDate = [];
+  const completeDate = [];
+  const cancelDate = [];
+
+  const pendingUserData = [];
+  const completeUserData = [];
+  const cancelUserData = [];
+
   const booked_date = new Date(`${year}/${month + 1}/${date}`).toDateString();
 
   useEffect(() => {
@@ -82,10 +90,18 @@ export default function Bookings() {
   }, [date, month, year]);
 
   function handleBookingDate(year, month) {
-    bookings.map((data) => {
+    bookings.forEach((data) => {
       if (data.year === year && data.month === month) {
-        bookingDate.push(data.date);
-        bookingUserData.push(data);
+        if (!data.cancelOrder && !data.orderCompleted) {
+          pendingDate.push(data.date);
+          pendingUserData.push(data);
+        } else if (!data.cancelOrder && data.orderCompleted) {
+          completeDate.push(data.date);
+          completeUserData.push(data);
+        } else if (data.cancelOrder && !data.orderCompleted) {
+          cancelDate.push(data.date);
+          cancelUserData.push(data);
+        }
       }
     });
   }
@@ -114,7 +130,7 @@ export default function Bookings() {
     setIsClicked(true);
     setIsDateClicked(false);
 
-    if (!bookingDate.includes(date)) {
+    if (!cancelDate.includes(date)) {
       axios
         .patch(
           `${SERVER_URL}/vendor/bookNowV/${userId}`,
@@ -207,89 +223,121 @@ export default function Bookings() {
             <h3>
               {months[month]} {year}
             </h3>
-            {bookingDate.length != 0 ? (
-              bookingUserData.map((data) => {
-                return (
-                  <div
-                    style={{
-                      boxShadow: "0 1px 8px #868e96",
-                      margin: "1rem",
-                      padding: "1rem",
-                      borderRadius: "5px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        margin: ".2rem",
-                      }}
-                    >
-                      <span>Name</span>
-                      <span> {data.name}</span>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        margin: ".2rem",
-                      }}
-                    >
-                      <span>Mobile No</span>
-                      <span> {data.phoneNo}</span>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "space-between",
-                        margin: ".2rem",
-                      }}
-                    >
-                      <span style={{ textAlign: "left" }}>Address</span>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <span style={{ marginLeft: "5rem" }}>Vill :-</span>
-                        <span> {data.address.vill}</span>
-                      </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <span style={{ marginLeft: "5rem" }}>Post :-</span>{" "}
-                        <span> {data.address.post}</span>
-                      </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <span style={{ marginLeft: "5rem" }}>Dist :-</span>
-                        <span> {data.address.dist}</span>
-                      </div>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        margin: ".2rem",
-                      }}
-                    >
-                      <span>Date</span>
-                      <span style={{ color: "blue" }}>
-                        {data.date}/{month + 1}/{year}
-                      </span>
-                    </div>
+
+            <div
+              id="bookingView"
+              style={{
+                position: "sticky",
+                top: "3.7rem",
+                padding: ".5rem",
+                backgroundColor: "#fff",
+              }}
+            >
+              <div
+                style={{
+                  border:
+                    orderStatus != "pending"
+                      ? "3px solid #fff"
+                      : "3px solid black",
+                  padding: ".3rem",
+                  borderRadius: "5px",
+                }}
+                onClick={() => setOrderStatus("pending")}
+              >
+                {" "}
+                <button
+                  className="btn"
+                  style={{
+                    backgroundColor: "blue",
+                  }}
+                >
+                  Pending
+                </button>
+              </div>
+
+              <div
+                style={{
+                  border:
+                    orderStatus != "complete"
+                      ? "3px solid #fff"
+                      : "3px solid black",
+                  padding: ".3rem",
+                  borderRadius: "5px",
+                }}
+                onClick={() => setOrderStatus("complete")}
+              >
+                {" "}
+                <button
+                  className="btn"
+                  style={{
+                    backgroundColor: "green",
+                  }}
+                >
+                  Completed
+                </button>
+              </div>
+
+              <div
+                style={{
+                  border:
+                    orderStatus != "cancel"
+                      ? "3px solid #fff"
+                      : "3px solid black",
+                  padding: ".3rem",
+                  borderRadius: "5px",
+                }}
+                onClick={() => setOrderStatus("cancel")}
+              >
+                <button
+                  className="btn"
+                  style={{
+                    backgroundColor: "red",
+                  }}
+                >
+                  Canceled
+                </button>
+              </div>
+            </div>
+
+            {pendingDate.length != 0 ||
+            completeDate.length != 0 ||
+            cancelDate.length != 0 ? (
+              <div>
+                {" "}
+                {orderStatus == "pending" && pendingUserData.length != 0 ? (
+                  pendingUserData.map((data, i) => {
+                    return <BookingList data={data} key={i} />;
+                  })
+                ) : orderStatus == "pending" ? (
+                  <div style={{ marginTop: "8rem" }}>
+                    You don't have any pending booking in this month.
                   </div>
-                );
-              })
+                ) : (
+                  ""
+                )}
+                {orderStatus == "complete" && completeUserData != 0 ? (
+                  completeUserData.map((data, i) => {
+                    return <BookingList data={data} key={i} />;
+                  })
+                ) : orderStatus == "complete" ? (
+                  <div style={{ marginTop: "8rem" }}>
+                    You don't have any completed booking in this month.
+                  </div>
+                ) : (
+                  ""
+                )}
+                {orderStatus == "cancel" && cancelUserData != 0 ? (
+                  cancelUserData.map((data, i) => {
+                    return <BookingList data={data} key={i} />;
+                  })
+                ) : orderStatus == "cancel" ? (
+                  <div style={{ marginTop: "8rem" }}>
+                    You don't have any canceled booking in this month.
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
             ) : (
               <div style={{ marginTop: "5rem" }}>
                 There is no Bookings in this Month .
@@ -369,8 +417,14 @@ export default function Bookings() {
           </div>
         )}
         <Calendar
-          bookingDate={bookingDate}
-          bookingUserData={bookingUserData}
+          bookingDate={
+            orderStatus == "pending"
+              ? pendingDate
+              : orderStatus == "complete"
+              ? completeDate
+              : cancelDate
+          }
+          orderStatus={orderStatus}
           month={month}
           year={year}
           months={months}

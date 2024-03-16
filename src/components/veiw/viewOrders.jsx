@@ -8,7 +8,7 @@ import { SERVER_URL } from "../../utils/base";
 import { useSelector } from "react-redux";
 import { clearDataUser } from "../../utils/userslice";
 import { clearDataVendor } from "../../utils/vendorslice";
-import CamleCase from "../camleCase/camleCase";
+import OrderList from "../orderList/orderList";
 export default function ViewOrders() {
   const category = localStorage.getItem("category");
 
@@ -17,6 +17,8 @@ export default function ViewOrders() {
     category === "user"
       ? useSelector((store) => store.user.data)
       : useSelector((store) => store.vendor.data);
+
+  const cancelOrder = useSelector((store) => store.category.cancelOrder);
 
   const token = `Bearer ${
     userData[0]?.token || JSON.parse(localStorage.getItem(category))?.token
@@ -30,40 +32,56 @@ export default function ViewOrders() {
 
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [orderStatus, setOrderStatus] = useState("pending");
+
+  const pendingVendorData = [];
+  const completeVendorData = [];
+  const cancelVendorData = [];
 
   useEffect(() => {
-    setTimeout(() => {
-      if (category === "user") {
-        axios
-          .get(`${SERVER_URL}/bookings/getOrdersU/${userId}`, {
-            headers: { Authorization: token },
-          })
-          .then((result) => {
-            setOrders(result.data);
-            setIsLoading(false);
-          })
-          .catch((err) => {
-            dispatch(clearDataUser());
-            localStorage.clear();
-            navigate("/");
-          });
-      } else if (category === "vendor") {
-        axios
-          .get(`${SERVER_URL}/bookings/getOrdersV/${userId}`, {
-            headers: { Authorization: token },
-          })
-          .then((result) => {
-            setOrders(result.data);
-            setIsLoading(false);
-          })
-          .catch((err) => {
-            dispatch(clearDataVendor());
-            localStorage.clear();
-            navigate("/");
-          });
+    if (category === "user") {
+      axios
+        .get(`${SERVER_URL}/bookings/getOrdersU/${userId}`, {
+          headers: { Authorization: token },
+        })
+        .then((result) => {
+          setOrders(result.data);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          dispatch(clearDataUser());
+          localStorage.clear();
+          navigate("/");
+        });
+    } else if (category === "vendor") {
+      axios
+        .get(`${SERVER_URL}/bookings/getOrdersV/${userId}`, {
+          headers: { Authorization: token },
+        })
+        .then((result) => {
+          setOrders(result.data);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          dispatch(clearDataVendor());
+          localStorage.clear();
+          navigate("/");
+        });
+    }
+  }, [cancelOrder]);
+
+  function handleOrdersView() {
+    orders.forEach((data) => {
+      if (!data.cancelOrder && !data.orderCompleted) {
+        pendingVendorData.push(data);
+      } else if (!data.cancelOrder && data.orderCompleted) {
+        completeVendorData.push(data);
+      } else if (data.cancelOrder && !data.orderCompleted) {
+        cancelVendorData.push(data);
       }
-    }, 3000);
-  }, []);
+    });
+  }
+  handleOrdersView();
 
   function hanldeCrossInOrders() {
     navigate("/");
@@ -84,6 +102,78 @@ export default function ViewOrders() {
         Orders
       </h1>
       <div className="views">
+        <div
+          style={{
+            width: "100%",
+            position: "absolute",
+            top: "-5rem",
+            padding: ".5rem",
+            display: "flex",
+            justifyContent: "space-around",
+          }}
+        >
+          <div
+            style={{
+              border:
+                orderStatus != "pending" ? "3px solid #fff" : "3px solid black",
+              padding: ".3rem",
+              borderRadius: "5px",
+            }}
+            onClick={() => setOrderStatus("pending")}
+          >
+            {" "}
+            <button
+              className="btn"
+              style={{
+                backgroundColor: "blue",
+              }}
+            >
+              Pending
+            </button>
+          </div>
+
+          <div
+            style={{
+              border:
+                orderStatus != "complete"
+                  ? "3px solid #fff"
+                  : "3px solid black",
+              padding: ".3rem",
+              borderRadius: "5px",
+            }}
+            onClick={() => setOrderStatus("complete")}
+          >
+            {" "}
+            <button
+              className="btn"
+              style={{
+                backgroundColor: "green",
+              }}
+            >
+              Completed
+            </button>
+          </div>
+
+          <div
+            style={{
+              border:
+                orderStatus != "cancel" ? "3px solid #fff" : "3px solid black",
+              padding: ".3rem",
+              borderRadius: "5px",
+            }}
+            onClick={() => setOrderStatus("cancel")}
+          >
+            <button
+              className="btn"
+              style={{
+                backgroundColor: "red",
+              }}
+            >
+              Canceled
+            </button>
+          </div>
+        </div>
+
         {isLoading ? (
           <div
             className="loading"
@@ -101,32 +191,64 @@ export default function ViewOrders() {
           >
             You haven't Ordered Yet !
           </h1>
-        ) : (
-          orders?.map((element) => {
-            return (
-              <div className="views-children" key={element.key}>
-                <div>
-                  <span>Name :</span>{" "}
-                  <span>
-                    <CamleCase element={element.name} />
-                  </span>
-                </div>
-                <div>
-                  <span>Phone No :</span> <span>{element.phoneNo}</span>
-                </div>
-                <div>
-                  <span>Type :</span>
-                  <span>
-                    <CamleCase element={element.type} />
-                  </span>
-                </div>
-                <div>
-                  <span>Date :</span>
-                  <span>{element.date}</span>
-                </div>
+        ) : pendingVendorData.length != 0 ||
+          completeVendorData.length != 0 ||
+          cancelVendorData.length != 0 ? (
+          <>
+            {orderStatus == "pending" && pendingVendorData.length != 0 ? (
+              pendingVendorData?.map((element, i) => {
+                return (
+                  <OrderList
+                    element={element}
+                    key={i}
+                    orderStatus={orderStatus}
+                  />
+                );
+              })
+            ) : orderStatus == "pending" ? (
+              <div style={{ margin: "5rem auto" }}>
+                You don't have any pending Order
               </div>
-            );
-          })
+            ) : (
+              ""
+            )}
+            {orderStatus == "complete" && completeVendorData.length != 0 ? (
+              completeVendorData?.map((element, i) => {
+                return (
+                  <OrderList
+                    element={element}
+                    key={i}
+                    orderStatus={orderStatus}
+                  />
+                );
+              })
+            ) : orderStatus == "complete" ? (
+              <div style={{ margin: "5rem auto" }}>
+                You don't have any completed Order
+              </div>
+            ) : (
+              ""
+            )}{" "}
+            {orderStatus == "cancel" && cancelVendorData.length != 0 ? (
+              cancelVendorData?.map((element, i) => {
+                return (
+                  <OrderList
+                    element={element}
+                    key={i}
+                    orderStatus={orderStatus}
+                  />
+                );
+              })
+            ) : orderStatus == "cancel" ? (
+              <div style={{ margin: "5rem auto" }}>
+                You don't have any canceled Order
+              </div>
+            ) : (
+              ""
+            )}
+          </>
+        ) : (
+          ""
         )}
       </div>
     </div>

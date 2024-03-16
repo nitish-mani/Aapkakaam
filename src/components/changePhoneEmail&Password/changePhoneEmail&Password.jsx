@@ -25,6 +25,7 @@ export default function ChangePhoneEmailPassword() {
   const [pass, setPass] = useState("");
   const [email, setEmail] = useState(userData?.email);
   const [phoneNo, setPhoneNo] = useState(userData?.phoneNo);
+  const [otpId, setOtpId] = useState("");
 
   const [isPhoneOtpLoading, setIsPhoneOtpLoading] = useState(false);
   const [isEmailOtpLoading, setIsEmailOtpLoading] = useState(false);
@@ -42,6 +43,7 @@ export default function ChangePhoneEmailPassword() {
 
   const [otpTimer, setOtpTimer] = useState(false);
 
+  console.log(otpId);
   function hanldeCrossInChange() {
     navigate("/");
   }
@@ -66,7 +68,8 @@ export default function ChangePhoneEmailPassword() {
                 phoneNo,
               })
               .then((res) => {
-                if (res.data.return) {
+                if (res.data.verified) {
+                  setOtpId(res.data.otpId);
                   setSuccess("OTP sent successfuly");
                   setIsOtpSent(true);
                   setOtpTimer(false);
@@ -95,6 +98,7 @@ export default function ChangePhoneEmailPassword() {
             axios
               .post(`${SERVER_URL}/${category}/otpVerification`, {
                 otp,
+                otpId,
               })
               .then((res) => {
                 if (res.data.verify) {
@@ -108,6 +112,7 @@ export default function ChangePhoneEmailPassword() {
                           phoneNo: phoneNo,
                           userId: userData.userId,
                           token: userData.token,
+                          otpId,
                         },
                         {
                           headers: { Authorization: token },
@@ -126,8 +131,10 @@ export default function ChangePhoneEmailPassword() {
                         setTimeout(() => {
                           navigate("/");
                         }, 2000);
-                      })
-                      .catch((err) => console.log(err));
+                      }) .catch((err) => {
+                        setIsEmailOtpLoading(false);
+                        setErr(err.response.data.message);
+                      });
                   } else if (category === "vendor") {
                     axios
                       .patch(
@@ -137,6 +144,7 @@ export default function ChangePhoneEmailPassword() {
                           phoneNo: phoneNo,
                           vendorId: userData?.vendorId,
                           token: userData?.token,
+                          otpId,
                         },
                         {
                           headers: { Authorization: token },
@@ -155,8 +163,10 @@ export default function ChangePhoneEmailPassword() {
                         setTimeout(() => {
                           navigate("/");
                         }, 2000);
-                      })
-                      .catch((err) => console.log(err));
+                      }) .catch((err) => {
+                        setIsEmailOtpLoading(false);
+                        setErr(err.response.data.message);
+                      });
                   }
                 } else {
                   setErr(res.data.message);
@@ -177,6 +187,7 @@ export default function ChangePhoneEmailPassword() {
               })
               .then((res) => {
                 if (res.data.verified) {
+                  setOtpId(res.data.otpId);
                   setSuccess("OTP sent successfuly");
                   setOtpTimer(false);
                   setIsOtpESent(true);
@@ -186,16 +197,19 @@ export default function ChangePhoneEmailPassword() {
                   }, 2000);
                 } else {
                   setErr("Something bad happens");
+                  setIsEmailOtpLoading(false);
                 }
+              }) .catch((err) => {
+                setIsEmailOtpLoading(false);
+                setErr(err.response.data.message);
               });
           } else {
             axios
               .post(`${SERVER_URL}/${category}/emailOtpVerification`, {
                 emailOtp,
+                otpId,
               })
               .then((res) => {
-                console.log(res);
-
                 if (res.data.verify) {
                   setSuccess("OTP verified successfully");
                   if (category === "user") {
@@ -207,6 +221,7 @@ export default function ChangePhoneEmailPassword() {
                           email: email,
                           userId: userData?.userId,
                           token: userData?.token,
+                          otpId,
                         },
                         {
                           headers: { Authorization: token },
@@ -228,7 +243,10 @@ export default function ChangePhoneEmailPassword() {
                           navigate("/");
                         }, 2000);
                       })
-                      .catch((err) => console.log(err));
+                      .catch((err) => {
+                        setIsEmailOtpLoading(false);
+                        setErr(err.response.data.message);
+                      });
                   } else if (category === "vendor") {
                     axios
                       .patch(
@@ -238,6 +256,7 @@ export default function ChangePhoneEmailPassword() {
                           email: email,
                           vendorId: userData?.vendorId,
                           token: userData?.token,
+                          otpId,
                         },
                         {
                           headers: { Authorization: token },
@@ -257,8 +276,10 @@ export default function ChangePhoneEmailPassword() {
                         setTimeout(() => {
                           navigate("/");
                         }, 2000);
-                      })
-                      .catch((err) => console.log(err));
+                      }) .catch((err) => {
+                        setIsEmailOtpLoading(false);
+                        setErr(err.response.data.message);
+                      });
                   }
                 } else {
                   setErr(res.data.message);
@@ -288,6 +309,7 @@ export default function ChangePhoneEmailPassword() {
                   {
                     email: email,
                     password: pass,
+                    otpId,
                   }
                 )
                 .then((result) => {
@@ -299,7 +321,10 @@ export default function ChangePhoneEmailPassword() {
                     navigate("/login", { state: { category: category } });
                   }, 2000);
                 })
-                .catch((err) => console.log(err));
+                .catch((err) => {
+                  setErr(err.response.data.message);
+                  setIsEmailOtpLoading(false);
+                });
             } else if (category === "vendor") {
               axios
                 .patch(
@@ -308,6 +333,7 @@ export default function ChangePhoneEmailPassword() {
                   {
                     email: email,
                     password: pass,
+                    otpId,
                   }
                 )
                 .then((result) => {
@@ -318,7 +344,10 @@ export default function ChangePhoneEmailPassword() {
                     navigate("/login", { state: { category: category } });
                   }, 2000);
                 })
-                .catch((err) => console.log(err));
+                .catch((err) => {
+                  setIsEmailOtpLoading(false);
+                  setErr(err.response.data.message);
+                });
             }
           }
         }
@@ -332,8 +361,8 @@ export default function ChangePhoneEmailPassword() {
                 phoneNo,
               })
               .then((res) => {
-                console.log(res, "v");
-                if (res.data.return) {
+                if (res.data.verified) {
+                  setOtpId(res.data.otpId);
                   setSuccess("OTP sent successfuly");
                   setIsOtpSent(true);
                   setOtpTimer(false);
@@ -362,6 +391,7 @@ export default function ChangePhoneEmailPassword() {
             axios
               .post(`${SERVER_URL}/${category}/otpVerification`, {
                 otp,
+                otpId,
               })
               .then((res) => {
                 if (res.data.verify) {
@@ -381,6 +411,9 @@ export default function ChangePhoneEmailPassword() {
                     setErr("");
                   }, 3000);
                 }
+              }) .catch((err) => {
+                setIsPhoneOtpLoading(false);
+                setErr(err.response.data.message);
               });
           }
         } else if (editType == "email") {
@@ -394,6 +427,7 @@ export default function ChangePhoneEmailPassword() {
               .then((res) => {
                 console.log(res.data.verified);
                 if (res.data.verified) {
+                  setOtpId(res.data.otpId);
                   setSuccess("OTP sent successfuly");
                   setIsOtpESent(true);
                   setOtpTimer(false);
@@ -407,15 +441,17 @@ export default function ChangePhoneEmailPassword() {
                     setErr("");
                   }, 3000);
                 }
+              }) .catch((err) => {
+                setIsEmailOtpLoading(false);
+                setErr(err.response.data.message);
               });
           } else {
             axios
               .post(`${SERVER_URL}/${category}/emailOtpVerification`, {
                 emailOtp,
+                otpId,
               })
               .then((res) => {
-                console.log(res);
-
                 if (res.data.verify) {
                   setSuccess("OTP verified successfully");
                   setIsOtpESent(false);
@@ -433,6 +469,9 @@ export default function ChangePhoneEmailPassword() {
                     setErr("");
                   }, 3000);
                 }
+              }) .catch((err) => {
+                setIsEmailOtpLoading(false);
+                setErr(err.response.data.message);
               });
           }
         } else if (editType == "pass") {
@@ -444,6 +483,7 @@ export default function ChangePhoneEmailPassword() {
                 email,
               })
               .then((res) => {
+                setOtpId(res.data.otpId);
                 setSuccess("OTP sent successfuly");
                 setOtpTimer(false);
                 setIsOtpESent(true);
@@ -451,15 +491,17 @@ export default function ChangePhoneEmailPassword() {
                 setTimeout(() => {
                   setSuccess("");
                 }, 2000);
+              }) .catch((err) => {
+                setIsEmailOtpLoading(false);
+                setErr(err.response.data.message);
               });
           } else {
             axios
               .post(`${SERVER_URL}/${category}/emailOtpVerification`, {
                 emailOtp,
+                otpId,
               })
               .then((res) => {
-                console.log(res);
-
                 if (res.data.verify) {
                   setOtpVerification(true);
                   setIsOtpESent(true);
@@ -475,6 +517,9 @@ export default function ChangePhoneEmailPassword() {
                     setErr("");
                   }, 3000);
                 }
+              }) .catch((err) => {
+                setIsEmailOtpLoading(false);
+                setErr(err.response.data.message);
               });
           }
         }
