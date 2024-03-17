@@ -23,7 +23,7 @@ export default function PopUP({
   }
 
   return (
-    <div className="popup">
+    <div id="popup">
       {purpose == "cancelOrder" ? (
         <div id="cancelOrder">
           <div

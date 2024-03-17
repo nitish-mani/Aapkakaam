@@ -578,7 +578,7 @@ export default function Profile() {
           <span className="span email-grid">Ratings</span>
           <span
             style={{ color: "green" }}
-          >{`${userData[0]?.rating} / 5 (${userData[0]?.ratingCount})`}</span>
+          >{userData[0]?.rating?`${userData[0]?.rating} / 5 (${userData[0]?.ratingCount})`:"No Ratings"}</span>
         </div>
       ) : (
         ""
@@ -610,7 +610,11 @@ export default function Profile() {
                   }}
                 />
               ) : (
-                `Rs ${userData[0]?.wageRate} / Day`
+                <span>
+                  {userData[0]?.wageRate
+                    ? `Rs ${userData[0]?.wageRate} / Day`
+                    : "No Wage Rate"}
+                </span>
               )}
             </span>
             <span className="verify-btn btn1" onClick={handleWageRate}>

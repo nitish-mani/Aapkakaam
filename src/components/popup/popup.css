@@ -1,4 +1,4 @@
-.popup {
+#popup {
   position: fixed;
   top: 0;
   left: 0;
@@ -6,6 +6,9 @@
   height: 100vh;
   backdrop-filter: blur(10px);
   background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 1;
 }
 #cancelOrder,
@@ -14,10 +17,12 @@
   width: 40rem;
   height: 20rem;
   padding: 3rem;
-  position: absolute;
+  /* position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); */
+  margin-left: auto;
+  margin-right: auto;
   border: 2px solid black;
   border-radius: 5px;
   display: flex;
@@ -44,4 +49,24 @@
   top: 1rem;
   left: 50%;
   transform: translateX(-50%);
+}
+@media screen and (max-width: 550px) {
+  #cancelOrder,
+  #markAsComplete,
+  #forRating1 {
+    width: 30rem;
+  }
+}
+@media screen and (max-width: 400px) {
+  #popup {
+    margin: 0;
+  }
+
+  #cancelOrder,
+  #markAsComplete,
+  #forRating1 {
+    width: 25rem;
+    height: 25rem;
+    margin: 0;
+  }
 }

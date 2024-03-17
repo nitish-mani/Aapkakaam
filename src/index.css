@@ -115,6 +115,14 @@ input::-webkit-inner-spin-button {
     top: -5rem;
   }
 }
+@media screen and (max-width: 400px) {
+  .success {
+    width: 27.5rem;
+  }
+  .err {
+    width: 27.5rem;
+  }
+}
 
 @keyframes loading {
   from {
