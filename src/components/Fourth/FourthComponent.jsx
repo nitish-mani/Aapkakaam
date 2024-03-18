@@ -1,5 +1,9 @@
 import { useNavigate } from "react-router";
 import "../Second/SecondComponent.css";
+import carpenter from "../../resources/img/Carpenter-Services..jpg";
+import laptoprepaire from "../../resources/img/laptop repaire.jpg";
+import dhobi from "../../resources/img/dhobi.jpg";
+import cook from "../../resources/img/cook.jpeg";
 import { useState } from "react";
 
 export default function FourthComponent() {
@@ -54,10 +58,7 @@ export default function FourthComponent() {
         onClick={handleClicked}
         style={{ transform: btnClicked ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://bizmaa.com/wp-content/uploads/2019/05/Carpenter-Services..jpg"
-          alt="Carpenter"
-        />
+        <img src={carpenter} alt="Carpenter" />
         <div>Carpenter</div>
       </div>
       <div
@@ -65,10 +66,7 @@ export default function FourthComponent() {
         onClick={handleClicked1}
         style={{ transform: btnClicked1 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://www.quickfix-computers.co.uk/wp-content/uploads/2020/12/iStock-1144570833-scaled.jpg"
-          alt="Laptop Repair"
-        />
+        <img src={laptoprepaire} alt="Laptop Repair" />
         <div>Laptop Repair</div>
       </div>
 
@@ -77,10 +75,7 @@ export default function FourthComponent() {
         onClick={handleClicked2}
         style={{ transform: btnClicked2 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://www.thespruce.com/thmb/nY2gdDJHDv93SMoVo8bahBVcP9U=/2500x1789/filters:fill(auto,1)/BEREAVED_LAUNDRY-56a275463df78cf7727625be.jpg"
-          alt="Washer Man"
-        />
+        <img src={dhobi} alt="Washer Man" />
         <div>Washer Man</div>
       </div>
       <div
@@ -88,10 +83,7 @@ export default function FourthComponent() {
         onClick={handleClicked3}
         style={{ transform: btnClicked3 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="http://s3.amazonaws.com/img.mynetdiary.com/blog/how-to-make-healthy-food-kitchen-set-up-ideas.jpeg"
-          alt="Cook"
-        />
+        <img src={cook} alt="Cook" />
         <div>Cook</div>
       </div>
     </div>

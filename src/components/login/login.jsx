@@ -74,14 +74,14 @@ export default function Login() {
           navigate("/");
           if (category === "user") dispatch(addDataUser(result.data));
           else if (category === "vendor") dispatch(addDataVendor(result.data));
-        }, 5000);
+        }, 2000);
       })
       .catch((err) => {
         setIsLoading(false);
         setErr(err.response.data.message);
         setTimeout(() => {
           setErr("");
-        }, 10000);
+        }, 3000);
       });
   }
 

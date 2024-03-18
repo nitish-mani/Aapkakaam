@@ -64,6 +64,7 @@ export default function Profile() {
     dispatch(setLocationPincode(""));
     dispatch(setLocationPost(""));
     localStorage.clear();
+    navigate('/');
   }
 
   function handleCrossInProfile() {

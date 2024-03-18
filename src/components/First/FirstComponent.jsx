@@ -1,5 +1,8 @@
-import axios from "axios";
 import "./FirstComponent.css";
+import labour from "../../resources/img/manual-labor-2097522_1280.jpg";
+import mason from "../../resources/img/mason-2376322_1280.jpg";
+import electrician from "../../resources/img/electrician-2755683_1280.jpg";
+import plumber from "../../resources/img/plumber-228010_1280 (2).jpg";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -56,10 +59,7 @@ export default function FirstComponent() {
         onClick={handleClicked}
         style={{ transform: btnClicked ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://cdn.pixabay.com/photo/2017/02/25/11/26/manual-labor-2097522_1280.jpg"
-          alt="Labour"
-        />
+        <img src={labour} alt="Labour" />
         <div>Labour</div>
       </div>
       <div
@@ -67,10 +67,7 @@ export default function FirstComponent() {
         onClick={handleClicked1}
         style={{ transform: btnClicked1 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://cdn.pixabay.com/photo/2017/06/06/06/13/mason-2376322_1280.jpg"
-          alt="Mason"
-        />
+        <img src={mason} alt="Mason" />
         <div>Mason</div>
       </div>
       <div
@@ -78,10 +75,7 @@ export default function FirstComponent() {
         onClick={handleClicked2}
         style={{ transform: btnClicked2 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://cdn.pixabay.com/photo/2017/09/16/14/33/electrician-2755683_1280.jpg"
-          alt="Electrician"
-        />
+        <img src={electrician} alt="Electrician" />
         <div>Electrician</div>
       </div>
       <div
@@ -89,10 +83,7 @@ export default function FirstComponent() {
         onClick={handleClicked3}
         style={{ transform: btnClicked3 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://cdn.pixabay.com/photo/2013/12/13/21/13/plumber-228010_1280.jpg"
-          alt="Plumber"
-        />
+        <img src={plumber} alt="Plumber" />
         <div>Plumber</div>
       </div>
     </div>

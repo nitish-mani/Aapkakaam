@@ -1,5 +1,10 @@
 import { useNavigate } from "react-router";
 import "../Second/SecondComponent.css";
+import aatachakki from "../../resources/img/aatachakki.jpg";
+import latrinetank from "../../resources/img/latrin tank cleaner.jpg";
+import marriagehall from "../../resources/img/marriagehall.jpg";
+import shuttering from "../../resources/img/shettering.jpg";
+
 import { useState } from "react";
 
 export default function EighthComponent() {
@@ -57,10 +62,7 @@ export default function EighthComponent() {
         onClick={handleClicked}
         style={{ transform: btnClicked ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://i.ytimg.com/vi/3TM_K-_x0UA/maxresdefault.jpg"
-          alt="Atta Chakki"
-        />
+        <img src={aatachakki} alt="Atta Chakki" />
         <div>Atta Chakki</div>
       </div>
       <div
@@ -68,10 +70,7 @@ export default function EighthComponent() {
         onClick={handleClicked1}
         style={{ transform: btnClicked1 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="http://s0.yellowpages.com.au/98ee1e83-a7ee-4a10-87ea-8ee834277374/a-c-liquid-waste-disposal-septic-tank-cleaning-service-mildura-3500-image.jpg"
-          alt="Latrine Tank Cleaner"
-        />
+        <img src={latrinetank} alt="Latrine Tank Cleaner" />
         <div>Latrine Tank Cleaner </div>
       </div>
 
@@ -80,10 +79,7 @@ export default function EighthComponent() {
         onClick={handleClicked2}
         style={{ transform: btnClicked2 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://i.pinimg.com/originals/72/1b/6a/721b6aa40cde82b1a6dd9f504dbf63e7.jpg"
-          alt="Marriage Hall"
-        />
+        <img src={marriagehall} alt="Marriage Hall" />
         <div>Marriage Hall Booking</div>
       </div>
       <div
@@ -91,10 +87,7 @@ export default function EighthComponent() {
         onClick={handleClicked3}
         style={{ transform: btnClicked3 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://i.ytimg.com/vi/bcgcMb_8xis/maxresdefault.jpg"
-          alt="Shuttering"
-        />
+        <img src={shuttering} alt="Shuttering" />
         <div>Shuttering Booking</div>
       </div>
     </div>

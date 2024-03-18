@@ -1,5 +1,8 @@
 import { useNavigate } from "react-router";
-import pundit from "../../resources/pundit.jpeg";
+import pundit from "../../resources/img/pundit.jpeg";
+import milkman from "../../resources/img/milkman.jpg";
+import parlour from "../../resources/img/beauty-parlour-pic-01.jpg";
+import mehandimaker from "../../resources/img/mehandi maker.jpg";
 import "../First/FirstComponent.css";
 import { useState } from "react";
 export default function ThirdComponent() {
@@ -55,10 +58,7 @@ export default function ThirdComponent() {
         onClick={handleClicked}
         style={{ transform: btnClicked ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://i.pinimg.com/originals/5d/3e/c7/5d3ec7d759f8ed4667b4477354044377.jpg"
-          alt="Milk Man"
-        />
+        <img src={milkman} alt="Milk Man" />
         <div>Milk Man</div>
       </div>
       <div
@@ -66,10 +66,7 @@ export default function ThirdComponent() {
         onClick={handleClicked1}
         style={{ transform: btnClicked1 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://atzone.in/wp-content/uploads/2018/10/beauty-parlour-pic-01.jpg"
-          alt="Parlour"
-        />
+        <img src={parlour} alt="Parlour" />
         <div>Parlour</div>
       </div>
       <div
@@ -77,10 +74,7 @@ export default function ThirdComponent() {
         onClick={handleClicked2}
         style={{ transform: btnClicked2 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://d22ir9aoo7cbf6.cloudfront.net/wp-content/uploads/sites/2/2018/10/Henna-artists-singapore.jpg"
-          alt="Mehandi Maker"
-        />
+        <img src={mehandimaker} alt="Mehandi Maker" />
         <div>Mehandi Maker</div>
       </div>
       <div

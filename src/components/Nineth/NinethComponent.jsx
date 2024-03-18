@@ -1,5 +1,9 @@
 import { useNavigate } from "react-router";
 import "../First/FirstComponent.css";
+import waiter from "../../resources/img/Waiter.webp";
+import marblestone from "../../resources/img/marble fitter.jpg";
+import erikshaw from "../../resources/img/e-riksha.jpg";
+import pualcutter from "../../resources/img/pual cutter.jpg";
 import { useState } from "react";
 
 export default function NinethComponent() {
@@ -55,10 +59,7 @@ export default function NinethComponent() {
         onClick={handleClicked}
         style={{ transform: btnClicked ? "translateY(5px)" : "" }}
       >
-        <img
-          src="http://healthzap.co/wp-content/uploads/2019/12/Waiter.jpg"
-          alt="Waiter"
-        />
+        <img src={waiter} alt="Waiter" />
         <div>Waiter</div>
       </div>
       <div
@@ -66,10 +67,7 @@ export default function NinethComponent() {
         onClick={handleClicked1}
         style={{ transform: btnClicked1 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://i.ytimg.com/vi/NfspCva7sOc/maxresdefault.jpg"
-          alt="Marble Stone Fitter"
-        />
+        <img src={marblestone} alt="Marble Stone Fitter" />
         <div>Marble Stone Fitter</div>
       </div>
       <div
@@ -77,10 +75,7 @@ export default function NinethComponent() {
         onClick={handleClicked2}
         style={{ transform: btnClicked2 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://1.bp.blogspot.com/-gdUQKkXPEjs/XgWv2A1RZxI/AAAAAAAAAoY/BlHZQzU4BgQyWm8_JO7f2-Nigq0Da4d4QCLcBGAsYHQ/s1600/ST1.jpg"
-          alt="E-Riksaw"
-        />
+        <img src={erikshaw} alt="E-Riksaw" />
         <div>E-Riksaw Booking</div>
       </div>
       <div
@@ -88,10 +83,7 @@ export default function NinethComponent() {
         onClick={handleClicked3}
         style={{ transform: btnClicked3 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://5.imimg.com/data5/KM/KT/SR/SELLER-2938346/heavy-duty-tractor-operated-chaff-cutter-machine.jpg"
-          alt="Pual Cutter"
-        />
+        <img src={pualcutter} alt="Pual Cutter" />
         <div>Pual Cutter</div>
       </div>
     </div>

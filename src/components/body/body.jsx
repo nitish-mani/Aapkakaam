@@ -76,7 +76,7 @@ export default function Body() {
     <>
       <div className="line"></div>
       {category === "vendor" && address?.length === 0 ? (
-        <div style={{ marginTop: "8rem", textAlign: "center" }}>
+        <div style={{ marginTop: "2rem", textAlign: "center" }}>
           Your profile is not visible to User. Please Update Your Address to
           make your profile visible.
           <span
@@ -88,7 +88,7 @@ export default function Body() {
           </span>
         </div>
       ) : category === "vendor" && !wageRate ? (
-        <div style={{ marginTop: "8rem", textAlign: "center", color: "red" }}>
+        <div style={{ marginTop: "2rem", textAlign: "center", color: "red" }}>
           Your profile is not visible to User. Please Set Your{" "}
           <span style={{ color: "blue" }}>Wage Rate</span> from Your Profile.
         </div>

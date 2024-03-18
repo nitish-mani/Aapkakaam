@@ -1,5 +1,9 @@
 import { useNavigate } from "react-router";
 import "../First/FirstComponent.css";
+import painter from "../../resources/img/painter.jpeg";
+import bikerepaire from "../../resources/img/bike repaire.jpg";
+import carrepaire from "../../resources/img/car repaire.avif";
+import tilesfitter from "../../resources/img/tiles fitter.jpg";
 import { useState } from "react";
 
 export default function FifthComponent() {
@@ -55,10 +59,7 @@ export default function FifthComponent() {
         onClick={handleClicked}
         style={{ transform: btnClicked ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://achoicepainting.com/wp-content/uploads/2019/01/professional-house-painters.jpeg"
-          alt="Painter"
-        />
+        <img src={painter} alt="Painter" />
         <div>Painter</div>
       </div>
       <div
@@ -66,10 +67,7 @@ export default function FifthComponent() {
         onClick={handleClicked1}
         style={{ transform: btnClicked1 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://theclarklawoffice.com/wp-content/uploads/2019/05/What-Are-The-Most-Dangerous-Aftermarket-Motorcycle-Modifications-1999x1333.jpg"
-          alt="Bike Repair"
-        />
+        <img src={bikerepaire} alt="Bike Repair" />
         <div>Bike Repaire</div>
       </div>
       <div
@@ -77,10 +75,7 @@ export default function FifthComponent() {
         onClick={handleClicked2}
         style={{ transform: btnClicked2 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://media.ed.edmunds-media.com/non-make/fe/fe_323201_1600.jpg"
-          alt="Car Repair"
-        />
+        <img src={carrepaire} alt="Car Repair" />
         <div>Car Repaire</div>
       </div>
       <div
@@ -88,10 +83,7 @@ export default function FifthComponent() {
         onClick={handleClicked3}
         style={{ transform: btnClicked3 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://5.imimg.com/data5/WV/MH/SC/ANDROID-45457828/product-jpeg.jpg"
-          alt="Tiles Fitter"
-        />
+        <img src={tilesfitter} alt="Tiles Fitter" />
         <div>Tiles Fitter</div>
       </div>
     </div>

@@ -1,5 +1,9 @@
 import { useNavigate } from "react-router";
 import "../Second/SecondComponent.css";
+import car from "../../resources/img/car booking.jpg";
+import lights from "../../resources/img/light booking.jpg";
+import bus from "../../resources/img/bus booking.jpg";
+import tenthouse from "../../resources/img/tent house.jpg";
 import { useState } from "react";
 
 export default function SixthComponent() {
@@ -54,10 +58,7 @@ export default function SixthComponent() {
         onClick={handleClicked}
         style={{ transform: btnClicked ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://wallpaperaccess.com/full/40105.jpg"
-          alt="Four wheeler"
-        />
+        <img src={car} alt="Four wheeler" />
         <div>Four Wheeler Booking</div>
       </div>
       <div
@@ -65,10 +66,7 @@ export default function SixthComponent() {
         onClick={handleClicked1}
         style={{ transform: btnClicked1 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://themprojects.com/wp-content/uploads/2018/05/lamps-lighting-wonderful-outdoor-ideas-with-unique-hanging-lights-on-regarding-outdoor-hanging-decorative-lights.jpg"
-          alt="Lights"
-        />
+        <img src={lights} alt="Lights" />
         <div>Lights Booking</div>
       </div>
 
@@ -77,7 +75,7 @@ export default function SixthComponent() {
         onClick={handleClicked2}
         style={{ transform: btnClicked2 ? "translateY(5px)" : "" }}
       >
-        <img src="https://wallpaperaccess.com/full/1628627.jpg" alt="Bus" />
+        <img src={bus} alt="Bus" />
         <div>Bus Booking</div>
       </div>
       <div
@@ -85,10 +83,7 @@ export default function SixthComponent() {
         onClick={handleClicked3}
         style={{ transform: btnClicked3 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://i.pinimg.com/originals/c0/36/3b/c0363b269f852293b41fca6500d02057.jpg"
-          alt="Tent House"
-        />
+        <img src={tenthouse} alt="Tent House" />
         <div>Tent House Booking</div>
       </div>
     </div>

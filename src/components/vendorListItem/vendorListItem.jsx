@@ -192,17 +192,18 @@ export default function VendorListItem({
           <div>
             <Ratings rating={data.rating} />
           </div>{" "}
-          <p
-            style={{ fontSize: "1.5rem" }}
-          >{`   ${data.rating}/5 (${data.ratingCount}) `}</p>
+          <p style={{ fontSize: "1.5rem" }}>
+            {data.rating
+              ? `   ${data.rating}/5 (${data.ratingCount}) `
+              : "4.0 / 5(1)"}
+          </p>
         </div>
 
         <div>
           <span style={{ fontSize: "1.5rem", fontWeight: "normal" }}>
-            {data.phoneNo || '********'}
+            {data.phoneNo}
           </span>
         </div>
-       
       </div>
 
       <div className="vdldiv">

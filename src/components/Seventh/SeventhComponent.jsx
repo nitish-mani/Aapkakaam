@@ -1,5 +1,9 @@
 import { useNavigate } from "react-router";
 import "../First/FirstComponent.css";
+import generator from "../../resources/img/generator.jpg";
+import auto from "../../resources/img/auto-rickshaw.png";
+import dj from "../../resources/img/dj.png";
+import dhankutti from "../../resources/img/dhankutti.jpg";
 import { useState } from "react";
 
 export default function SeventhComponent() {
@@ -53,10 +57,7 @@ export default function SeventhComponent() {
         onClick={handleClicked}
         style={{ transform: btnClicked ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://midwestgeneratorsolutions.com/wp-content/uploads/2017/09/cummins-cutout.jpg"
-          alt="Generator"
-        />
+        <img src={generator} alt="Generator" />
         <div>Generator Booking</div>
       </div>
       <div
@@ -64,11 +65,7 @@ export default function SeventhComponent() {
         onClick={handleClicked1}
         style={{ transform: btnClicked1 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="http://pluspng.com/img-png/auto-rickshaw-png-download-png-938.png"
-          alt="Auto"
-          style={{ backgroundColor: "white" }}
-        />
+        <img src={auto} alt="Auto" style={{ backgroundColor: "white" }} />
         <div>Auto Booking</div>
       </div>
       <div
@@ -76,11 +73,7 @@ export default function SeventhComponent() {
         onClick={handleClicked2}
         style={{ transform: btnClicked2 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://crownevents.co.nz/wp-content/uploads/2018/05/Nexus-dj-standard-510x510.png"
-          alt="DJ"
-          style={{ backgroundColor: "white" }}
-        />
+        <img src={dj} alt="DJ" style={{ backgroundColor: "white" }} />
         <div>DJ Booking</div>
       </div>
       <div
@@ -88,10 +81,7 @@ export default function SeventhComponent() {
         onClick={handleClicked3}
         style={{ transform: btnClicked3 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://i.ytimg.com/vi/ctinyWz7Aaw/maxresdefault.jpg"
-          alt="Dhankutti"
-        />
+        <img src={dhankutti} alt="Dhankutti" />
         <div>Dhankutti Booking</div>
       </div>
     </div>
