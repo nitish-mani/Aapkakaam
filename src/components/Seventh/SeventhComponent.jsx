@@ -5,11 +5,13 @@ import auto from "../../resources/img/auto-rickshaw.png";
 import dj from "../../resources/img/dj.png";
 import dhankutti from "../../resources/img/dhankutti.jpg";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function SeventhComponent() {
   const navigate = useNavigate();
   const category = localStorage.getItem("category");
   const token = JSON.parse(localStorage.getItem(category))?.token;
+  const lang = useSelector((store) => store.category.selectLanguage);
 
   const [btnClicked, setBtnClicked] = useState(false);
   const [btnClicked1, setBtnClicked1] = useState(false);
@@ -58,7 +60,7 @@ export default function SeventhComponent() {
         style={{ transform: btnClicked ? "translateY(5px)" : "" }}
       >
         <img src={generator} alt="Generator" />
-        <div>Generator Booking</div>
+        <div>{lang == "en" ? "Generator Booking" : "जनरेटर बुकिंग"}</div>
       </div>
       <div
         className="first-div-div"
@@ -66,7 +68,7 @@ export default function SeventhComponent() {
         style={{ transform: btnClicked1 ? "translateY(5px)" : "" }}
       >
         <img src={auto} alt="Auto" style={{ backgroundColor: "white" }} />
-        <div>Auto Booking</div>
+        <div>{lang == "en" ? "Auto Booking" : "ऑटो बुकिंग"}</div>
       </div>
       <div
         className="first-div-div"
@@ -74,7 +76,7 @@ export default function SeventhComponent() {
         style={{ transform: btnClicked2 ? "translateY(5px)" : "" }}
       >
         <img src={dj} alt="DJ" style={{ backgroundColor: "white" }} />
-        <div>DJ Booking</div>
+        <div>{lang == "en" ? "DJ Booking" : "डीजे बुकिंग"}</div>
       </div>
       <div
         className="first-div-div"
@@ -82,7 +84,7 @@ export default function SeventhComponent() {
         style={{ transform: btnClicked3 ? "translateY(5px)" : "" }}
       >
         <img src={dhankutti} alt="Dhankutti" />
-        <div>Dhankutti Booking</div>
+        <div>{lang == "en" ? "Dhankutti Booking" : "धनकुट्टी बुकिंग"}</div>
       </div>
     </div>
   );

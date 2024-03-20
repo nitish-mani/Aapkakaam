@@ -3,7 +3,7 @@
   width: 30rem;
   background-color: var(--primary-color);
   box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.367);
-  margin: 14rem auto;
+  margin: 5rem auto;
   position: relative;
 }
 
@@ -35,9 +35,9 @@
   width: 100%;
 }
 
-.verify{
-  margin: .5rem 0;
-  padding: .3rem;
+.verify {
+  margin: 0.5rem 0;
+  padding: 0.3rem;
   border: 1px solid blue;
   border-radius: 5px;
   color: blue;
@@ -84,7 +84,7 @@
 }
 @media screen and (max-width: 600px) {
   .signup {
-    margin-top: 18rem;
+    margin-top: 5rem;
   }
 }
 @media screen and (max-width: 350px) {

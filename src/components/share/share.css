@@ -1,5 +1,5 @@
 .share {
-  margin: 10rem auto;
+  margin: 5rem auto;
   width: 25rem;
   height: 40rem;
   display: grid;
@@ -23,6 +23,6 @@
 }
 @media screen and (max-width: 600px) {
   .share {
-    margin-top: 18rem;
+    margin-top: 5rem;
   }
 }

@@ -9,6 +9,7 @@ const categorySlice = createSlice({
     location_pincode: "",
     location_post: "",
     cancelOrder: false,
+    selectLanguage: "en",
   },
   reducers: {
     setCategory: (state, action) => {
@@ -29,6 +30,9 @@ const categorySlice = createSlice({
     setCancelOrder: (state, action) => {
       state.cancelOrder = action.payload;
     },
+    setSelectLanguage: (state, action) => {
+      state.selectLanguage = action.payload;
+    },
   },
 });
 
@@ -39,5 +43,6 @@ export const {
   setLocationPincode,
   setLocationPost,
   setCancelOrder,
+  setSelectLanguage,
 } = categorySlice.actions;
 export default categorySlice.reducer;

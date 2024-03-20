@@ -5,10 +5,12 @@ import parlour from "../../resources/img/beauty-parlour-pic-01.jpg";
 import mehandimaker from "../../resources/img/mehandi maker.jpg";
 import "../First/FirstComponent.css";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 export default function ThirdComponent() {
   const navigate = useNavigate();
   const category = localStorage.getItem("category");
   const token = JSON.parse(localStorage.getItem(category))?.token;
+  const lang = useSelector((store) => store.category.selectLanguage);
 
   const [btnClicked, setBtnClicked] = useState(false);
   const [btnClicked1, setBtnClicked1] = useState(false);
@@ -59,7 +61,7 @@ export default function ThirdComponent() {
         style={{ transform: btnClicked ? "translateY(5px)" : "" }}
       >
         <img src={milkman} alt="Milk Man" />
-        <div>Milk Man</div>
+        <div>{lang == "en" ? "Milk Man" : "दूधवाला"}</div>
       </div>
       <div
         className="first-div-div"
@@ -67,7 +69,7 @@ export default function ThirdComponent() {
         style={{ transform: btnClicked1 ? "translateY(5px)" : "" }}
       >
         <img src={parlour} alt="Parlour" />
-        <div>Parlour</div>
+        <div>{lang == "en" ? "Parlour" : "पार्लर"}</div>
       </div>
       <div
         className="first-div-div"
@@ -75,7 +77,7 @@ export default function ThirdComponent() {
         style={{ transform: btnClicked2 ? "translateY(5px)" : "" }}
       >
         <img src={mehandimaker} alt="Mehandi Maker" />
-        <div>Mehandi Maker</div>
+        <div>{lang == "en" ? "Mehandi Maker" : "मेहँदी मेकर"}</div>
       </div>
       <div
         className="first-div-div"
@@ -83,7 +85,7 @@ export default function ThirdComponent() {
         style={{ transform: btnClicked3 ? "translateY(5px)" : "" }}
       >
         <img src={pundit} alt="Pundits" />
-        <div>Pundits</div>
+        <div>{lang == "en" ? "Pundits" : "पंडित"}</div>
       </div>
     </div>
   );

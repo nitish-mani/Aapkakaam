@@ -74,7 +74,6 @@ export default function Body() {
 
   return (
     <>
-      <div className="line"></div>
       {category === "vendor" && address?.length === 0 ? (
         <div style={{ marginTop: "2rem", textAlign: "center" }}>
           Your profile is not visible to User. Please Update Your Address to

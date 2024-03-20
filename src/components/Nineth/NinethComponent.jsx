@@ -5,11 +5,13 @@ import marblestone from "../../resources/img/marble fitter.jpg";
 import erikshaw from "../../resources/img/e-riksha.jpg";
 import pualcutter from "../../resources/img/pual cutter.jpg";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function NinethComponent() {
   const navigate = useNavigate();
   const category = localStorage.getItem("category");
   const token = JSON.parse(localStorage.getItem(category))?.token;
+  const lang = useSelector((store) => store.category.selectLanguage);
 
   const [btnClicked, setBtnClicked] = useState(false);
   const [btnClicked1, setBtnClicked1] = useState(false);
@@ -60,7 +62,7 @@ export default function NinethComponent() {
         style={{ transform: btnClicked ? "translateY(5px)" : "" }}
       >
         <img src={waiter} alt="Waiter" />
-        <div>Waiter</div>
+        <div>{lang == "en" ? "Waiter" : "वेटर"}</div>
       </div>
       <div
         className="first-div-div"
@@ -68,7 +70,7 @@ export default function NinethComponent() {
         style={{ transform: btnClicked1 ? "translateY(5px)" : "" }}
       >
         <img src={marblestone} alt="Marble Stone Fitter" />
-        <div>Marble Stone Fitter</div>
+        <div>{lang == "en" ? "Marble Stone Fitter" : "संगमरमर लगनेवाला"}</div>
       </div>
       <div
         className="first-div-div"
@@ -76,7 +78,7 @@ export default function NinethComponent() {
         style={{ transform: btnClicked2 ? "translateY(5px)" : "" }}
       >
         <img src={erikshaw} alt="E-Riksaw" />
-        <div>E-Riksaw Booking</div>
+        <div>{lang == "en" ? "E-Riksaw Booking" : "ई-रिक्शा बुकिंग"}</div>
       </div>
       <div
         className="first-div-div"
@@ -84,7 +86,7 @@ export default function NinethComponent() {
         style={{ transform: btnClicked3 ? "translateY(5px)" : "" }}
       >
         <img src={pualcutter} alt="Pual Cutter" />
-        <div>Pual Cutter</div>
+        <div>{lang == "en" ? "Pual Cutter" : "पुआल काटनेवाला"}</div>
       </div>
     </div>
   );

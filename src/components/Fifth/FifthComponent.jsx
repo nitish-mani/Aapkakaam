@@ -5,11 +5,13 @@ import bikerepaire from "../../resources/img/bike repaire.jpg";
 import carrepaire from "../../resources/img/car repaire.avif";
 import tilesfitter from "../../resources/img/tiles fitter.jpg";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function FifthComponent() {
   const navigate = useNavigate();
   const category = localStorage.getItem("category");
   const token = JSON.parse(localStorage.getItem(category))?.token;
+  const lang = useSelector((store) => store.category.selectLanguage);
 
   const [btnClicked, setBtnClicked] = useState(false);
   const [btnClicked1, setBtnClicked1] = useState(false);
@@ -60,7 +62,7 @@ export default function FifthComponent() {
         style={{ transform: btnClicked ? "translateY(5px)" : "" }}
       >
         <img src={painter} alt="Painter" />
-        <div>Painter</div>
+        <div>{lang == "en" ? "Painter" : "पेंटर"}</div>
       </div>
       <div
         className="first-div-div"
@@ -68,7 +70,7 @@ export default function FifthComponent() {
         style={{ transform: btnClicked1 ? "translateY(5px)" : "" }}
       >
         <img src={bikerepaire} alt="Bike Repair" />
-        <div>Bike Repaire</div>
+        <div>{lang == "en" ? "Bike Repaire" : "बाइक की मरम्मत"}</div>
       </div>
       <div
         className="first-div-div"
@@ -76,7 +78,7 @@ export default function FifthComponent() {
         style={{ transform: btnClicked2 ? "translateY(5px)" : "" }}
       >
         <img src={carrepaire} alt="Car Repair" />
-        <div>Car Repaire</div>
+        <div>{lang == "en" ? "Car Repaire" : "कार की मरम्मत"}</div>
       </div>
       <div
         className="first-div-div"
@@ -84,7 +86,7 @@ export default function FifthComponent() {
         style={{ transform: btnClicked3 ? "translateY(5px)" : "" }}
       >
         <img src={tilesfitter} alt="Tiles Fitter" />
-        <div>Tiles Fitter</div>
+        <div>{lang == "en" ? "Tiles Fitter" : "टाइल लगानेवाला"}</div>
       </div>
     </div>
   );

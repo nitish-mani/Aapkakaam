@@ -5,11 +5,13 @@ import electrician from "../../resources/img/electrician-2755683_1280.jpg";
 import plumber from "../../resources/img/plumber-228010_1280 (2).jpg";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
 
 export default function FirstComponent() {
   const navigate = useNavigate();
   const category = localStorage.getItem("category");
   const token = JSON.parse(localStorage.getItem(category))?.token;
+  const lang = useSelector((store) => store.category.selectLanguage);
 
   const [btnClicked, setBtnClicked] = useState(false);
   const [btnClicked1, setBtnClicked1] = useState(false);
@@ -21,7 +23,7 @@ export default function FirstComponent() {
     setTimeout(() => setBtnClicked(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "labour" } });
+        navigate("/checkBookingDate", { state: { jobType: "labourer" } });
       else navigate("/category");
     }, 200);
   }
@@ -60,7 +62,7 @@ export default function FirstComponent() {
         style={{ transform: btnClicked ? "translateY(5px)" : "" }}
       >
         <img src={labour} alt="Labour" />
-        <div>Labour</div>
+        <div>{lang == "en" ? "Labourer" : "मजदूर"}</div>
       </div>
       <div
         className="first-div-div"
@@ -68,7 +70,7 @@ export default function FirstComponent() {
         style={{ transform: btnClicked1 ? "translateY(5px)" : "" }}
       >
         <img src={mason} alt="Mason" />
-        <div>Mason</div>
+        <div>{lang == "en" ? "Mason" : "राजमिस्त्री"}</div>
       </div>
       <div
         className="first-div-div"
@@ -76,7 +78,7 @@ export default function FirstComponent() {
         style={{ transform: btnClicked2 ? "translateY(5px)" : "" }}
       >
         <img src={electrician} alt="Electrician" />
-        <div>Electrician</div>
+        <div>{lang == "en" ? "Electrician" : "बिजली मिस्त्री"}</div>
       </div>
       <div
         className="first-div-div"
@@ -84,7 +86,7 @@ export default function FirstComponent() {
         style={{ transform: btnClicked3 ? "translateY(5px)" : "" }}
       >
         <img src={plumber} alt="Plumber" />
-        <div>Plumber</div>
+        <div>{lang == "en" ? "Plumber" : "प्लंबर"}</div>
       </div>
     </div>
   );

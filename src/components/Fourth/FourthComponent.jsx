@@ -5,11 +5,13 @@ import laptoprepaire from "../../resources/img/laptop repaire.jpg";
 import dhobi from "../../resources/img/dhobi.jpg";
 import cook from "../../resources/img/cook.jpeg";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function FourthComponent() {
   const navigate = useNavigate();
   const category = localStorage.getItem("category");
   const token = JSON.parse(localStorage.getItem(category))?.token;
+  const lang = useSelector((store) => store.category.selectLanguage);
 
   const [btnClicked, setBtnClicked] = useState(false);
   const [btnClicked1, setBtnClicked1] = useState(false);
@@ -59,7 +61,7 @@ export default function FourthComponent() {
         style={{ transform: btnClicked ? "translateY(5px)" : "" }}
       >
         <img src={carpenter} alt="Carpenter" />
-        <div>Carpenter</div>
+        <div>{lang == "en" ? "Carpenter" : "बढ़ई"}</div>
       </div>
       <div
         className="second-div-div"
@@ -67,7 +69,7 @@ export default function FourthComponent() {
         style={{ transform: btnClicked1 ? "translateY(5px)" : "" }}
       >
         <img src={laptoprepaire} alt="Laptop Repair" />
-        <div>Laptop Repair</div>
+        <div>{lang == "en" ? "Laptop Repaire" : "लैपटॉप की मरम्मत"}</div>
       </div>
 
       <div
@@ -76,7 +78,7 @@ export default function FourthComponent() {
         style={{ transform: btnClicked2 ? "translateY(5px)" : "" }}
       >
         <img src={dhobi} alt="Washer Man" />
-        <div>Washer Man</div>
+        <div>{lang == "en" ? "Washer Man" : "धोबी"}</div>
       </div>
       <div
         className="second-div-div"
@@ -84,7 +86,7 @@ export default function FourthComponent() {
         style={{ transform: btnClicked3 ? "translateY(5px)" : "" }}
       >
         <img src={cook} alt="Cook" />
-        <div>Cook</div>
+        <div>{lang == "en" ? "Cook" : "बाबर्ची"}</div>
       </div>
     </div>
   );

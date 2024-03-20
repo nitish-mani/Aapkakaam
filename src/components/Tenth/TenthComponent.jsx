@@ -1,11 +1,17 @@
 import { useNavigate } from "react-router";
 import "../Second/SecondComponent.css";
+import ro from "../../resources/img/ro.webp";
+import chaat from "../../resources/img/chaat.jpg";
+import dulhaRath from "../../resources/img/dulha rath.jpg";
+import kirtan from "../../resources/img/kirtan.jpg";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function TenthComponent() {
   const navigate = useNavigate();
   const category = localStorage.getItem("category");
   const token = JSON.parse(localStorage.getItem(category))?.token;
+  const lang = useSelector((store) => store.category.selectLanguage);
 
   const [btnClicked, setBtnClicked] = useState(false);
   const [btnClicked1, setBtnClicked1] = useState(false);
@@ -53,44 +59,34 @@ export default function TenthComponent() {
         onClick={handleClicked}
         style={{ transform: btnClicked ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://5.imimg.com/data5/ET/PE/MY-7826251/commercial-ro-water-treatment-plant-500x500.jpg"
-          alt="RO"
-        />
-        <div>RO Water Booking</div>
+        <img src={ro} alt="RO" />
+        <div>{lang == "en" ? "RO Water Booking" : "आरओ वाटर बुकिंग"}</div>
       </div>
       <div
         className="second-div-div"
         onClick={handleClicked1}
         style={{ transform: btnClicked1 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://www.mellownspicy.com/wp-content/uploads/2012/08/Samosa_Chaat_a.jpg"
-          alt="Chaat"
-        />
-        <div>Chaat Booking</div>
+        <img src={chaat} alt="Chaat" />
+        <div>{lang == "en" ? "Chaat Booking" : "चाट बुकिंग"}</div>
       </div>
       <div
         className="second-div-div"
         onClick={handleClicked2}
         style={{ transform: btnClicked2 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://4.imimg.com/data4/LQ/QA/MY-11753941/wedding-baggi-1000x1000.jpg"
-          alt="Dulha Rath"
-        />
-        <div>Dulha Rath Booking</div>
+        <img src={dulhaRath} alt="Dulha Rath" />
+        <div>{lang == "en" ? "Dulha Rath Booking" : "दुल्हारथ बुकिंग"}</div>
       </div>
       <div
         className="second-div-div"
         onClick={handleClicked3}
         style={{ transform: btnClicked3 ? "translateY(5px)" : "" }}
       >
-        <img
-          src="https://i.ytimg.com/vi/fA2k7nMIpkU/maxresdefault.jpg"
-          alt="Kirtan"
-        />
-        <div>Kirtan Mandali Booking</div>
+        <img src={kirtan} alt="Kirtan" />
+        <div>
+          {lang == "en" ? "Kirtan Mandali Booking" : "कीर्तन मंडली बुकिंग"}
+        </div>
       </div>
     </div>
   );

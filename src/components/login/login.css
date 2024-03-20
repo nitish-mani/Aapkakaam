@@ -3,7 +3,7 @@
   background-color: var(--primary-color);
   text-align: center;
   box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.367);
-  margin: 14rem auto;
+  margin: 5rem auto;
 }
 .login__1stChild {
   color: #fff;
@@ -40,7 +40,7 @@
 }
 @media screen and (max-width: 600px) {
   .login {
-    margin-top: 18rem;
+    margin-top: 5rem;
   }
 }
 @media screen and (max-width: 350px) {

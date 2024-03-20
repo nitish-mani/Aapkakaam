@@ -5,11 +5,13 @@ import lights from "../../resources/img/light booking.jpg";
 import bus from "../../resources/img/bus booking.jpg";
 import tenthouse from "../../resources/img/tent house.jpg";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function SixthComponent() {
   const navigate = useNavigate();
   const category = localStorage.getItem("category");
   const token = JSON.parse(localStorage.getItem(category))?.token;
+  const lang = useSelector((store) => store.category.selectLanguage);
 
   const [btnClicked, setBtnClicked] = useState(false);
   const [btnClicked1, setBtnClicked1] = useState(false);
@@ -59,7 +61,9 @@ export default function SixthComponent() {
         style={{ transform: btnClicked ? "translateY(5px)" : "" }}
       >
         <img src={car} alt="Four wheeler" />
-        <div>Four Wheeler Booking</div>
+        <div>
+          {lang == "en" ? "Four Wheeler Booking" : "चार पहिया वाहन बुकिंग"}
+        </div>
       </div>
       <div
         className="second-div-div"
@@ -67,7 +71,7 @@ export default function SixthComponent() {
         style={{ transform: btnClicked1 ? "translateY(5px)" : "" }}
       >
         <img src={lights} alt="Lights" />
-        <div>Lights Booking</div>
+        <div>{lang == "en" ? "Lights Booking" : "लाइट बुकिंग"}</div>
       </div>
 
       <div
@@ -76,7 +80,7 @@ export default function SixthComponent() {
         style={{ transform: btnClicked2 ? "translateY(5px)" : "" }}
       >
         <img src={bus} alt="Bus" />
-        <div>Bus Booking</div>
+        <div>{lang == "en" ? "Bus Booking" : "बस बुकिंग"}</div>
       </div>
       <div
         className="second-div-div"
@@ -84,7 +88,7 @@ export default function SixthComponent() {
         style={{ transform: btnClicked3 ? "translateY(5px)" : "" }}
       >
         <img src={tenthouse} alt="Tent House" />
-        <div>Tent House Booking</div>
+        <div>{lang == "en" ? "Tent House Booking" : "टेंट हाउस की बुकिंग"}</div>
       </div>
     </div>
   );

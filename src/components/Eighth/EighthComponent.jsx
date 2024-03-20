@@ -6,11 +6,13 @@ import marriagehall from "../../resources/img/marriagehall.jpg";
 import shuttering from "../../resources/img/shettering.jpg";
 
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function EighthComponent() {
   const navigate = useNavigate();
   const category = localStorage.getItem("category");
   const token = JSON.parse(localStorage.getItem(category))?.token;
+  const lang = useSelector((store) => store.category.selectLanguage);
 
   const [btnClicked, setBtnClicked] = useState(false);
   const [btnClicked1, setBtnClicked1] = useState(false);
@@ -63,7 +65,7 @@ export default function EighthComponent() {
         style={{ transform: btnClicked ? "translateY(5px)" : "" }}
       >
         <img src={aatachakki} alt="Atta Chakki" />
-        <div>Atta Chakki</div>
+        <div>{lang == "en" ? "Atta Chakki" : "आटाचक्की"}</div>
       </div>
       <div
         className="second-div-div"
@@ -71,7 +73,9 @@ export default function EighthComponent() {
         style={{ transform: btnClicked1 ? "translateY(5px)" : "" }}
       >
         <img src={latrinetank} alt="Latrine Tank Cleaner" />
-        <div>Latrine Tank Cleaner </div>
+        <div>
+          {lang == "en" ? "Latrine Tank Cleaner" : "शौचालय टैंक क्लीनर"}{" "}
+        </div>
       </div>
 
       <div
@@ -80,7 +84,7 @@ export default function EighthComponent() {
         style={{ transform: btnClicked2 ? "translateY(5px)" : "" }}
       >
         <img src={marriagehall} alt="Marriage Hall" />
-        <div>Marriage Hall Booking</div>
+        <div>{lang == "en" ? "Marriage Hall Booking" : "विवाह हॉल बुकिंग"}</div>
       </div>
       <div
         className="second-div-div"
@@ -88,7 +92,7 @@ export default function EighthComponent() {
         style={{ transform: btnClicked3 ? "translateY(5px)" : "" }}
       >
         <img src={shuttering} alt="Shuttering" />
-        <div>Shuttering Booking</div>
+        <div>{lang == "en" ? "Shuttering Booking" : "शटरिंग बुकिंग"}</div>
       </div>
     </div>
   );
