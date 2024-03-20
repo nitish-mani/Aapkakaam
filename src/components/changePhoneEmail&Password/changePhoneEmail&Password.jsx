@@ -131,7 +131,8 @@ export default function ChangePhoneEmailPassword() {
                         setTimeout(() => {
                           navigate("/");
                         }, 2000);
-                      }) .catch((err) => {
+                      })
+                      .catch((err) => {
                         setIsEmailOtpLoading(false);
                         setErr(err.response.data.message);
                       });
@@ -163,7 +164,8 @@ export default function ChangePhoneEmailPassword() {
                         setTimeout(() => {
                           navigate("/");
                         }, 2000);
-                      }) .catch((err) => {
+                      })
+                      .catch((err) => {
                         setIsEmailOtpLoading(false);
                         setErr(err.response.data.message);
                       });
@@ -199,7 +201,8 @@ export default function ChangePhoneEmailPassword() {
                   setErr("Something bad happens");
                   setIsEmailOtpLoading(false);
                 }
-              }) .catch((err) => {
+              })
+              .catch((err) => {
                 setIsEmailOtpLoading(false);
                 setErr(err.response.data.message);
               });
@@ -276,7 +279,8 @@ export default function ChangePhoneEmailPassword() {
                         setTimeout(() => {
                           navigate("/");
                         }, 2000);
-                      }) .catch((err) => {
+                      })
+                      .catch((err) => {
                         setIsEmailOtpLoading(false);
                         setErr(err.response.data.message);
                       });
@@ -411,7 +415,8 @@ export default function ChangePhoneEmailPassword() {
                     setErr("");
                   }, 3000);
                 }
-              }) .catch((err) => {
+              })
+              .catch((err) => {
                 setIsPhoneOtpLoading(false);
                 setErr(err.response.data.message);
               });
@@ -441,7 +446,8 @@ export default function ChangePhoneEmailPassword() {
                     setErr("");
                   }, 3000);
                 }
-              }) .catch((err) => {
+              })
+              .catch((err) => {
                 setIsEmailOtpLoading(false);
                 setErr(err.response.data.message);
               });
@@ -469,7 +475,8 @@ export default function ChangePhoneEmailPassword() {
                     setErr("");
                   }, 3000);
                 }
-              }) .catch((err) => {
+              })
+              .catch((err) => {
                 setIsEmailOtpLoading(false);
                 setErr(err.response.data.message);
               });
@@ -491,7 +498,8 @@ export default function ChangePhoneEmailPassword() {
                 setTimeout(() => {
                   setSuccess("");
                 }, 2000);
-              }) .catch((err) => {
+              })
+              .catch((err) => {
                 setIsEmailOtpLoading(false);
                 setErr(err.response.data.message);
               });
@@ -517,7 +525,8 @@ export default function ChangePhoneEmailPassword() {
                     setErr("");
                   }, 3000);
                 }
-              }) .catch((err) => {
+              })
+              .catch((err) => {
                 setIsEmailOtpLoading(false);
                 setErr(err.response.data.message);
               });
@@ -551,13 +560,21 @@ export default function ChangePhoneEmailPassword() {
       />
       <div
         className="err"
-        style={{ opacity: err ? "1" : "", border: err ? "" : "none" }}
+        style={{
+          opacity: err ? "1" : "",
+          border: err ? "" : "none",
+          top: "-5rem",
+        }}
       >
         {err}
       </div>
       <div
         className="success"
-        style={{ opacity: success ? "1" : "", border: success ? "" : "none" }}
+        style={{
+          opacity: success ? "1" : "",
+          border: success ? "" : "none",
+          top: "-5rem",
+        }}
       >
         {success}
       </div>
