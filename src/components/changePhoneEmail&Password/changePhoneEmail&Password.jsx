@@ -441,6 +441,8 @@ export default function ChangePhoneEmailPassword() {
                     setSuccess("");
                   }, 2000);
                 } else {
+                  setIsEmailOtpLoading(false);
+                  setOtpTimer(false);
                   setErr("Something Bad happens");
                   setTimeout(() => {
                     setErr("");
@@ -448,6 +450,7 @@ export default function ChangePhoneEmailPassword() {
                 }
               })
               .catch((err) => {
+                setOtpTimer(false);
                 setIsEmailOtpLoading(false);
                 setErr(err.response.data.message);
               });
@@ -537,49 +540,101 @@ export default function ChangePhoneEmailPassword() {
   }
 
   return (
-    <div className="editPhoneEmail">
-      <h3 style={{ marginBottom: "4rem" }}>
-        Change{" "}
-        {editType == "phoneNo"
-          ? "Mobile Number"
-          : editType == "email"
-          ? "Email"
-          : "Password"}
-      </h3>
-      <img
-        src={cross}
-        alt="cross"
-        style={{
-          width: "20px",
-          position: "absolute",
-          top: ".5rem",
-          right: ".5rem",
-          cursor: "pointer",
-        }}
-        onClick={hanldeCrossInChange}
-      />
-      <div
-        className="err"
-        style={{
-          opacity: err ? "1" : "",
-          border: err ? "" : "none",
-          top: "-5rem",
-        }}
-      >
-        {err}
-      </div>
-      <div
-        className="success"
-        style={{
-          opacity: success ? "1" : "",
-          border: success ? "" : "none",
-          top: "-5rem",
-        }}
-      >
-        {success}
-      </div>
-      {!otpVerification ? (
-        editType == "phoneNo" ? (
+    <div style={{ height: "50rem", }}>
+      <div className="editPhoneEmail">
+        <h3 style={{ marginBottom: "4rem" }}>
+          Change{" "}
+          {editType == "phoneNo"
+            ? "Mobile Number"
+            : editType == "email"
+            ? "Email"
+            : "Password"}
+        </h3>
+        <img
+          src={cross}
+          alt="cross"
+          style={{
+            width: "20px",
+            position: "absolute",
+            top: ".5rem",
+            right: ".5rem",
+            cursor: "pointer",
+          }}
+          onClick={hanldeCrossInChange}
+        />
+        <div
+          className="err"
+          style={{
+            opacity: err ? "1" : "",
+            border: err ? "" : "none",
+            top: "-5rem",
+          }}
+        >
+          {err}
+        </div>
+        <div
+          className="success"
+          style={{
+            opacity: success ? "1" : "",
+            border: success ? "" : "none",
+            top: "-5rem",
+          }}
+        >
+          {success}
+        </div>
+        {!otpVerification ? (
+          editType == "phoneNo" ? (
+            <div>
+              {isOtpSent ? (
+                <input
+                  type="number"
+                  placeholder="Enter OTP"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                />
+              ) : (
+                <input
+                  type="number"
+                  placeholder="Mobile Number"
+                  value={phoneNo}
+                  readOnly
+                />
+              )}
+            </div>
+          ) : editType == "email" ? (
+            <div>
+              {isOtpESent ? (
+                <input
+                  type="text"
+                  placeholder="Enter OTP"
+                  value={emailOtp}
+                  onChange={(e) => setEmailOtp(e.target.value)}
+                />
+              ) : (
+                <input type="text" placeholder="Email" value={email} readOnly />
+              )}
+            </div>
+          ) : (
+            <div>
+              {isOtpESent ? (
+                <input
+                  type="text"
+                  placeholder="Enter OTP"
+                  value={emailOtp}
+                  onChange={(e) => setEmailOtp(e.target.value)}
+                />
+              ) : (
+                <input
+                  type="text"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoFocus
+                />
+              )}
+            </div>
+          )
+        ) : editType == "phoneNo" ? (
           <div>
             {isOtpSent ? (
               <input
@@ -591,9 +646,9 @@ export default function ChangePhoneEmailPassword() {
             ) : (
               <input
                 type="number"
-                placeholder="Mobile Number"
+                placeholder="New Mobile Number"
                 value={phoneNo}
-                readOnly
+                onChange={(e) => setPhoneNo(e.target.value)}
               />
             )}
           </div>
@@ -607,7 +662,12 @@ export default function ChangePhoneEmailPassword() {
                 onChange={(e) => setEmailOtp(e.target.value)}
               />
             ) : (
-              <input type="text" placeholder="Email" value={email} readOnly />
+              <input
+                type="text"
+                placeholder="New Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             )}
           </div>
         ) : (
@@ -615,86 +675,65 @@ export default function ChangePhoneEmailPassword() {
             {isOtpESent ? (
               <input
                 type="text"
-                placeholder="Enter OTP"
-                value={emailOtp}
-                onChange={(e) => setEmailOtp(e.target.value)}
+                placeholder="Enter New Password"
+                value={pass}
+                onChange={(e) => setPass(e.target.value)}
               />
             ) : (
               <input
                 type="text"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoFocus
+                placeholder="Enter New Password"
+                value={pass}
+                readOnly
               />
             )}
           </div>
-        )
-      ) : editType == "phoneNo" ? (
-        <div>
-          {isOtpSent ? (
-            <input
-              type="number"
-              placeholder="Enter OTP"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-            />
-          ) : (
-            <input
-              type="number"
-              placeholder="New Mobile Number"
-              value={phoneNo}
-              onChange={(e) => setPhoneNo(e.target.value)}
-            />
-          )}
-        </div>
-      ) : editType == "email" ? (
-        <div>
-          {isOtpESent ? (
-            <input
-              type="text"
-              placeholder="Enter OTP"
-              value={emailOtp}
-              onChange={(e) => setEmailOtp(e.target.value)}
-            />
-          ) : (
-            <input
-              type="text"
-              placeholder="New Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          )}
-        </div>
-      ) : (
-        <div>
-          {isOtpESent ? (
-            <input
-              type="text"
-              placeholder="Enter New Password"
-              value={pass}
-              onChange={(e) => setPass(e.target.value)}
-            />
-          ) : (
-            <input
-              type="text"
-              placeholder="Enter New Password"
-              value={pass}
-              readOnly
-            />
-          )}
-        </div>
-      )}
-      <button
-        className={otpTimer ? "hover btn" : "btn"}
-        style={{
-          marginTop: "3rem",
-          backgroundColor: otpTimer ? "rgb(17, 97, 228,.5)" : "",
-        }}
-        onClick={handleChangePhoneNoEmailPassword}
-      >
-        {!otpVerification ? (
-          editType == "phoneNo" ? (
+        )}
+        <button
+          className={otpTimer ? "hover btn" : "btn"}
+          style={{
+            marginTop: "3rem",
+            backgroundColor: otpTimer ? "rgb(17, 97, 228,.5)" : "",
+          }}
+          onClick={handleChangePhoneNoEmailPassword}
+        >
+          {!otpVerification ? (
+            editType == "phoneNo" ? (
+              isOtpSent ? (
+                isPhoneOtpLoading ? (
+                  <div className="loading"></div>
+                ) : (
+                  "Verify OTP"
+                )
+              ) : isPhoneOtpLoading ? (
+                <div className="loading"></div>
+              ) : (
+                "Send OTP"
+              )
+            ) : editType == "email" ? (
+              isOtpESent ? (
+                isEmailOtpLoading ? (
+                  <div className="loading"></div>
+                ) : (
+                  "Verify OTP"
+                )
+              ) : isEmailOtpLoading ? (
+                <div className="loading"></div>
+              ) : (
+                "Send OTP"
+              )
+            ) : isOtpESent ? (
+              isEmailOtpLoading ? (
+                <div className="loading"></div>
+              ) : (
+                "Verify OTP"
+              )
+            ) : isEmailOtpLoading ? (
+              <div className="loading"></div>
+            ) : (
+              "Send OTP"
+            )
+          ) : editType == "phoneNo" ? (
             isOtpSent ? (
               isPhoneOtpLoading ? (
                 <div className="loading"></div>
@@ -704,7 +743,7 @@ export default function ChangePhoneEmailPassword() {
             ) : isPhoneOtpLoading ? (
               <div className="loading"></div>
             ) : (
-              "Send OTP"
+              "Verify Number"
             )
           ) : editType == "email" ? (
             isOtpESent ? (
@@ -716,63 +755,29 @@ export default function ChangePhoneEmailPassword() {
             ) : isEmailOtpLoading ? (
               <div className="loading"></div>
             ) : (
-              "Send OTP"
+              "Verify Email"
             )
           ) : isOtpESent ? (
             isEmailOtpLoading ? (
               <div className="loading"></div>
             ) : (
-              "Verify OTP"
+              "Update Password"
             )
-          ) : isEmailOtpLoading ? (
-            <div className="loading"></div>
-          ) : (
-            "Send OTP"
-          )
-        ) : editType == "phoneNo" ? (
-          isOtpSent ? (
-            isPhoneOtpLoading ? (
-              <div className="loading"></div>
-            ) : (
-              "Verify OTP"
-            )
-          ) : isPhoneOtpLoading ? (
-            <div className="loading"></div>
-          ) : (
-            "Verify Number"
-          )
-        ) : editType == "email" ? (
-          isOtpESent ? (
-            isEmailOtpLoading ? (
-              <div className="loading"></div>
-            ) : (
-              "Verify OTP"
-            )
-          ) : isEmailOtpLoading ? (
-            <div className="loading"></div>
-          ) : (
-            "Verify Email"
-          )
-        ) : isOtpESent ? (
-          isEmailOtpLoading ? (
-            <div className="loading"></div>
           ) : (
             "Update Password"
-          )
+          )}
+        </button>
+        {otpTimer ? (
+          <div className="otpTimer">
+            <span>Resend OTP After </span>
+            <span>
+              <Timer setOtpTimer={setOtpTimer} />
+            </span>
+          </div>
         ) : (
-          "Update Password"
+          ""
         )}
-      </button>
-      {otpTimer ? (
-        <div className="otpTimer">
-          <span>Resend OTP After </span>
-          <span>
-            <Timer setOtpTimer={setOtpTimer} />
-          </span>
-        </div>
-      ) : (
-        ""
-      )}
+      </div>
     </div>
   );
 }
