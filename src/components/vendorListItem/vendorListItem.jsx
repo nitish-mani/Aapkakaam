@@ -210,7 +210,7 @@ export default function VendorListItem({
         <button
           className="btn"
           style={{ marginTop: "1rem" }}
-          onClick={() => handleBookNow(data.vendorId)}
+          onClick={() => handleBookNow(data._id)}
         >
           {isLoading ? <div className="loading"></div> : "Book Now"}
         </button>

@@ -211,14 +211,21 @@ export default function Address() {
 
       <div
         className="err"
-        style={{ opacity: err ? "1" : "", border: err ? "none" : "none" }}
+        style={{
+          opacity: err ? "1" : "",
+          top: "-5rem",
+          border: err ? "none" : "none",
+        }}
       >
         {err}
+      
       </div>
       <div
         className="success"
         style={{
           opacity: success ? "1" : "",
+          top: "-5rem",
+
           border: success ? "none" : "none",
         }}
       >

@@ -200,11 +200,17 @@ export default function ChangePhoneEmailPassword() {
                 } else {
                   setErr("Something bad happens");
                   setIsEmailOtpLoading(false);
+                  setTimeout(() => {
+                    setErr("");
+                  }, 2000);
                 }
               })
               .catch((err) => {
                 setIsEmailOtpLoading(false);
                 setErr(err.response.data.message);
+                setTimeout(() => {
+                  setErr("");
+                }, 2000);
               });
           } else {
             axios
@@ -249,6 +255,9 @@ export default function ChangePhoneEmailPassword() {
                       .catch((err) => {
                         setIsEmailOtpLoading(false);
                         setErr(err.response.data.message);
+                        setTimeout(() => {
+                          setErr("");
+                        }, 2000);
                       });
                   } else if (category === "vendor") {
                     axios
@@ -283,6 +292,9 @@ export default function ChangePhoneEmailPassword() {
                       .catch((err) => {
                         setIsEmailOtpLoading(false);
                         setErr(err.response.data.message);
+                        setTimeout(() => {
+                          setErr("");
+                        }, 2000);
                       });
                   }
                 } else {
@@ -328,6 +340,9 @@ export default function ChangePhoneEmailPassword() {
                 .catch((err) => {
                   setErr(err.response.data.message);
                   setIsEmailOtpLoading(false);
+                  setTimeout(() => {
+                    setErr("");
+                  }, 2000);
                 });
             } else if (category === "vendor") {
               axios
@@ -351,6 +366,9 @@ export default function ChangePhoneEmailPassword() {
                 .catch((err) => {
                   setIsEmailOtpLoading(false);
                   setErr(err.response.data.message);
+                  setTimeout(() => {
+                    setErr("");
+                  }, 2000);
                 });
             }
           }
@@ -419,6 +437,9 @@ export default function ChangePhoneEmailPassword() {
               .catch((err) => {
                 setIsPhoneOtpLoading(false);
                 setErr(err.response.data.message);
+                setTimeout(() => {
+                  setErr("");
+                }, 2000);
               });
           }
         } else if (editType == "email") {
@@ -453,6 +474,9 @@ export default function ChangePhoneEmailPassword() {
                 setOtpTimer(false);
                 setIsEmailOtpLoading(false);
                 setErr(err.response.data.message);
+                setTimeout(() => {
+                  setErr("");
+                }, 2000);
               });
           } else {
             axios
@@ -482,6 +506,9 @@ export default function ChangePhoneEmailPassword() {
               .catch((err) => {
                 setIsEmailOtpLoading(false);
                 setErr(err.response.data.message);
+                setTimeout(() => {
+                  setErr("");
+                }, 2000);
               });
           }
         } else if (editType == "pass") {
@@ -505,6 +532,9 @@ export default function ChangePhoneEmailPassword() {
               .catch((err) => {
                 setIsEmailOtpLoading(false);
                 setErr(err.response.data.message);
+                setTimeout(() => {
+                  setErr("");
+                }, 2000);
               });
           } else {
             axios
@@ -532,6 +562,9 @@ export default function ChangePhoneEmailPassword() {
               .catch((err) => {
                 setIsEmailOtpLoading(false);
                 setErr(err.response.data.message);
+                setTimeout(() => {
+                  setErr("");
+                }, 2000);
               });
           }
         }
@@ -540,7 +573,7 @@ export default function ChangePhoneEmailPassword() {
   }
 
   return (
-    <div style={{ height: "50rem", }}>
+    <div style={{ height: "50rem" }}>
       <div className="editPhoneEmail">
         <h3 style={{ marginBottom: "4rem" }}>
           Change{" "}
@@ -566,7 +599,7 @@ export default function ChangePhoneEmailPassword() {
           className="err"
           style={{
             opacity: err ? "1" : "",
-            border: err ? "" : "none",
+            border:  "none",
             top: "-5rem",
           }}
         >
@@ -576,7 +609,7 @@ export default function ChangePhoneEmailPassword() {
           className="success"
           style={{
             opacity: success ? "1" : "",
-            border: success ? "" : "none",
+            border:  "none",
             top: "-5rem",
           }}
         >

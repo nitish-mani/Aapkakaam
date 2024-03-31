@@ -77,7 +77,10 @@ export default function CheckBookingDate() {
           borderBottom: "1px solid rgba(105, 102, 102, 0.637)",
         }}
       >
-        Check Booking Date
+        Check Booking Date{" "}
+        <span style={{ fontSize: "1.5rem", marginLeft: "1rem" }}>
+          (for {jobType})
+        </span>
       </h1>
       <div className="checkBookingDate">
         <div
