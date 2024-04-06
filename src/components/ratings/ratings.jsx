@@ -2,8 +2,8 @@ import "./ratings.css";
 
 export default function Ratings({ rating = 4 }) {
   return (
-    <div class="rating-container">
-      <div class="rating empty">
+    <div className="rating-container">
+      <div className="rating empty">
         <svg
           data-slot="icon"
           fill="none"

@@ -6,8 +6,11 @@ import "./vendorListItem.css";
 import { useNavigate } from "react-router";
 import male from "../../resources/svg/male-svgrepo-com.svg";
 import female from "../../resources/svg/female-svgrepo-com.svg";
+import rupee from "../../resources/svg/rupee-1-frame-svgrepo-com.svg";
 import Ratings from "../ratings/ratings";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { addDataVendor } from "../../utils/vendorslice";
+import { addDataUser } from "../../utils/userslice";
 
 export default function VendorListItem({
   data,
@@ -27,7 +30,7 @@ export default function VendorListItem({
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState("");
   const [success, setSuccess] = useState("");
-
+  const dispatch = useDispatch();
   const pincode = pinLocation || userData[0].address[0].pincode;
   const balance = userData[0].balance;
 
@@ -72,15 +75,27 @@ export default function VendorListItem({
                 }
               )
               .then((succ) => {
+                const data = { ...userData[0], balance: succ.data.balance };
+                dispatch(addDataUser(data));
+                localStorage.setItem(category, JSON.stringify(data));
+
                 setIsLoading(false);
                 setBookingHappen(!bookingHappen);
-                setSuccess(succ.data);
+                setSuccess(succ.data.message);
                 setTimeout(() => {
                   setSuccess("");
-                }, 1000);
+                }, 2000);
+              })
+              .catch((err) => {
+                setIsLoading(false);
+                setErr(err.response.data.message);
+                setTimeout(() => {
+                  setErr("");
+                }, 2000);
               });
           })
           .catch((err) => {
+            setIsLoading(false);
             setErr(err.response.data.message);
             setTimeout(() => {
               setErr("");
@@ -108,7 +123,7 @@ export default function VendorListItem({
                 `${SERVER_URL}/vendor/bookNowV/${vendorId}`,
                 {
                   bookingId,
-                  vendorId: userData[0].vendorId,
+                  vendorUser: userData[0].vendorId,
                   name: userData[0].name,
                   phoneNo: userData[0].phoneNo,
                   vill: userData[0].address[0].vill,
@@ -124,12 +139,22 @@ export default function VendorListItem({
                 }
               )
               .then((succ) => {
+                const data = { ...userData[0], balance: succ.data.balance };
+                dispatch(addDataVendor(data));
+                localStorage.setItem(category, JSON.stringify(data));
                 setIsLoading(false);
-                setSuccess(succ.data);
+                setSuccess(succ.data.message);
                 setBookingHappen(!bookingHappen);
                 setTimeout(() => {
                   setSuccess("");
-                }, 1000);
+                }, 2000);
+              })
+              .catch((err) => {
+                setIsLoading(false);
+                setErr(err.response.data.message);
+                setTimeout(() => {
+                  setErr("");
+                }, 2000);
               });
           })
           .catch((err) => {
@@ -168,11 +193,25 @@ export default function VendorListItem({
           top: "-5rem",
         }}
       >
-        {success.message}
+        {success}
       </div>
       <div id="profilePic">
         {data.gender == "Male" ? (
-          <img src={male} alt="" />
+          data.profilePic ? (
+            <img
+              src={data.profilePic}
+              alt=""
+              style={{ width: "10rem", height: "10rem", borderRadius: "50%" }}
+            />
+          ) : (
+            <img src={male} alt="" />
+          )
+        ) : data.profilePic ? (
+          <img
+            src={data.profilePic}
+            alt=""
+            style={{ width: "10rem", height: "10rem", borderRadius: "50%" }}
+          />
         ) : (
           <img src={female} alt="" />
         )}
@@ -215,7 +254,10 @@ export default function VendorListItem({
           {isLoading ? <div className="loading"></div> : "Book Now"}
         </button>
         <h5 style={{ marginTop: "2rem" }}>
-          <span style={{ fontSize: "1.5rem", marginRight: "1rem" }}>Rs</span>
+          <span style={{ fontSize: "1.5rem", marginRight: "1rem" }}>
+            {" "}
+            <img src={rupee} alt="" style={{ width: "1.2rem" }} />{" "}
+          </span>
           <span style={{ fontSize: "1.5rem", color: "green" }}>
             {data.wageRate} / Day
           </span>

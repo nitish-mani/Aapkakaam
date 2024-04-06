@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import cross from "../../resources/svg/multiply-svgrepo-com.svg";
 import male from "../../resources/svg/male-svgrepo-com.svg";
 import female from "../../resources/svg/female-svgrepo-com.svg";
+import rupee from "../../resources/svg/rupee-1-frame-svgrepo-com.svg";
 import { useState } from "react";
 import axios from "axios";
 import { SERVER_URL } from "../../utils/base";
@@ -18,7 +19,11 @@ import {
   setPrIsVisibleVendor,
 } from "../../utils/vendorslice";
 import CamleCase from "../camleCase/camleCase";
-import { setLocationPincode, setLocationPost } from "../../utils/categoryslice";
+import {
+  setLocationPincode,
+  setLocationPost,
+  setURL,
+} from "../../utils/categoryslice";
 
 export default function Profile() {
   const [nameEdit, setNameEdit] = useState(false);
@@ -64,7 +69,7 @@ export default function Profile() {
     dispatch(setLocationPincode(""));
     dispatch(setLocationPost(""));
     localStorage.clear();
-    navigate('/');
+    navigate("/");
   }
 
   function handleCrossInProfile() {
@@ -94,16 +99,15 @@ export default function Profile() {
             {
               name: name,
               userId: userData[0].userId,
-              token: userData[0].token,
             },
             {
               headers: { Authorization: token },
             }
           )
           .then((result) => {
-            dispatch(clearDataUser());
-            dispatch(addDataUser(result.data));
-            localStorage.setItem(category, JSON.stringify(result.data));
+            const data = { ...userData[0], name: result.data.name };
+            dispatch(addDataUser(data));
+            localStorage.setItem(category, JSON.stringify(data));
 
             setNameEdit(false);
             setIsLoading((state) => ({ ...state, name: false }));
@@ -117,16 +121,15 @@ export default function Profile() {
             {
               name: name,
               vendorId: userData[0].vendorId,
-              token: userData[0].token,
             },
             {
               headers: { Authorization: token },
             }
           )
           .then((result) => {
-            dispatch(clearDataVendor());
-            dispatch(addDataVendor(result.data));
-            localStorage.setItem(category, JSON.stringify(result.data));
+            const data = { ...userData[0], name: result.data.name };
+            dispatch(addDataVendor(data));
+            localStorage.setItem(category, JSON.stringify(data));
 
             setNameEdit(false);
             setIsLoading((state) => ({ ...state, name: false }));
@@ -246,22 +249,27 @@ export default function Profile() {
           {
             wageRate: wageRate,
             vendorId: userData[0].vendorId,
-            token: userData[0].token,
           },
           {
             headers: { Authorization: token },
           }
         )
         .then((result) => {
-          dispatch(clearDataVendor());
-          dispatch(addDataVendor(result.data));
-          localStorage.setItem(category, JSON.stringify(result.data));
+          const data = { ...userData[0], wageRate: result.data.wageRate };
+          dispatch(addDataVendor(data));
+          localStorage.setItem(category, JSON.stringify(data));
 
           setWageRateEdit(false);
           setIsLoading((state) => ({ ...state, wageRate: false }));
         })
         .catch((err) => console.log(err));
     }
+  }
+
+  function handleProfileImage() {
+    navigate("/uploads");
+    dispatch(setPrIsVisibleVendor(false));
+    dispatch(setPrIsVisibleUser(false));
   }
 
   /***
@@ -287,11 +295,59 @@ export default function Profile() {
         }}
       >
         {userData[0].gender == "Male" ? (
-          <img src={male} alt="" style={{ width: "5rem" }} />
+          userData[0].imgURL ? (
+            <img
+              src={userData[0].imgURL}
+              alt=""
+              style={{
+                width: "5rem",
+                height: "5rem",
+                borderRadius: "50%",
+                cursor: "pointer",
+              }}
+              onClick={handleProfileImage}
+            />
+          ) : (
+            <img
+              src={male}
+              alt=""
+              style={{ width: "5rem", cursor: "pointer" }}
+              onClick={handleProfileImage}
+            />
+          )
+        ) : userData[0].imgURL ? (
+          <img
+            src={userData[0].imgURL}
+            alt=""
+            style={{
+              width: "5rem",
+              height: "5rem",
+              borderRadius: "50%",
+              cursor: "pointer",
+            }}
+            onClick={handleProfileImage}
+          />
         ) : (
-          <img src={female} alt="" style={{ width: "5rem" }} />
+          <img
+            src={female}
+            alt=""
+            style={{ width: "5rem", cursor: "pointer" }}
+            onClick={handleProfileImage}
+          />
         )}
       </div>
+      <p
+        onClick={handleProfileImage}
+        style={{
+          color: "blue",
+          cursor: "pointer",
+          fontSize: "1rem",
+          width: "fit-content",
+          margin:"0 auto"
+        }}
+      >
+        Upload Profile Image
+      </p>
       <h2>
         <CamleCase element={category} /> Profile
       </h2>
@@ -314,7 +370,7 @@ export default function Profile() {
 
       <div>
         <span className="border-bottom">Name </span>
-        <span className="span email-grid">
+        <span className="span email-grid ">
           {nameEdit ? (
             <input
               type="text"
@@ -367,7 +423,7 @@ export default function Profile() {
 
       <div>
         <span className="border-bottom">Mobile No</span>
-        <span className="span email-grid">
+        <span className="span email-grid ">
           {phoneNoEdit ? (
             <input
               type="number"
@@ -434,7 +490,7 @@ export default function Profile() {
 
       <div>
         <span className="border-bottom">Email </span>
-        <span className="span email-grid">
+        <span className="span email-grid ">
           {emailEdit ? (
             <input
               type="email"
@@ -500,7 +556,7 @@ export default function Profile() {
 
       <div>
         <span className="border-bottom">Orders </span>
-        <span className="span email-grid">
+        <span className="span email-grid ">
           <span>{userData[0]?.orders}</span>
 
           {/***** Orders View btn  *****/}
@@ -517,7 +573,7 @@ export default function Profile() {
 
       <div>
         <span className="border-bottom">Share</span>
-        <span className="span email-grid">
+        <span className="span email-grid ">
           <span>{userData[0]?.share}</span>
 
           {/***** Share View btn  *****/}
@@ -541,7 +597,7 @@ export default function Profile() {
       {category === "vendor" ? (
         <div>
           <span className="border-bottom">Bookings </span>
-          <span className="span email-grid">
+          <span className="span email-grid ">
             <span>{userData[0]?.bookings}</span>
 
             {/***** Bookings View btn  *****/}
@@ -566,8 +622,15 @@ export default function Profile() {
        **************************/}
 
       <div>
-        <span className="span email-grid">Balance </span>{" "}
-        <span>{`Rs ${userData[0]?.balance}`}</span>
+        <span className="span email-grid ">Balance </span>{" "}
+        <span>
+          <img src={rupee} alt="" style={{ width: "1.15rem" }} />
+          {userData[0]?.balance === 0 ? (
+            <span style={{ color: "red" }}>{`${userData[0]?.balance}`}</span>
+          ) : (
+            <span style={{ color: "green" }}>{`${userData[0]?.balance}`}</span>
+          )}
+        </span>
       </div>
 
       {/**********************************
@@ -576,10 +639,12 @@ export default function Profile() {
 
       {category === "vendor" ? (
         <div>
-          <span className="span email-grid">Ratings</span>
-          <span
-            style={{ color: "green" }}
-          >{userData[0]?.rating?`${userData[0]?.rating} / 5 (${userData[0]?.ratingCount})`:"No Ratings"}</span>
+          <span className="span email-grid ">Ratings</span>
+          <span style={{ color: "green" }}>
+            {userData[0]?.rating
+              ? `${userData[0]?.rating} / 5 (${userData[0]?.ratingCount})`
+              : "No Ratings"}
+          </span>
         </div>
       ) : (
         ""
@@ -592,7 +657,7 @@ export default function Profile() {
       {category === "vendor" ? (
         <div>
           <span>Wage-rate</span>
-          <span className="span email-grid">
+          <span className="span email-grid ">
             <span>
               {wageRateEdit ? (
                 <input
@@ -612,9 +677,16 @@ export default function Profile() {
                 />
               ) : (
                 <span>
-                  {userData[0]?.wageRate
-                    ? `Rs ${userData[0]?.wageRate} / Day`
-                    : "No Wage Rate"}
+                  {userData[0]?.wageRate ? (
+                    <span>
+                      <img src={rupee} alt="" style={{ width: "1.15rem" }} />
+                      <span style={{ color: "blue" }}>
+                        {userData[0]?.wageRate} / Day
+                      </span>
+                    </span>
+                  ) : (
+                    "No Wage Rate"
+                  )}
                 </span>
               )}
             </span>
@@ -667,7 +739,7 @@ export default function Profile() {
       {category === "vendor" ? (
         <div>
           <span className="border-bottom">Job Profile </span>
-          <span className="span email-grid">
+          <span className="span email-grid ">
             <span style={{ color: "blue" }}>
               <CamleCase element={userData[0]?.type} />
             </span>

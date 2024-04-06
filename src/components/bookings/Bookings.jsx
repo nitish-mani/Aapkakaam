@@ -67,6 +67,7 @@ export default function Bookings() {
   const [isClicked, setIsClicked] = useState(false);
   const [err, setErr] = useState("");
   const [success, setSuccess] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const [orderStatus, setOrderStatus] = useState("pending");
 
@@ -90,20 +91,22 @@ export default function Bookings() {
   }, [date, month, year]);
 
   function handleBookingDate(year, month) {
-    bookings.forEach((data) => {
-      if (data.year === year && data.month === month) {
-        if (!data.cancelOrder && !data.orderCompleted) {
-          pendingDate.push(data.date);
-          pendingUserData.push(data);
-        } else if (!data.cancelOrder && data.orderCompleted) {
-          completeDate.push(data.date);
-          completeUserData.push(data);
-        } else if (data.cancelOrder && !data.orderCompleted) {
-          cancelDate.push(data.date);
-          cancelUserData.push(data);
+    if (Array.isArray(bookings))
+      bookings?.forEach((data1) => {
+        const data = data1.booking;
+        if (data.year === year && data.month === month) {
+          if (!data.cancelOrder && !data.orderCompleted) {
+            pendingDate.push(data.date);
+            pendingUserData.push(data);
+          } else if (!data.cancelOrder && data.orderCompleted) {
+            completeDate.push(data.date);
+            completeUserData.push(data);
+          } else if (data.cancelOrder && !data.orderCompleted) {
+            cancelDate.push(data.date);
+            cancelUserData.push(data);
+          }
         }
-      }
-    });
+      });
   }
   handleBookingDate(year, month);
 
@@ -113,18 +116,23 @@ export default function Bookings() {
 
   function getBookings() {
     axios
-      .get(`${SERVER_URL}/vendor/getBookings/${userId}`, {
+      .get(`${SERVER_URL}/vendor/getBookings/${userId}/${month}/${year}`, {
         headers: { Authorization: token },
       })
       .then((succ) => {
         setBookings(succ.data);
+        setIsLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setIsLoading(false);
+        console.log(err);
+      });
   }
 
   useEffect(() => {
+    setIsLoading(true);
     getBookings();
-  }, []);
+  }, [month, year]);
 
   function handleBookings() {
     setIsClicked(true);
@@ -299,9 +307,14 @@ export default function Bookings() {
               </div>
             </div>
 
-            {pendingDate.length != 0 ||
-            completeDate.length != 0 ||
-            cancelDate.length != 0 ? (
+            {isLoading ? (
+              <div
+                className="loading"
+                style={{ width: "100%", height: "30rem" }}
+              ></div>
+            ) : pendingDate.length != 0 ||
+              completeDate.length != 0 ||
+              cancelDate.length != 0 ? (
               <div>
                 {" "}
                 {orderStatus == "pending" && pendingUserData.length != 0 ? (

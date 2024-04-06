@@ -9,7 +9,7 @@ const vendorSlice = createSlice({
   },
   reducers: {
     addDataVendor: (state, action) => {
-      state.data.push(action.payload);
+      state.data[0] = action.payload;
     },
     clearDataVendor: (state, action) => {
       state.data = [];

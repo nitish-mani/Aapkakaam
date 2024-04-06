@@ -168,7 +168,7 @@ export default function NavBar() {
         </div>
         <input
           type="text"
-          placeholder="Search"
+          placeholder="Search Services"
           className="input"
           value={searchItem}
           onChange={(e) => setSearchItem(e.target.value)}

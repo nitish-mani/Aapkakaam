@@ -22,7 +22,14 @@
   justify-content: space-between;
   position: relative;
 }
-
+#views_child {
+  width: 100%;
+  position: absolute;
+  top: -5rem;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+}
 .views-children {
   border: 2px solid #dee2e6;
   height: max-content;
@@ -37,7 +44,12 @@
   grid-template-columns: 1fr 1fr;
   margin: 1rem;
 }
-
+.pageHandler {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
 @media screen and (max-width: 1160px) {
   .views {
     display: grid;
@@ -103,6 +115,9 @@
   .views-P img {
     width: 1.4rem;
     height: 1.4rem;
+  }
+  #views_child {
+    flex-direction: column;
   }
 }
 @media screen and (max-width: 297px) {

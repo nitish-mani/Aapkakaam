@@ -32,14 +32,19 @@ export default function ViewShare() {
   const [share, setShare] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [pageNo, setPageNo] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
+
   useEffect(() => {
     setTimeout(() => {
       if (category === "user") {
         axios
-          .get(`${SERVER_URL}/${category}/getShare/${userId}`, {
+          .get(`${SERVER_URL}/${category}/getShare/${userId}/${pageNo}`, {
             headers: { Authorization: token },
           })
           .then((result) => {
+            const page = Math.floor(result.data.total / 12) + 1;
+            setTotalPage(page);
             setShare(result.data.share);
             setIsLoading(false);
           })
@@ -50,10 +55,12 @@ export default function ViewShare() {
           });
       } else if (category === "vendor") {
         axios
-          .get(`${SERVER_URL}/${category}/getShare/${userId}`, {
+          .get(`${SERVER_URL}/${category}/getShare/${userId}/${pageNo}`, {
             headers: { Authorization: token },
           })
           .then((result) => {
+            const page = Math.floor(result.data.total / 12) + 1;
+            setTotalPage(page);
             setShare(result.data.share);
             setIsLoading(false);
           })
@@ -64,11 +71,25 @@ export default function ViewShare() {
           });
       }
     }, 3000);
-  }, []);
+  }, [pageNo]);
 
   function hanldeCrossInShare() {
     navigate("/");
     JSON.parse(localStorage.getItem(category));
+  }
+
+  function handlePrev() {
+    if (pageNo > 1) {
+      setIsLoading(true);
+      setPageNo((page) => page - 1);
+    }
+  }
+
+  function handleNext() {
+    if (pageNo < totalPage) {
+      setIsLoading(true);
+      setPageNo((page) => page + 1);
+    }
   }
 
   return (
@@ -130,6 +151,42 @@ export default function ViewShare() {
             );
           })
         )}
+      </div>
+      <div className="pageHandler">
+        <div
+          className="verify-btn"
+          style={{
+            width: "fit-content",
+            opacity: pageNo > 1 ? "1" : ".5",
+            cursor: pageNo > 1 ? "pointer" : "not-allowed",
+          }}
+          onClick={handlePrev}
+        >
+          Prev
+        </div>
+        <div
+          style={{
+            width: "2rem",
+            backgroundColor: "blue",
+            textAlign: "center",
+            color: "#fff",
+            padding: ".2rem",
+            borderRadius: "5px",
+          }}
+        >
+          {pageNo}
+        </div>
+        <div
+          className="verify-btn"
+          style={{
+            width: "fit-content",
+            opacity: totalPage > pageNo ? "1" : ".5",
+            cursor: totalPage > pageNo ? "pointer" : "not-allowed",
+          }}
+          onClick={handleNext}
+        >
+          Next
+        </div>
       </div>
     </div>
   );

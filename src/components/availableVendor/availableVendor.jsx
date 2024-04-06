@@ -34,7 +34,14 @@ export default function AvailableVendor() {
 
   const [vendorPresent, setVendorPresent] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoading1, setIsLoading1] = useState(false);
   const [bookingHappen, setBookingHappen] = useState(false);
+
+  const [pageNo, setPageNo] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
+
+  const [minRating, setMinRating] = useState(0);
+  const [minWageRate, setMinWageRate] = useState(0);
 
   const booked_date = new Date(`${year}/${month + 1}/${date}`).toDateString();
 
@@ -44,16 +51,21 @@ export default function AvailableVendor() {
         .get(
           `${SERVER_URL}/vendor/${
             category === "user" ? "getAll" : "getAllV"
-          }/${jobType}/${pincode}/${booked_date}`,
+          }/${jobType}/${pincode}/${booked_date}/${pageNo}/${minRating}/${minWageRate}`,
           {
             headers: { Authorization: token },
           }
         )
         .then((result) => {
-          setVendorPresent(result.data);
+          setVendorPresent(result.data.vendors);
+          const page = Math.floor(result.data.total / 12) + 1;
+          setTotalPage(page);
+
+          setIsLoading1(false);
           setTimeout(() => setIsLoading(false), 1000);
         })
         .catch((err) => {
+          setIsLoading1(false);
           console.log(err.response.data.message);
           setTimeout(() => setIsLoading(false), 3000);
         });
@@ -63,11 +75,32 @@ export default function AvailableVendor() {
         navigate("/address");
       }, 5000);
     }
-  }, [bookingHappen]);
+  }, [bookingHappen, pageNo]);
+
+  function handleFilter() {
+    setIsLoading(true);
+    setIsLoading1(true);
+    setBookingHappen(!bookingHappen);
+  }
 
   function hanldeCrossInOrders() {
     navigate("/");
   }
+
+  function handlePrev() {
+    if (pageNo > 1) {
+      setIsLoading(true);
+      setPageNo((page) => page - 1);
+    }
+  }
+
+  function handleNext() {
+    if (pageNo < totalPage) {
+      setIsLoading(true);
+      setPageNo((page) => page + 1);
+    }
+  }
+
   return (
     <div className="views-P">
       <img src={cross} alt="cross" onClick={hanldeCrossInOrders} />
@@ -81,10 +114,56 @@ export default function AvailableVendor() {
         }}
       >
         <CamleCase element={jobType} /> List
-        <h5 style={{ display: "inline", fontSize: "1.5rem" }}>
+        <div style={{ display: "inline", fontSize: "1.5rem" }}>
           (for date - {booked_date})
-        </h5>
+        </div>
       </h1>
+      <div className="pageHandlerP">
+        <h5>
+          Filter <CamleCase element={jobType} /> List
+        </h5>
+        <div className="pageHandler res" style={{ width: "100%" }}>
+          <select
+            name=""
+            id=""
+            onChange={(e) => setMinRating(e.target.value)}
+            style={{
+              borderRadius: "5px",
+              border: "2px solid black",
+            }}
+          >
+            <option value="0">Rating</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+          <select
+            name=""
+            id=""
+            onChange={(e) => setMinWageRate(e.target.value)}
+            style={{
+              borderRadius: "5px",
+              border: "2px solid black",
+            }}
+          >
+            <option value="0">Wage Rate</option>
+            <option value="0">0</option>
+            <option value="100">100</option>
+            <option value="200">200</option>
+            <option value="300">300</option>
+            <option value="400">400</option>
+          </select>
+          <button
+            className="btn"
+            style={{ width: "10rem", height: "2rem" }}
+            onClick={handleFilter}
+          >
+            {isLoading1 ? "Loading..." : "Submit"}
+          </button>
+        </div>
+      </div>
       <div className="available-vendor">
         {isLoading ? (
           <div
@@ -127,6 +206,42 @@ export default function AvailableVendor() {
               : `${userData[0]?.address[0]?.post} (${userData[0]?.address[0]?.pincode})`}
           </h1>
         )}
+      </div>
+      <div className="pageHandler">
+        <div
+          className="verify-btn"
+          style={{
+            width: "fit-content",
+            opacity: pageNo > 1 ? "1" : ".5",
+            cursor: pageNo > 1 ? "pointer" : "not-allowed",
+          }}
+          onClick={handlePrev}
+        >
+          Prev
+        </div>
+        <div
+          style={{
+            width: "2rem",
+            backgroundColor: "blue",
+            textAlign: "center",
+            color: "#fff",
+            padding: ".2rem",
+            borderRadius: "5px",
+          }}
+        >
+          {pageNo}
+        </div>
+        <div
+          className="verify-btn"
+          style={{
+            width: "fit-content",
+            opacity: totalPage > pageNo ? "1" : ".5",
+            cursor: totalPage > pageNo ? "pointer" : "not-allowed",
+          }}
+          onClick={handleNext}
+        >
+          Next
+        </div>
       </div>
     </div>
   );

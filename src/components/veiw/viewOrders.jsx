@@ -34,6 +34,9 @@ export default function ViewOrders() {
   const [isLoading, setIsLoading] = useState(true);
   const [orderStatus, setOrderStatus] = useState("pending");
 
+  const [pageNo, setPageNo] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
+
   const pendingVendorData = [];
   const completeVendorData = [];
   const cancelVendorData = [];
@@ -41,11 +44,13 @@ export default function ViewOrders() {
   useEffect(() => {
     if (category === "user") {
       axios
-        .get(`${SERVER_URL}/bookings/getOrdersU/${userId}`, {
+        .get(`${SERVER_URL}/bookings/getOrdersU/${userId}/${pageNo}`, {
           headers: { Authorization: token },
         })
         .then((result) => {
-          setOrders(result.data);
+          setOrders(result.data.orders);
+          const page = Math.floor(result.data.total / 12) + 1;
+          setTotalPage(page);
           setIsLoading(false);
         })
         .catch((err) => {
@@ -55,11 +60,13 @@ export default function ViewOrders() {
         });
     } else if (category === "vendor") {
       axios
-        .get(`${SERVER_URL}/bookings/getOrdersV/${userId}`, {
+        .get(`${SERVER_URL}/bookings/getOrdersV/${userId}/${pageNo}`, {
           headers: { Authorization: token },
         })
         .then((result) => {
-          setOrders(result.data);
+          setOrders(result.data.orders);
+          const page = Math.floor(result.data.total / 12) + 1;
+          setTotalPage(page);
           setIsLoading(false);
         })
         .catch((err) => {
@@ -68,7 +75,7 @@ export default function ViewOrders() {
           navigate("/");
         });
     }
-  }, [cancelOrder]);
+  }, [cancelOrder, pageNo]);
 
   function handleOrdersView() {
     orders.forEach((data) => {
@@ -87,6 +94,20 @@ export default function ViewOrders() {
     navigate("/");
   }
 
+  function handlePrev() {
+    if (pageNo > 1) {
+      setIsLoading(true);
+      setPageNo((page) => page - 1);
+    }
+  }
+
+  function handleNext() {
+    if (pageNo < totalPage) {
+      setIsLoading(true);
+      setPageNo((page) => page + 1);
+    }
+  }
+
   return (
     <div className="views-P">
       <img src={cross} alt="cross" onClick={hanldeCrossInOrders} />
@@ -102,16 +123,7 @@ export default function ViewOrders() {
         Orders
       </h1>
       <div className="views">
-        <div
-          style={{
-            width: "100%",
-            position: "absolute",
-            top: "-5rem",
-            padding: ".5rem",
-            display: "flex",
-            justifyContent: "space-around",
-          }}
-        >
+        <div id="views_child">
           <div
             style={{
               border:
@@ -250,6 +262,42 @@ export default function ViewOrders() {
         ) : (
           ""
         )}
+      </div>
+      <div className="pageHandler">
+        <div
+          className="verify-btn"
+          style={{
+            width: "fit-content",
+            opacity: pageNo > 1 ? "1" : ".5",
+            cursor: pageNo > 1 ? "pointer" : "not-allowed",
+          }}
+          onClick={handlePrev}
+        >
+          Prev
+        </div>
+        <div
+          style={{
+            width: "2rem",
+            backgroundColor: "blue",
+            textAlign: "center",
+            color: "#fff",
+            padding: ".2rem",
+            borderRadius: "5px",
+          }}
+        >
+          {pageNo}
+        </div>
+        <div
+          className="verify-btn"
+          style={{
+            width: "fit-content",
+            opacity: totalPage > pageNo ? "1" : ".5",
+            cursor: totalPage > pageNo ? "pointer" : "not-allowed",
+          }}
+          onClick={handleNext}
+        >
+          Next
+        </div>
       </div>
     </div>
   );

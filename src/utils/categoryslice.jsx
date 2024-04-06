@@ -10,6 +10,9 @@ const categorySlice = createSlice({
     location_post: "",
     cancelOrder: false,
     selectLanguage: "en",
+    url: "",
+    validEmailId: "",
+    validPhoneNoId: "",
   },
   reducers: {
     setCategory: (state, action) => {
@@ -33,6 +36,15 @@ const categorySlice = createSlice({
     setSelectLanguage: (state, action) => {
       state.selectLanguage = action.payload;
     },
+    setURL: (state, action) => {
+      state.url = action.payload;
+    },
+    setValidEmailId: (state, action) => {
+      state.validEmailId = action.payload;
+    },
+    setValidPhoneNoId: (state, action) => {
+      state.validPhoneNoId = action.payload;
+    },
   },
 });
 
@@ -44,5 +56,8 @@ export const {
   setLocationPost,
   setCancelOrder,
   setSelectLanguage,
+  setURL,
+  setValidEmailId,
+  setValidPhoneNoId,
 } = categorySlice.actions;
 export default categorySlice.reducer;

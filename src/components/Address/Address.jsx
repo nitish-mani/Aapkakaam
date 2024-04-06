@@ -114,18 +114,18 @@ export default function Address() {
       }
 
       if (!isDisable) {
+        const villC = CamleCase({ element: vill });
         setIsClicked(true);
         if (category === "user") {
           axios
             .patch(
               `${SERVER_URL}/${category}/update/address`,
               {
-                vill: CamleCase(vill),
+                vill: villC,
                 post,
                 dist,
                 state,
                 pincode,
-                token: userData[0].token,
                 userId: userData[0]?.userId,
               },
               {
@@ -133,11 +133,11 @@ export default function Address() {
               }
             )
             .then((result) => {
-              dispatch(clearDataUser());
               setIsClicked(false);
               setSuccess(result.data);
-              dispatch(addDataUser(result.data));
-              localStorage.setItem(category, JSON.stringify(result.data));
+              const data = { ...userData[0], address: result.data.address };
+              dispatch(addDataUser(data));
+              localStorage.setItem(category, JSON.stringify(data));
               setTimeout(() => {
                 setSuccess("");
                 navigate("/");
@@ -155,7 +155,7 @@ export default function Address() {
             .patch(
               `${SERVER_URL}/${category}/update/address`,
               {
-                vill: CamleCase(vill),
+                vill: villC,
                 post,
                 dist,
                 state,
@@ -168,11 +168,12 @@ export default function Address() {
               }
             )
             .then((result) => {
-              dispatch(clearDataVendor());
               setIsClicked(false);
               setSuccess(result.data);
-              dispatch(addDataVendor(result.data));
-              localStorage.setItem(category, JSON.stringify(result.data));
+
+              const data = { ...userData[0], address: result.data.address };
+              dispatch(addDataVendor(data));
+              localStorage.setItem(category, JSON.stringify(data));
               setTimeout(() => {
                 setSuccess("");
                 navigate("/");
@@ -218,7 +219,6 @@ export default function Address() {
         }}
       >
         {err}
-      
       </div>
       <div
         className="success"

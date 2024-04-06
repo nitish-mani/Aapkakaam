@@ -6,12 +6,28 @@
   grid-template-columns: 1fr;
   gap: 5rem;
 }
+.pageHandlerP {
+  width: 25rem;
+  text-align: center;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 0.5rem;
+}
 h1 {
   display: flex;
 }
 
 @media screen and (max-width: 550px) {
   h1 {
+    flex-direction: column;
+  }
+  .pageHandlerP {
+    width: fit-content;
+    padding: 1rem;
+    margin: 0 auto;
+  }
+  .res {
+    display: flex;
     flex-direction: column;
   }
 }

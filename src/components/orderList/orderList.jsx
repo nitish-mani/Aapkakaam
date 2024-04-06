@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setCancelOrder } from "../../utils/categoryslice";
 import PopUP from "../popup/popup";
+import { addDataVendor } from "../../utils/vendorslice";
+import { addDataUser } from "../../utils/userslice";
 
 export default function OrderList({ element, orderStatus }) {
   const dispatch = useDispatch();
@@ -55,6 +57,9 @@ export default function OrderList({ element, orderStatus }) {
             }
           )
           .then((succ) => {
+            const data = { ...userData[0], balance: succ.data.balance };
+            dispatch(addDataUser(data));
+            localStorage.setItem(category, JSON.stringify(data));
             setSuccess(succ.data.message);
             dispatch(setCancelOrder(!cancelOrder));
             setIsLoadingCancelOrder(false);
@@ -65,6 +70,9 @@ export default function OrderList({ element, orderStatus }) {
           .catch((err) => {
             setErr(err.response.data.message);
             setIsLoadingCancelOrder(false);
+            setTimeout(() => {
+              setErr("");
+            }, 3000);
           });
       else if (category == "vendor")
         axios
@@ -78,6 +86,9 @@ export default function OrderList({ element, orderStatus }) {
             }
           )
           .then((succ) => {
+            const data = { ...userData[0], balance: succ.data.balance };
+            dispatch(addDataVendor(data));
+            localStorage.setItem(category, JSON.stringify(data));
             setSuccess(succ.data.message);
             dispatch(setCancelOrder(!cancelOrder));
             setIsLoadingCancelOrder(false);
@@ -123,6 +134,9 @@ export default function OrderList({ element, orderStatus }) {
           .catch((err) => {
             setErr(err.response.data.message);
             setIsLoadingCompleteOrder(false);
+            setTimeout(() => {
+              setErr("");
+            }, 3000);
           });
       else if (category == "vendor")
         axios
@@ -183,6 +197,9 @@ export default function OrderList({ element, orderStatus }) {
             .catch((err) => {
               setErr(err.response.data.message);
               setIsLoadingRating(false);
+              setTimeout(() => {
+                setErr("");
+              }, 3000);
             });
         else if (category == "vendor")
           axios

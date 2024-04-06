@@ -6,10 +6,13 @@ import line from "../../resources/svg/line-svgrepo-com.svg";
 import rightTck from "../../resources/svg/sign-check-svgrepo-com.svg";
 import axios from "axios";
 import { SERVER_URL } from "../../utils/base";
+import { useDispatch, useSelector } from "react-redux";
+import { setValidEmailId, setValidPhoneNoId } from "../../utils/categoryslice";
 
 export default function SignUp() {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -32,6 +35,7 @@ export default function SignUp() {
   const [verifyPhoneNo, setVerifyPhoneNo] = useState(false);
   const [verifyEmail, setVerifyEmail] = useState(false);
   const [otpId, setOtpId] = useState("");
+  const [otpIdE, setOtpIdE] = useState("");
 
   const [isNameEmpty, setIsNameEmpty] = useState(true);
   const [isEmailEmpty, setIsEmailEmpty] = useState(true);
@@ -42,7 +46,12 @@ export default function SignUp() {
   const [err, setErr] = useState("");
   const [success, setSuccess] = useState("");
 
+  const [isValid, setIsValid] = useState(false);
+  const [isValidPass, setIsValidPass] = useState(true);
+
   let category = location.state.category;
+  const validEmailId = useSelector((state) => state.category.validEmailId);
+  const validPhoneNoId = useSelector((state) => state.category.validPhoneNoId);
 
   let cd = location.state.cd;
   let id = location.state.id;
@@ -65,9 +74,18 @@ export default function SignUp() {
   }, [name]);
 
   useEffect(() => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setIsValid(regex.test(email));
+
     setIsEmailEmpty(true);
   }, [email]);
 
+  useEffect(() => {
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+    if (pass != "" && pass.length > 5) setIsValidPass(regex.test(pass));
+    else setIsValidPass(true);
+  }, [pass]);
   useEffect(() => {
     setIsRePassMatch(true);
   }, [rePass]);
@@ -106,6 +124,7 @@ export default function SignUp() {
         .then((res) => {
           if (res.data.verified) {
             setOtpId(res.data.otpId);
+            dispatch(setValidPhoneNoId(res.data.otpId));
             setIsOtpSent(true);
             setIsPhoneOtpLoading(false);
             setSuccess(res.data.message);
@@ -129,7 +148,6 @@ export default function SignUp() {
           otpId,
         })
         .then((res) => {
-          console.log(res);
           setVerifyPhoneNo(res.data.verify);
           if (res.data.verify) {
             setIsOtpSent(false);
@@ -154,7 +172,8 @@ export default function SignUp() {
         })
         .then((res) => {
           if (res.data.verified) {
-            setOtpId(res.data.otpId);
+            setOtpIdE(res.data.otpId);
+            dispatch(setValidEmailId(res.data.otpId));
             setIsEmailOtpSent(true);
             setIsEmailOtpLoading(false);
             setSuccess("OTP sent successfully");
@@ -173,10 +192,9 @@ export default function SignUp() {
       axios
         .post(`${SERVER_URL}/${category}/emailOtpVerification`, {
           emailOtp,
-          otpId,
+          otpId: otpIdE,
         })
         .then((res) => {
-          console.log(res);
           setVerifyEmail(res.data.verify);
           if (res.data.verify) {
             setIsEmailOtpSent(false);
@@ -188,7 +206,16 @@ export default function SignUp() {
           } else {
             setErr(res.data.message);
             setIsEmailOtpLoading(false);
+            setTimeout(() => {
+              setErr("");
+            }, 3000);
           }
+        })
+        .catch((err) => {
+          setErr(res.data.response.message);
+          setTimeout(() => {
+            setErr("");
+          }, 3000);
         });
     }
   }
@@ -220,7 +247,7 @@ export default function SignUp() {
       return;
     }
 
-    if (verifyEmail && verifyPhoneNo) {
+    if (verifyEmail && verifyPhoneNo && isValid && isValidPass) {
       setIsLoading(true);
       axios
         .post(`${SERVER_URL}/${category}/signup`, {
@@ -232,8 +259,8 @@ export default function SignUp() {
           gender: gender,
           type: job,
           cd,
-          verifyPhoneNo,
-          verifyEmail,
+          validEmailId,
+          validPhoneNoId,
         })
         .then((result) => {
           setIsLoading(false);
@@ -247,11 +274,18 @@ export default function SignUp() {
           setIsLoading(false);
           setErr(err.response.data.message);
           setTimeout(() => {
+            setEmailOtp("");
+            setValidEmailId("");
+            setVerifyEmail(false);
             setErr("");
-          }, 10000);
+          }, 3000);
         });
     } else {
-      setErr("Verify Mobile Number and Email");
+      if (!isValid) setErr("Invalid Email");
+      else setErr("Verify Mobile Number and Email");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
     }
   }
 
@@ -267,13 +301,21 @@ export default function SignUp() {
     <div className="signup">
       <div
         className="err"
-        style={{ opacity: err ? "1" : "", border: err ? "none" : "none" }}
+        style={{
+          opacity: err ? "1" : "",
+          border: err ? "none" : "none",
+          top: "-5rem",
+        }}
       >
         {err}
       </div>
       <div
         className="success"
-        style={{ opacity: success ? "1" : "", border: success ? "none" : "none" }}
+        style={{
+          opacity: success ? "1" : "",
+          border: success ? "none" : "none",
+          top: "-5rem",
+        }}
       >
         {success}
       </div>
@@ -391,7 +433,7 @@ export default function SignUp() {
           ) : (
             ""
           )}
-          {email.length >= 7 && !verifyEmail ? (
+          {isValid && !verifyEmail ? (
             <div className="verify" onClick={handleEmailVerify}>
               {isEmailOtpSent ? (
                 isEmailOtpLoading ? (
@@ -436,12 +478,15 @@ export default function SignUp() {
         </div>
         <h6
           style={{
-            display: isPassValid ? "none" : "",
+            display: isValidPass ? "none" : "",
             color: "red",
             textAlign: "left",
+            fontSize: "1rem",
           }}
         >
-          Password must have 6 charactors
+          Password must be at least 8 characters long and contain at least one
+          uppercase letter, one lowercase letter, one number, and one special
+          character
         </h6>
 
         <div>
@@ -471,8 +516,8 @@ export default function SignUp() {
               onChange={(e) => setJob(e.target.value)}
             >
               <option value="">Select Your Job</option>
-              <option value="labour">Labour</option>
-              <option value="mashon">Mashon</option>
+              <option value="labourer">Labourer</option>
+              <option value="mason">Mason</option>
               <option value="electrician">Electrician</option>
               <option value="plumber">Plumber</option>
               <option value="ac mechanic">AC Mechanic</option>

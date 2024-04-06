@@ -5,10 +5,10 @@ import { useLocation, useNavigate } from "react-router";
 import cross from "../../resources/svg/multiply-svgrepo-com.svg";
 import axios from "axios";
 import Timer from "../timer/timer";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 
-import { addDataUser, clearDataUser } from "../../utils/userslice";
-import { addDataVendor, clearDataVendor } from "../../utils/vendorslice";
+import { addDataUser } from "../../utils/userslice";
+import { addDataVendor } from "../../utils/vendorslice";
 
 export default function ChangePhoneEmailPassword() {
   const navigate = useNavigate();
@@ -19,12 +19,15 @@ export default function ChangePhoneEmailPassword() {
 
   const category = localStorage.getItem("category");
 
-  const userData = JSON.parse(localStorage.getItem(category));
-  const token = `Bearer ${userData?.token}`;
+  const userData =
+    category === "user"
+      ? useSelector((store) => store.user.data)
+      : useSelector((store) => store.vendor.data);
+  const token = `Bearer ${userData[0]?.token}`;
 
   const [pass, setPass] = useState("");
-  const [email, setEmail] = useState(userData?.email);
-  const [phoneNo, setPhoneNo] = useState(userData?.phoneNo);
+  const [email, setEmail] = useState(userData[0]?.email);
+  const [phoneNo, setPhoneNo] = useState(userData[0]?.phoneNo);
   const [otpId, setOtpId] = useState("");
 
   const [isPhoneOtpLoading, setIsPhoneOtpLoading] = useState(false);
@@ -110,8 +113,7 @@ export default function ChangePhoneEmailPassword() {
 
                         {
                           phoneNo: phoneNo,
-                          userId: userData.userId,
-                          token: userData.token,
+                          userId: userData[0].userId,
                           otpId,
                         },
                         {
@@ -119,12 +121,13 @@ export default function ChangePhoneEmailPassword() {
                         }
                       )
                       .then((result) => {
-                        dispatch(clearDataUser());
-                        dispatch(addDataUser(result.data));
-                        localStorage.setItem(
-                          category,
-                          JSON.stringify(result.data)
-                        );
+                        const data = {
+                          ...userData[0],
+                          phoneNo: result.data.phoneNo,
+                        };
+                        dispatch(addDataUser(data));
+                        localStorage.setItem(category, JSON.stringify(data));
+
                         setSuccess("User Mobile Number Updated Successfully");
                         setIsOtpSent(false);
                         setIsPhoneOtpLoading(false);
@@ -143,8 +146,7 @@ export default function ChangePhoneEmailPassword() {
 
                         {
                           phoneNo: phoneNo,
-                          vendorId: userData?.vendorId,
-                          token: userData?.token,
+                          vendorId: userData[0]?.vendorId,
                           otpId,
                         },
                         {
@@ -152,12 +154,13 @@ export default function ChangePhoneEmailPassword() {
                         }
                       )
                       .then((result) => {
-                        dispatch(clearDataVendor());
-                        dispatch(addDataVendor(result.data));
-                        localStorage.setItem(
-                          category,
-                          JSON.stringify(result.data)
-                        );
+                        const data = {
+                          ...userData[0],
+                          phoneNo: result.data.phoneNo,
+                        };
+                        dispatch(addDataVendor(data));
+                        localStorage.setItem(category, JSON.stringify(data));
+
                         setSuccess("Vendor Mobile Number Updated Successfully");
                         setIsOtpSent(false);
                         setIsPhoneOtpLoading(false);
@@ -228,8 +231,7 @@ export default function ChangePhoneEmailPassword() {
 
                         {
                           email: email,
-                          userId: userData?.userId,
-                          token: userData?.token,
+                          userId: userData[0]?.userId,
                           otpId,
                         },
                         {
@@ -237,12 +239,12 @@ export default function ChangePhoneEmailPassword() {
                         }
                       )
                       .then((result) => {
-                        dispatch(clearDataUser());
-                        dispatch(addDataUser(result.data));
-                        localStorage.setItem(
-                          category,
-                          JSON.stringify(result.data)
-                        );
+                        const data = {
+                          ...userData[0],
+                          email: result.data.email,
+                        };
+                        dispatch(addDataUser(data));
+                        localStorage.setItem(category, JSON.stringify(data));
 
                         setSuccess("User Email Updated Successfully");
                         setIsOtpESent(false);
@@ -254,10 +256,16 @@ export default function ChangePhoneEmailPassword() {
                       })
                       .catch((err) => {
                         setIsEmailOtpLoading(false);
-                        setErr(err.response.data.message);
                         setTimeout(() => {
-                          setErr("");
+                          setSuccess("");
+
+                          setErr(err.response.data.message);
                         }, 2000);
+                        setTimeout(() => {
+                          setIsOtpESent(false);
+                          setEmailOtp("");
+                          setErr("");
+                        }, 4000);
                       });
                   } else if (category === "vendor") {
                     axios
@@ -266,8 +274,7 @@ export default function ChangePhoneEmailPassword() {
 
                         {
                           email: email,
-                          vendorId: userData?.vendorId,
-                          token: userData?.token,
+                          vendorId: userData[0]?.vendorId,
                           otpId,
                         },
                         {
@@ -275,12 +282,12 @@ export default function ChangePhoneEmailPassword() {
                         }
                       )
                       .then((result) => {
-                        dispatch(clearDataVendor());
-                        dispatch(addDataVendor(result.data));
-                        localStorage.setItem(
-                          category,
-                          JSON.stringify(result.data)
-                        );
+                        const data = {
+                          ...userData[0],
+                          email: result.data.email,
+                        };
+                        dispatch(addDataVendor(data));
+                        localStorage.setItem(category, JSON.stringify(data));
 
                         setSuccess("Vendor Email Updated Successfully");
                         setIsOtpESent(false);
@@ -291,10 +298,16 @@ export default function ChangePhoneEmailPassword() {
                       })
                       .catch((err) => {
                         setIsEmailOtpLoading(false);
-                        setErr(err.response.data.message);
                         setTimeout(() => {
-                          setErr("");
+                          setSuccess("");
+
+                          setErr(err.response.data.message);
                         }, 2000);
+                        setTimeout(() => {
+                          setIsOtpESent(false);
+                          setEmailOtp("");
+                          setErr("");
+                        }, 4000);
                       });
                   }
                 } else {
@@ -599,7 +612,7 @@ export default function ChangePhoneEmailPassword() {
           className="err"
           style={{
             opacity: err ? "1" : "",
-            border:  "none",
+            border: "none",
             top: "-5rem",
           }}
         >
@@ -609,7 +622,7 @@ export default function ChangePhoneEmailPassword() {
           className="success"
           style={{
             opacity: success ? "1" : "",
-            border:  "none",
+            border: "none",
             top: "-5rem",
           }}
         >

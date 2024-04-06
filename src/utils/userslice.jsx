@@ -9,7 +9,7 @@ const userSlice = createSlice({
   },
   reducers: {
     addDataUser: (state, action) => {
-      state.data.push(action.payload);
+      state.data[0] = action.payload;
     },
     clearDataUser: (state, action) => {
       state.data = [];
