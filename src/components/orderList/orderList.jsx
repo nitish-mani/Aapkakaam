@@ -35,6 +35,7 @@ export default function OrderList({ element, orderStatus }) {
   const [popupComplete, setPopupComplete] = useState(false);
   const [popupRating, setPopupRating] = useState(false);
 
+  const [btnHovered, setBtnHovered] = useState(false);
   const [err, setErr] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -43,6 +44,13 @@ export default function OrderList({ element, orderStatus }) {
   }`;
 
   function handleCancelOrder(bookingId) {
+    if (!navigator.onLine) {
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
+      return;
+    }
     setIsLoadingCancelOrder(true);
     if (cancelOrder1) {
       if (category == "user")
@@ -110,6 +118,13 @@ export default function OrderList({ element, orderStatus }) {
   }
 
   function handleCompletedOrder(bookingId) {
+    if (!navigator.onLine) {
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
+      return;
+    }
     setIsLoadingCompleteOrder(true);
     if (markAsComplete) {
       if (category == "user")
@@ -171,6 +186,13 @@ export default function OrderList({ element, orderStatus }) {
   }
 
   function handleRatings(bookingId, rate) {
+    if (!navigator.onLine) {
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
+      return;
+    }
     if (!rate) {
       setIsLoadingRating(true);
       if (forRating) {
@@ -233,6 +255,13 @@ export default function OrderList({ element, orderStatus }) {
         setIsLoadingRating(false);
       }
     }
+  }
+
+  function handleMouseHoverEnter() {
+    setBtnHovered(true);
+  }
+  function handleMouseHoverLeave() {
+    setBtnHovered(false);
   }
   return (
     <div
@@ -297,7 +326,24 @@ export default function OrderList({ element, orderStatus }) {
               backgroundColor: "red",
             }}
             onClick={() => handleCancelOrder(element.bookingId)}
+            onMouseEnter={handleMouseHoverEnter}
+            onMouseLeave={handleMouseHoverLeave}
           >
+            {" "}
+            <div
+              className="popmsg"
+              style={{
+                display: btnHovered ? "block" : "none",
+                color: "green",
+                width: "20rem",
+                top: "-1rem",
+                left: "50%",
+                transform: "translateX(-50%)",
+                border: "none",
+              }}
+            >
+              You will get refund of Rs 25{" "}
+            </div>
             {isLoadingCancelOrder ? (
               <div className="loading"></div>
             ) : cancelOrder1 ? (

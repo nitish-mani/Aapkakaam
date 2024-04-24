@@ -15,6 +15,7 @@ import CheckBookingDate from "./components/checkBookingDate/checkBookingDate";
 import Share from "./components/share/share";
 import ChangePhoneEmailPassword from "./components/changePhoneEmail&Password/changePhoneEmail&Password";
 import UploadImage from "./components/uploadImage/uploadImage";
+import AddMoney from "./components/addMoney/addMoney";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -81,6 +82,10 @@ export default function App() {
         {
           path: "/uploads",
           element: <UploadImage />,
+        },
+        {
+          path: "/addMoney",
+          element: <AddMoney />,
         },
       ],
     },

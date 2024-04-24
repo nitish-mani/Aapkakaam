@@ -61,6 +61,13 @@ const UploadImage = () => {
   };
 
   function uploadToS3() {
+    if (!navigator.onLine) {
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
+      return;
+    }
     if (selectedFile.name && !imgLoading) {
       setImgLoading(true);
       axios

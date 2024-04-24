@@ -115,6 +115,13 @@ export default function Bookings() {
   }
 
   function getBookings() {
+    if (!navigator.onLine) {
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
+      return;
+    }
     axios
       .get(`${SERVER_URL}/vendor/getBookings/${userId}/${month}/${year}`, {
         headers: { Authorization: token },
@@ -125,16 +132,34 @@ export default function Bookings() {
       })
       .catch((err) => {
         setIsLoading(false);
-        console.log(err);
+        setErr("something bad happens");
+        setTimeout(() => {
+          setErr("");
+        }, 3000);
       });
   }
 
   useEffect(() => {
+    if (!navigator.onLine) {
+      setIsLoading(false);
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
+      return;
+    }
     setIsLoading(true);
     getBookings();
   }, [month, year]);
 
   function handleBookings() {
+    if (!navigator.onLine) {
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
+      return;
+    }
     setIsClicked(true);
     setIsDateClicked(false);
 

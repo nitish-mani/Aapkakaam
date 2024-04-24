@@ -45,7 +45,7 @@ export default function Footer() {
         style={{ borderTop: "1px solid rgba(0, 0, 0, 0.12)", width: "100vw" }}
       >
         <div className="footer-div2nd">
-          <div className="copyRight">@2024 Aapkakaam Technology Pvt. Ltd.</div>
+          <div className="copyRight">© 2024 Uslugi Technology Pvt. Ltd.</div>
           <div></div>
           <div className="connect">
             <div

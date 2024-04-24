@@ -61,6 +61,13 @@ export default function Address() {
     setErr("");
     setPincodeEmpty(false);
     if (pincode.length === 6) {
+      if (!navigator.onLine) {
+        setErr("You are offline");
+        setTimeout(() => {
+          setErr("");
+        }, 3000);
+        return;
+      }
       setIsAddressLoading(true);
       axios
         .get(`https://api.postalpincode.in/pincode/${pincode}`)
@@ -87,6 +94,13 @@ export default function Address() {
   }, [pincode]);
 
   function handleSubmitAddress() {
+    if (!navigator.onLine) {
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
+      return;
+    }
     if (viewOnLocation) {
       if (pincode.length != 6) {
         setErr("Pincode Must Have 6 Charactor");
@@ -177,14 +191,14 @@ export default function Address() {
               setTimeout(() => {
                 setSuccess("");
                 navigate("/");
-              }, 5000);
+              }, 3000);
             })
             .catch((err) => {
               setIsClicked(false);
               setErr(err.data);
               setTimeout(() => {
                 setErr("");
-              }, 5000);
+              }, 3000);
             });
         }
       }

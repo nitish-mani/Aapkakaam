@@ -30,6 +30,7 @@ export default function VendorListItem({
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState("");
   const [success, setSuccess] = useState("");
+  const [btnHovered, setBtnHovered] = useState(false);
   const dispatch = useDispatch();
   const pincode = pinLocation || userData[0].address[0].pincode;
   const balance = userData[0].balance;
@@ -172,7 +173,12 @@ export default function VendorListItem({
       }, 5000);
     }
   }
-
+  function handleMouseHoverEnter() {
+    setBtnHovered(true);
+  }
+  function handleMouseHoverLeave() {
+    setBtnHovered(false);
+  }
   return (
     <div className="available-vendor__child" key={i}>
       <div
@@ -229,7 +235,7 @@ export default function VendorListItem({
         </div>
         <div style={{ flexDirection: "row", justifyContent: "flex-start" }}>
           <div>
-            <Ratings rating={data.rating} />
+            <Ratings rating={data.rating ? data.rating : 4} />
           </div>{" "}
           <p style={{ fontSize: "1.5rem" }}>
             {data.rating
@@ -248,9 +254,17 @@ export default function VendorListItem({
       <div className="vdldiv">
         <button
           className="btn"
-          style={{ marginTop: "1rem" }}
+          style={{ marginTop: "1rem", position: "relative" }}
           onClick={() => handleBookNow(data._id)}
+          onMouseEnter={handleMouseHoverEnter}
+          onMouseLeave={handleMouseHoverLeave}
         >
+          <div
+            className="popmsg"
+            style={{ display: btnHovered ? "block" : "none" }}
+          >
+            It will cost you Rs 30{" "}
+          </div>
           {isLoading ? <div className="loading"></div> : "Book Now"}
         </button>
         <h5 style={{ marginTop: "2rem" }}>

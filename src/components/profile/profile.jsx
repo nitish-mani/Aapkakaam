@@ -20,6 +20,7 @@ import {
 } from "../../utils/vendorslice";
 import CamleCase from "../camleCase/camleCase";
 import {
+  setCategory,
   setLocationPincode,
   setLocationPost,
   setURL,
@@ -59,6 +60,7 @@ export default function Profile() {
   const [email, setEmail] = useState(userData[0]?.email);
   const [phoneNo, setPhoneNo] = useState(userData[0]?.phoneNo);
   const [wageRate, setWageRate] = useState(userData[0]?.wageRate);
+  const [err, setErr] = useState("");
 
   function handleLogout() {
     if (category === "user") dispatch(clearDataUser());
@@ -68,6 +70,7 @@ export default function Profile() {
     else if (category === "vendor") dispatch(setPrIsVisibleVendor(false));
     dispatch(setLocationPincode(""));
     dispatch(setLocationPost(""));
+    dispatch(setCategory(""));
     localStorage.clear();
     navigate("/");
   }
@@ -87,6 +90,13 @@ export default function Profile() {
   }
 
   function handleNameEdit() {
+    if (!navigator.onLine) {
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
+      return;
+    }
     setNameEdit(true);
 
     if (nameEdit) {
@@ -112,7 +122,12 @@ export default function Profile() {
             setNameEdit(false);
             setIsLoading((state) => ({ ...state, name: false }));
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            setErr("something bad happens");
+            setTimeout(() => {
+              setErr("");
+            }, 3000);
+          });
       } else if (category === "vendor") {
         axios
           .patch(
@@ -134,7 +149,12 @@ export default function Profile() {
             setNameEdit(false);
             setIsLoading((state) => ({ ...state, name: false }));
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            setErr("something bad happens");
+            setTimeout(() => {
+              setErr("");
+            }, 3000);
+          });
       }
     }
   }
@@ -237,6 +257,13 @@ export default function Profile() {
      **********************************/
   }
   function handleWageRate() {
+    if (!navigator.onLine) {
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
+      return;
+    }
     setWageRateEdit(true);
 
     if (wageRateEdit) {
@@ -262,8 +289,19 @@ export default function Profile() {
           setWageRateEdit(false);
           setIsLoading((state) => ({ ...state, wageRate: false }));
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          setErr("something bad happens");
+          setTimeout(() => {
+            setErr("");
+          }, 3000);
+        });
     }
+  }
+
+  function handleAddMoney() {
+    navigate("/addMoney");
+    dispatch(setPrIsVisibleVendor(false));
+    dispatch(setPrIsVisibleUser(false));
   }
 
   function handleProfileImage() {
@@ -287,6 +325,17 @@ export default function Profile() {
       className="profile"
       style={{ display: isPrVisible ? "block" : "none" }}
     >
+      {" "}
+      <div
+        className="err"
+        style={{
+          opacity: err ? "1" : "",
+          border: err ? "none" : "none",
+          top: "6.5rem",
+        }}
+      >
+        {err}
+      </div>
       <div
         style={{
           display: "flex",
@@ -343,7 +392,7 @@ export default function Profile() {
           cursor: "pointer",
           fontSize: "1rem",
           width: "fit-content",
-          margin:"0 auto"
+          margin: "0 auto",
         }}
       >
         Upload Profile Image
@@ -363,11 +412,9 @@ export default function Profile() {
         }}
         onClick={handleCrossInProfile}
       />
-
       {/**********************
        ******  Name  *********
        ***********************/}
-
       <div>
         <span className="border-bottom">Name </span>
         <span className="span email-grid ">
@@ -416,11 +463,9 @@ export default function Profile() {
           </span>
         </span>
       </div>
-
       {/*************************
        ******  Phone No *********
        **************************/}
-
       <div>
         <span className="border-bottom">Mobile No</span>
         <span className="span email-grid ">
@@ -483,11 +528,9 @@ export default function Profile() {
           </span>
         </span>
       </div>
-
       {/***********************
        ******  Email  *********
        ************************/}
-
       <div>
         <span className="border-bottom">Email </span>
         <span className="span email-grid ">
@@ -549,11 +592,9 @@ export default function Profile() {
           </span>
         </span>
       </div>
-
       {/************************
        ******  Orders  *********
        *************************/}
-
       <div>
         <span className="border-bottom">Orders </span>
         <span className="span email-grid ">
@@ -566,11 +607,9 @@ export default function Profile() {
           </span>
         </span>
       </div>
-
       {/***********************
        ******  Share  *********
        ************************/}
-
       <div>
         <span className="border-bottom">Share</span>
         <span className="span email-grid ">
@@ -589,11 +628,9 @@ export default function Profile() {
           </span>
         </span>
       </div>
-
       {/************************************
        ******  Bookings for vendor *********
        *************************************/}
-
       {category === "vendor" ? (
         <div>
           <span className="border-bottom">Bookings </span>
@@ -616,27 +653,33 @@ export default function Profile() {
       ) : (
         ""
       )}
-
       {/*************************
        ******  Balance  *********
        **************************/}
-
       <div>
         <span className="span email-grid ">Balance </span>{" "}
         <span>
+        <span  className="verify-btn" style={{border:"none",margin:"0 .3rem"}}>
           <img src={rupee} alt="" style={{ width: "1.15rem" }} />
           {userData[0]?.balance === 0 ? (
             <span style={{ color: "red" }}>{`${userData[0]?.balance}`}</span>
           ) : (
             <span style={{ color: "green" }}>{`${userData[0]?.balance}`}</span>
           )}
+         
+          </span>
+          <span
+            className="verify-btn btn1"
+            onClick={handleAddMoney}
+            style={{ padding: ".4rem" }}
+          >
+            Add Money
+          </span>
         </span>
       </div>
-
       {/**********************************
        ******  Rating for Vendor *********
        ***********************************/}
-
       {category === "vendor" ? (
         <div>
           <span className="span email-grid ">Ratings</span>
@@ -649,11 +692,9 @@ export default function Profile() {
       ) : (
         ""
       )}
-
       {/**********************************
        ******  WageRate for Vendor *********
        ***********************************/}
-
       {category === "vendor" ? (
         <div>
           <span>Wage-rate</span>
@@ -691,18 +732,20 @@ export default function Profile() {
               )}
             </span>
             <span className="verify-btn btn1" onClick={handleWageRate}>
-              Set Wage Rate
+              {isLoading.wageRate ? (
+                <div className="loading"></div>
+              ) : (
+                "Set Wage Rate"
+              )}
             </span>
           </span>
         </div>
       ) : (
         ""
       )}
-
       {/*************************
        ******  Address  *********
        **************************/}
-
       <div>
         <span className="span ">Address </span>
         {userData[0]?.address[0] ? (
@@ -731,11 +774,9 @@ export default function Profile() {
           </button>
         )}{" "}
       </div>
-
       {/****************************************
        ******  Job Profile for Vendor  *********
        *****************************************/}
-
       {category === "vendor" ? (
         <div>
           <span className="border-bottom">Job Profile </span>
@@ -748,11 +789,9 @@ export default function Profile() {
       ) : (
         ""
       )}
-
       {/*************************
        ******  Log Out  btn *********
        **************************/}
-
       <button className="btn" onClick={handleLogout}>
         Logout
       </button>

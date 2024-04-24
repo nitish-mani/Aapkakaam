@@ -154,3 +154,12 @@ input::-webkit-inner-spin-button {
     font-size: 1.2rem;
   }
 }
+
+.flex {
+  display: flex;
+  justify-content: center;
+  color: #fff;
+}
+.flex-child {
+  width: 25rem;
+}

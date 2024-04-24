@@ -1,36 +1,95 @@
-import NinethComponent from "../Nineth/NinethComponent";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import axios from "axios";
+import { SERVER_URL } from "../../utils/base";
+import { addDataVendor } from "../../utils/vendorslice";
+import { addDataUser } from "../../utils/userslice";
+import Eleventh from "../eleventh/eleventh";
+import FirstComponent from "../First/FirstComponent";
 import SecondComponent from "../Second/SecondComponent";
-import SeventhComponent from "../Seventh/SeventhComponent";
-import SixthComponent from "../Sixth/SixthComponent";
-import TenthComponent from "../Tenth/TenthComponent";
 import ThirdComponent from "../Third/ThirdComponent";
 import FourthComponent from "../Fourth/FourthComponent";
-import EighthComponent from "../Eighth/EighthComponent";
 import FifthComponent from "../Fifth/FifthComponent";
-import FirstComponent from "../First/FirstComponent";
-
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router";
+import SixthComponent from "../Sixth/SixthComponent";
+import SeventhComponent from "../Seventh/SeventhComponent";
+import EighthComponent from "../Eighth/EighthComponent";
+import NinethComponent from "../Nineth/NinethComponent";
+import TenthComponent from "../Tenth/TenthComponent";
 
 export default function Body() {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const category = localStorage.getItem("category");
-  const userData =
-    category == "user"
-      ? useSelector((state) => state.user.data)
-      : useSelector((state) => state.vendor.data);
-  const address = userData[0]?.address;
-  const wageRate = userData[0]?.wageRate;
-  const balance = userData[0]?.balance;
+  const userData = useSelector((state) =>
+    category === "user" ? state.user.data : state.vendor.data
+  );
+  const token = `Bearer ${userData[0]?.token}`;
+  const [err, setErr] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!navigator.onLine) throw new Error("You are offline");
+        const id =
+          category === "vendor" ? userData[0]?.vendorId : userData[0]?.userId;
+        if (category === "vendor" && id) {
+          const { data } = await axios.get(
+            `${SERVER_URL}/vendor/getVendorByVendor/${id}`,
+            {
+              headers: { Authorization: token },
+            }
+          );
+          const newData = {
+            ...userData[0],
+            balance: data.balance,
+            rating: data.rating,
+            ratingCount: data.ratingCount,
+          };
+          dispatch(addDataVendor(newData));
+          localStorage.setItem(category, JSON.stringify(newData));
+        } else if (category === "user" && id) {
+          const { data } = await axios.get(
+            `${SERVER_URL}/user/getUserByUser/${id}`,
+            {
+              headers: { Authorization: token },
+            }
+          );
+          const newData = {
+            ...userData[0],
+            balance: data.balance,
+          };
+          dispatch(addDataUser(newData));
+          localStorage.setItem(category, JSON.stringify(newData));
+        }
+      } catch (error) {
+        setErr("Something went wrong");
+        setTimeout(() => setErr(""), 3000);
+      }
+    };
+    fetchData();
+  }, []);
 
   function handleAddAddress() {
     navigate("/address");
   }
 
-  return (
-    <>
-      {category === "vendor" && address?.length === 0 ? (
+  const renderError = (msg) => (
+    <div
+      className="err"
+      style={{
+        opacity: msg ? 1 : "",
+        top: "-5rem",
+        border: msg ? "none" : "none",
+      }}
+    >
+      {msg}
+    </div>
+  );
+
+  const renderProfileVisibilityMessage = () => {
+    if (category === "vendor" && userData[0]?.address?.length === 0) {
+      return (
         <div style={{ marginTop: "2rem", textAlign: "center" }}>
           Your profile is not visible to User. Please Update Your Address to
           make your profile visible.
@@ -42,25 +101,39 @@ export default function Body() {
             Add
           </span>
         </div>
-      ) : (
-        ""
-      )}
-      {!wageRate && category === "vendor" && balance ? (
+      );
+    }
+    return null;
+  };
+
+  const renderWageRateMessage = () => {
+    if (
+      !userData[0]?.wageRate &&
+      category === "vendor" &&
+      userData[0]?.balance
+    ) {
+      return (
         <div style={{ marginTop: "2rem", textAlign: "center", color: "red" }}>
           Your profile is not visible to User. Please Set Your{" "}
           <span style={{ color: "blue" }}>Wage Rate</span> from Your Profile.
         </div>
-      ) : (
-        ""
-      )}
+      );
+    }
+    return null;
+  };
 
-      {balance < 5 ? (
+  const renderBalanceMessage = () => {
+    const { balance } = userData[0] || {};
+    if (!balance) return null;
+    let message = "";
+    if (balance < 30) {
+      message = (
         <div style={{ marginTop: "2rem", textAlign: "center" }}>
           Your <span style={{ color: "blue" }}>Balance</span> is{" "}
-          <span style={{ color: "red" }}>0</span> . You can't do bookings{" "}
-          {category == "vendor"
+          <span style={{ color: "red" }}>0</span>. You can't do bookings
+          {category === "vendor"
             ? "and as a Vendor your profile is not visible to User"
-            : ""}{" "}
+            : ""}
           . Please{" "}
           <span
             style={{ color: "blue", cursor: "pointer" }}
@@ -71,10 +144,12 @@ export default function Body() {
           to your friend or <span style={{ color: "blue" }}>Recharge</span> to
           increase your Balance.
         </div>
-      ) : balance <= 10 ? (
+      );
+    } else if (balance <= 60) {
+      message = (
         <div style={{ marginTop: "2rem", textAlign: "center" }}>
-          Your <span style={{ color: "blue" }}>Balance</span> is less than 15 Rs
-          . Please{" "}
+          Your <span style={{ color: "blue" }}>Balance</span> is less than 50
+          Rs. Please{" "}
           <span
             style={{ color: "blue", cursor: "pointer" }}
             onClick={() => navigate("/share")}
@@ -84,9 +159,17 @@ export default function Body() {
           to your friend or <span style={{ color: "blue" }}>Recharge</span> to
           increase your Balance.
         </div>
-      ) : (
-        ""
-      )}
+      );
+    }
+    return message;
+  };
+
+  return (
+    <>
+      {renderError(err)}
+      {renderProfileVisibilityMessage()}
+      {renderWageRateMessage()}
+      {renderBalanceMessage()}
       <FirstComponent />
       <SecondComponent />
       <ThirdComponent />
@@ -97,6 +180,7 @@ export default function Body() {
       <EighthComponent />
       <NinethComponent />
       <TenthComponent />
+      <Eleventh />
     </>
   );
 }

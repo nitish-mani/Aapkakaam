@@ -52,8 +52,9 @@ export default function TenthComponent() {
       else navigate("/category");
     }, 200);
   }
+
   return (
-    <div className="second-div">
+    <div className="second-div div-child">
       <div
         className="second-div-div"
         onClick={handleClicked}

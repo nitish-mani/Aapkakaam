@@ -13,6 +13,13 @@ export default function BookingList({ data }) {
   const [err, setErr] = useState("");
 
   function handleGrantPermission(bookingId) {
+    if (!navigator.onLine) {
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
+      return;
+    }
     setIsLoadingRatingPermission(true);
     axios
       .patch(

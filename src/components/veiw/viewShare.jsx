@@ -34,8 +34,17 @@ export default function ViewShare() {
 
   const [pageNo, setPageNo] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
+  const [err, setErr] = useState("");
 
   useEffect(() => {
+    if (!navigator.onLine) {
+      setIsLoading(false);
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
+      return;
+    }
     setTimeout(() => {
       if (category === "user") {
         axios
@@ -94,6 +103,16 @@ export default function ViewShare() {
 
   return (
     <div className="views-P">
+      <div
+        className="err"
+        style={{
+          opacity: err ? "1" : "",
+          border: err ? "none" : "none",
+          top: "-3rem",
+        }}
+      >
+        {err}
+      </div>
       <img src={cross} alt="cross" onClick={hanldeCrossInShare} />
       <h1
         style={{

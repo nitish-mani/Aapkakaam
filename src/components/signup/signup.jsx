@@ -107,6 +107,13 @@ export default function SignUp() {
   }, [emailOtp]);
 
   function handlePhoneVerify() {
+    if (!navigator.onLine) {
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
+      return;
+    }
     setIsPhoneOtpLoading(true);
     if (!isOtpSent) {
       if (phoneNo.length != 10) {
@@ -164,6 +171,13 @@ export default function SignUp() {
     }
   }
   function handleEmailVerify() {
+    if (!navigator.onLine) {
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
+      return;
+    }
     setIsEmailOtpLoading(true);
     if (!isEmailOtpSent)
       axios
@@ -244,6 +258,13 @@ export default function SignUp() {
 
     if (gender.length === 0) {
       setIsGender(false);
+      return;
+    }
+    if (!navigator.onLine) {
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
       return;
     }
 
@@ -556,6 +577,7 @@ export default function SignUp() {
               <option value="chaat">Chaat</option>
               <option value="dulha rath">Dulha Rath</option>
               <option value="kirtan mandli">Kirtan Mandli</option>
+              <option value="mini truck">Mini Truck</option>
             </select>
           </div>
         ) : (

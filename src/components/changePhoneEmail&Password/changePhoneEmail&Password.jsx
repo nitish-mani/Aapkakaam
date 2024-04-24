@@ -46,12 +46,19 @@ export default function ChangePhoneEmailPassword() {
 
   const [otpTimer, setOtpTimer] = useState(false);
 
-  console.log(otpId);
+ 
   function hanldeCrossInChange() {
     navigate("/");
   }
 
   function handleChangePhoneNoEmailPassword() {
+    if (!navigator.onLine) {
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
+      return;
+    }
     if (!otpTimer) {
       if (otpVerification) {
         if (editType == "phoneNo") {
@@ -464,7 +471,6 @@ export default function ChangePhoneEmailPassword() {
                 email,
               })
               .then((res) => {
-                console.log(res.data.verified);
                 if (res.data.verified) {
                   setOtpId(res.data.otpId);
                   setSuccess("OTP sent successfuly");

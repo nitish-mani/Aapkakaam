@@ -46,6 +46,13 @@ export default function AvailableVendor() {
   const booked_date = new Date(`${year}/${month + 1}/${date}`).toDateString();
 
   useEffect(() => {
+    if (!navigator.onLine) {
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
+      return;
+    }
     if (pincode) {
       axios
         .get(
@@ -66,8 +73,11 @@ export default function AvailableVendor() {
         })
         .catch((err) => {
           setIsLoading1(false);
-          console.log(err.response.data.message);
-          setTimeout(() => setIsLoading(false), 3000);
+          setErr(err.response.data.message);
+          setTimeout(() => {
+            setIsLoading(false);
+            setErr("");
+          }, 3000);
         });
     } else {
       setTimeout(() => {

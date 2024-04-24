@@ -9,8 +9,6 @@ export default function Category() {
   const dispatch = useDispatch();
   const { cd, id } = useParams();
 
-  console.log(cd, id);
-
   function handleUserLogin() {
     dispatch(setCategory("user"));
     localStorage.setItem("category", "user");

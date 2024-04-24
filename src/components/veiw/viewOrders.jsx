@@ -36,12 +36,21 @@ export default function ViewOrders() {
 
   const [pageNo, setPageNo] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
+  const [err, setErr] = useState("");
 
   const pendingVendorData = [];
   const completeVendorData = [];
   const cancelVendorData = [];
 
   useEffect(() => {
+    if (!navigator.onLine) {
+      setIsLoading(false);
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
+      return;
+    }
     if (category === "user") {
       axios
         .get(`${SERVER_URL}/bookings/getOrdersU/${userId}/${pageNo}`, {
@@ -110,6 +119,16 @@ export default function ViewOrders() {
 
   return (
     <div className="views-P">
+      <div
+        className="err"
+        style={{
+          opacity: err ? "1" : "",
+          border: err ? "none" : "none",
+          top: "-3rem",
+        }}
+      >
+        {err}
+      </div>
       <img src={cross} alt="cross" onClick={hanldeCrossInOrders} />
       <h1
         style={{

@@ -54,6 +54,7 @@ export default function NavBar() {
     "chaat",
     "dulha rath",
     "kirtan mandli",
+    "mini truck",
     "मजदूर",
     "राजमिस्त्री",
     "बिजली मिस्त्री",
@@ -94,6 +95,7 @@ export default function NavBar() {
     "चाट बुकिंग",
     "दुल्हारथ बुकिंग",
     "कीर्तन मंडली बुकिंग",
+    "छोटा ट्रक",
   ];
 
   const [btnClicked, setBtnClicked] = useState(false);
@@ -182,9 +184,9 @@ export default function NavBar() {
                 <div
                   key={i}
                   onClick={() => {
-                    if (i < 40) handleSearchItem(data);
+                    if (i < 41) handleSearchItem(data);
                     else {
-                      const data = items[i - 40];
+                      const data = items[i - 41];
                       handleSearchItem(data);
                     }
                   }}
@@ -216,26 +218,31 @@ export default function NavBar() {
             "Login"
           )}
         </button>
-        <div className="selectLang">
-          <div
-            style={{
-              borderBottom: lang == "en" ? "2px solid black" : "2px solid #fff",
-              padding: lang == "en" ? ".2rem" : ".2rem",
-              cursor: "pointer",
-            }}
-            onClick={() => dispatch(setSelectLanguage("en"))}
-          >
-            Eng
-          </div>
-          <div
-            style={{
-              borderBottom: lang == "en" ? "2px solid #fff" : "2px solid black",
-              padding: lang == "hin" ? ".3rem" : ".2rem",
-              cursor: "pointer",
-            }}
-            onClick={() => dispatch(setSelectLanguage("hin"))}
-          >
-            हिंदी
+        <div>
+         
+          <div className="selectLang">
+            <div
+              style={{
+                borderBottom:
+                  lang == "en" ? "2px solid black" : "2px solid #fff",
+                padding: lang == "en" ? ".2rem" : ".2rem",
+                cursor: "pointer",
+              }}
+              onClick={() => dispatch(setSelectLanguage("en"))}
+            >
+              Eng
+            </div>
+            <div
+              style={{
+                borderBottom:
+                  lang == "en" ? "2px solid #fff" : "2px solid black",
+                padding: lang == "hin" ? ".3rem" : ".2rem",
+                cursor: "pointer",
+              }}
+              onClick={() => dispatch(setSelectLanguage("hin"))}
+            >
+              हिंदी
+            </div>
           </div>
         </div>
       </div>

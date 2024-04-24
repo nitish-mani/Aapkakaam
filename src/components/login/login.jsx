@@ -58,6 +58,13 @@ export default function Login() {
       setIsPassEmpty(false);
       return;
     }
+    if (!navigator.onLine) {
+      setErr("You are offline");
+      setTimeout(() => {
+        setErr("");
+      }, 3000);
+      return;
+    }
     setIsLoading(true);
 
     axios
@@ -72,8 +79,8 @@ export default function Login() {
         setTimeout(() => {
           setSuccess("");
           navigate("/");
-          if (category === "user") dispatch(addDataUser(result.data));
-          else if (category === "vendor") dispatch(addDataVendor(result.data));
+          if (category == "user") dispatch(addDataUser(result.data));
+          else if (category == "vendor") dispatch(addDataVendor(result.data));
         }, 2000);
       })
       .catch((err) => {
