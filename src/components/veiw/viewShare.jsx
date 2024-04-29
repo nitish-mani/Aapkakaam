@@ -6,8 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { SERVER_URL } from "../../utils/base";
-import { clearDataVendor } from "../../utils/vendorslice";
-import { clearDataUser } from "../../utils/userslice";
 
 export default function ViewShare() {
   const category = localStorage.getItem("category");
@@ -45,41 +43,44 @@ export default function ViewShare() {
       }, 3000);
       return;
     }
-    setTimeout(() => {
-      if (category === "user") {
-        axios
-          .get(`${SERVER_URL}/${category}/getShare/${userId}/${pageNo}`, {
-            headers: { Authorization: token },
-          })
-          .then((result) => {
-            const page = Math.floor(result.data.total / 12) + 1;
-            setTotalPage(page);
-            setShare(result.data.share);
-            setIsLoading(false);
-          })
-          .catch((err) => {
-            dispatch(clearDataUser());
-            localStorage.clear();
+
+    if (category === "user") {
+      axios
+        .get(`${SERVER_URL}/${category}/getShare/${userId}/${pageNo}`, {
+          headers: { Authorization: token },
+        })
+        .then((result) => {
+          const page = Math.floor(result.data.total / 12) + 1;
+          setTotalPage(page);
+          setShare(result.data.share);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          setErr("something bad happens");
+          setTimeout(() => {
+            setErr("");
             navigate("/");
-          });
-      } else if (category === "vendor") {
-        axios
-          .get(`${SERVER_URL}/${category}/getShare/${userId}/${pageNo}`, {
-            headers: { Authorization: token },
-          })
-          .then((result) => {
-            const page = Math.floor(result.data.total / 12) + 1;
-            setTotalPage(page);
-            setShare(result.data.share);
-            setIsLoading(false);
-          })
-          .catch((err) => {
-            dispatch(clearDataVendor());
-            localStorage.clear();
+          }, 3000);
+        });
+    } else if (category === "vendor") {
+      axios
+        .get(`${SERVER_URL}/${category}/getShare/${userId}/${pageNo}`, {
+          headers: { Authorization: token },
+        })
+        .then((result) => {
+          const page = Math.floor(result.data.total / 12) + 1;
+          setTotalPage(page);
+          setShare(result.data.share);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          setErr("something bad happens");
+          setTimeout(() => {
+            setErr("");
             navigate("/");
-          });
-      }
-    }, 3000);
+          }, 3000);
+        });
+    }
   }, [pageNo]);
 
   function hanldeCrossInShare() {

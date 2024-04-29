@@ -6,8 +6,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { SERVER_URL } from "../../utils/base";
 import { useSelector } from "react-redux";
-import { clearDataUser } from "../../utils/userslice";
-import { clearDataVendor } from "../../utils/vendorslice";
 import OrderList from "../orderList/orderList";
 export default function ViewOrders() {
   const category = localStorage.getItem("category");
@@ -63,9 +61,11 @@ export default function ViewOrders() {
           setIsLoading(false);
         })
         .catch((err) => {
-          dispatch(clearDataUser());
-          localStorage.clear();
+          setErr("something bad happens")
+          setTimeout(() => {
+            setErr("")
           navigate("/");
+          }, 3000);
         });
     } else if (category === "vendor") {
       axios
@@ -79,9 +79,11 @@ export default function ViewOrders() {
           setIsLoading(false);
         })
         .catch((err) => {
-          dispatch(clearDataVendor());
-          localStorage.clear();
+          setErr("something bad happens")
+          setTimeout(() => {
+            setErr("")
           navigate("/");
+          }, 3000);
         });
     }
   }, [cancelOrder, pageNo]);
