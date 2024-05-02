@@ -179,7 +179,7 @@ export default function NavBar() {
       {searchItem != "" ? (
         <div className="searchItem">
           {items.map((data, i) => {
-            if (data.includes(searchItem)) {
+            if (data.includes(searchItem.toLocaleLowerCase())) {
               return (
                 <div
                   key={i}

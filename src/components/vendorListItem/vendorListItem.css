@@ -42,6 +42,9 @@
   .available-vendor__child div button {
     order: 1;
   }
+  .popmsg{
+    top: -6rem;
+  }
 }
 @media screen and (max-width: 600px) {
   #profilePic img {
