@@ -129,12 +129,9 @@ export default function Body() {
     if (balance < 30) {
       message = (
         <div style={{ marginTop: "2rem", textAlign: "center" }}>
-          Your <span style={{ color: "blue" }}>Balance</span> is{" "}
-          <span style={{ color: "red" }}>0</span>. You can't do bookings
-          {category === "vendor"
-            ? "and as a Vendor your profile is not visible to User"
-            : ""}
-          . Please{" "}
+          Your <span style={{ color: "blue" }}>Bonus Amount</span> is{" "}
+          <span style={{ color: "red" }}>0</span>. You can't do bookings .
+          Please{" "}
           <span
             style={{ color: "blue", cursor: "pointer" }}
             onClick={() => navigate("/share")}
@@ -148,7 +145,7 @@ export default function Body() {
     } else if (balance <= 60) {
       message = (
         <div style={{ marginTop: "2rem", textAlign: "center" }}>
-          Your <span style={{ color: "blue" }}>Balance</span> is less than 50
+          Your <span style={{ color: "blue" }}>Balance</span> is less than 61
           Rs. Please{" "}
           <span
             style={{ color: "blue", cursor: "pointer" }}

@@ -528,70 +528,7 @@ export default function Profile() {
           </span>
         </span>
       </div>
-      {/***********************
-       ******  Email  *********
-       ************************/}
-      <div>
-        <span className="border-bottom">Email </span>
-        <span className="span email-grid ">
-          {emailEdit ? (
-            <input
-              type="email"
-              placeholder="Email"
-              autoFocus
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-              style={{
-                height: "2.5rem",
-                border: "2px solid black",
-                paddingLeft: "1rem",
-                borderRadius: ".5rem",
-              }}
-            />
-          ) : (
-            userData[0]?.email
-          )}
-
-          {/***** Email Edit btn  *****/}
-
-          <span
-            className="verify-btn span-child"
-            onClick={handleEmailEdit}
-            style={{
-              color: emailEdit ? "white" : "",
-              border: emailEdit ? "none" : "",
-              backgroundColor: emailEdit ? "blue" : "",
-              width: isLoading.email ? "5rem" : "",
-              height: isLoading.email ? "3rem" : "",
-            }}
-          >
-            {emailEdit ? (
-              isLoading.email ? (
-                <div className="loading"></div>
-              ) : (
-                "Submit"
-              )
-            ) : (
-              "Edit"
-            )}
-          </span>
-
-          {/***** Email Verify btn  *****/}
-
-          <span
-            className="verify-btn"
-            style={{
-              backgroundColor: userData[0]?.verifyEmail === true ? "green" : "",
-              color: userData[0]?.verifyEmail === true ? "white" : "",
-              border: userData[0]?.verifyEmail === true ? "none" : "",
-            }}
-          >
-            {userData[0]?.verifyEmail === true ? "Verified" : "Verify"}
-          </span>
-        </span>
-      </div>
+     
       {/************************
        ******  Orders  *********
        *************************/}
@@ -654,29 +591,60 @@ export default function Profile() {
         ""
       )}
       {/*************************
-       ******  Balance  *********
+       ******  Bonus Amount  *********
        **************************/}
       <div>
-        <span className="span email-grid ">Balance </span>{" "}
+        <span className="span email-grid ">Bonus Amount </span>{" "}
         <span>
-        <span  className="verify-btn" style={{border:"none",margin:"0 .3rem"}}>
-          <img src={rupee} alt="" style={{ width: "1.15rem" }} />
-          {userData[0]?.balance === 0 ? (
-            <span style={{ color: "red" }}>{`${userData[0]?.balance}`}</span>
-          ) : (
-            <span style={{ color: "green" }}>{`${userData[0]?.balance}`}</span>
-          )}
-         
-          </span>
           <span
-            className="verify-btn btn1"
-            onClick={handleAddMoney}
-            style={{ padding: ".4rem" }}
+            className="verify-btn"
+            style={{ border: "none", margin: "0 .3rem" }}
           >
-            Add Money
+            <img src={rupee} alt="" style={{ width: "1.15rem" }} />
+            {userData[0]?.bonusAmount === 0 ? (
+              <span style={{ color: "red" }}>{`${userData[0]?.bonusAmount}`}</span>
+            ) : (
+              <span
+                style={{ color: "green" }}
+              >{`${userData[0]?.bonusAmount}`}</span>
+            )}
           </span>
         </span>
       </div>
+      {/****************************************
+       ****** for vendor Balance  *********
+       *****************************************/}
+      {category == "vendor" ? (
+        <div>
+          <span className="span email-grid ">Balance</span>{" "}
+          <span>
+            <span
+              className="verify-btn"
+              style={{ border: "none", margin: "0 .3rem" }}
+            >
+              <img src={rupee} alt="" style={{ width: "1.15rem" }} />
+              {userData[0]?.balance||0 === 0 ? (
+                <span style={{ color: "red" }}>{`${
+                  userData[0]?.balance || 0
+                }`}</span>
+              ) : (
+                <span style={{ color: "green" }}>{`${
+                  userData[0]?.balance || 0
+                }`}</span>
+              )}
+            </span>
+            <span
+              className="verify-btn btn1"
+              onClick={handleAddMoney}
+              style={{ padding: ".4rem" }}
+            >
+              Add Money
+            </span>
+          </span>
+        </div>
+      ) : (
+        ""
+      )}
       {/**********************************
        ******  Rating for Vendor *********
        ***********************************/}

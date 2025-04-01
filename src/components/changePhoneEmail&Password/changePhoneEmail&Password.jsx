@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router";
 import cross from "../../resources/svg/multiply-svgrepo-com.svg";
 import axios from "axios";
 import Timer from "../timer/timer";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { addDataUser } from "../../utils/userslice";
 import { addDataVendor } from "../../utils/vendorslice";
@@ -46,7 +46,6 @@ export default function ChangePhoneEmailPassword() {
 
   const [otpTimer, setOtpTimer] = useState(false);
 
- 
   function hanldeCrossInChange() {
     navigate("/");
   }

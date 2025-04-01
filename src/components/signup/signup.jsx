@@ -18,7 +18,6 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
   const [otp, setOtp] = useState("");
-  const [emailOtp, setEmailOtp] = useState("");
   const [pass, setPass] = useState("");
   const [rePass, setRePass] = useState("");
   const [job, setJob] = useState("");
@@ -28,17 +27,12 @@ export default function SignUp() {
   const [isNumValid, setIsNumValid] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isPhoneOtpLoading, setIsPhoneOtpLoading] = useState(false);
-  const [isEmailOtpLoading, setIsEmailOtpLoading] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false);
-  const [isEmailOtpSent, setIsEmailOtpSent] = useState(false);
 
   const [verifyPhoneNo, setVerifyPhoneNo] = useState(false);
-  const [verifyEmail, setVerifyEmail] = useState(false);
   const [otpId, setOtpId] = useState("");
-  const [otpIdE, setOtpIdE] = useState("");
 
   const [isNameEmpty, setIsNameEmpty] = useState(true);
-  const [isEmailEmpty, setIsEmailEmpty] = useState(true);
   const [isRePassMatch, setIsRePassMatch] = useState(true);
   const [isEyeClicked, setIsEyeClicked] = useState(false);
   const [isGender, setIsGender] = useState(true);
@@ -50,7 +44,6 @@ export default function SignUp() {
   const [isValidPass, setIsValidPass] = useState(true);
 
   let category = location.state.category;
-  const validEmailId = useSelector((state) => state.category.validEmailId);
   const validPhoneNoId = useSelector((state) => state.category.validPhoneNoId);
 
   let cd = location.state.cd;
@@ -74,16 +67,7 @@ export default function SignUp() {
   }, [name]);
 
   useEffect(() => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    setIsValid(regex.test(email));
-
-    setIsEmailEmpty(true);
-  }, [email]);
-
-  useEffect(() => {
-    const regex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
-    if (pass != "" && pass.length > 5) setIsValidPass(regex.test(pass));
+    if (pass == "" && pass.length < 6) setIsValidPass(false);
     else setIsValidPass(true);
   }, [pass]);
   useEffect(() => {
@@ -101,10 +85,6 @@ export default function SignUp() {
   useEffect(() => {
     setErr("");
   }, [otp]);
-
-  useEffect(() => {
-    setErr("");
-  }, [emailOtp]);
 
   function handlePhoneVerify() {
     if (!navigator.onLine) {
@@ -170,69 +150,6 @@ export default function SignUp() {
         });
     }
   }
-  function handleEmailVerify() {
-    if (!navigator.onLine) {
-      setErr("You are offline");
-      setTimeout(() => {
-        setErr("");
-      }, 3000);
-      return;
-    }
-    setIsEmailOtpLoading(true);
-    if (!isEmailOtpSent)
-      axios
-        .post(`${SERVER_URL}/${category}/emailVerification`, {
-          email,
-        })
-        .then((res) => {
-          if (res.data.verified) {
-            setOtpIdE(res.data.otpId);
-            dispatch(setValidEmailId(res.data.otpId));
-            setIsEmailOtpSent(true);
-            setIsEmailOtpLoading(false);
-            setSuccess("OTP sent successfully");
-            setTimeout(() => {
-              setSuccess("");
-            }, 2000);
-          } else {
-            setErr("Something bad happens");
-            setIsEmailOtpLoading(false);
-            setTimeout(() => {
-              setErr("");
-            }, 3000);
-          }
-        });
-    else {
-      axios
-        .post(`${SERVER_URL}/${category}/emailOtpVerification`, {
-          emailOtp,
-          otpId: otpIdE,
-        })
-        .then((res) => {
-          setVerifyEmail(res.data.verify);
-          if (res.data.verify) {
-            setIsEmailOtpSent(false);
-            setIsEmailOtpLoading(false);
-            setSuccess("OTP verified successfully");
-            setTimeout(() => {
-              setSuccess("");
-            }, 2000);
-          } else {
-            setErr(res.data.message);
-            setIsEmailOtpLoading(false);
-            setTimeout(() => {
-              setErr("");
-            }, 3000);
-          }
-        })
-        .catch((err) => {
-          setErr(res.data.response.message);
-          setTimeout(() => {
-            setErr("");
-          }, 3000);
-        });
-    }
-  }
 
   function handleSignup() {
     if (name.length < 1) {
@@ -241,10 +158,6 @@ export default function SignUp() {
     }
     if (phoneNo.length != 10) {
       setIsNumValid(false);
-      return;
-    }
-    if (email.length < 1) {
-      setIsEmailEmpty(false);
       return;
     }
     if (rePass != pass) {
@@ -268,19 +181,17 @@ export default function SignUp() {
       return;
     }
 
-    if (verifyEmail && verifyPhoneNo && isValid && isValidPass) {
+    if (verifyPhoneNo && isValid && isValidPass) {
       setIsLoading(true);
       axios
         .post(`${SERVER_URL}/${category}/signup`, {
           name: name,
-          email: email,
           phoneNo: phoneNo,
           password: pass,
           sharedBy: id,
           gender: gender,
           type: job,
           cd,
-          validEmailId,
           validPhoneNoId,
         })
         .then((result) => {
@@ -418,60 +329,7 @@ export default function SignUp() {
             Incorrect Number
           </h6>
         </div>
-        <div style={{ position: "relative" }}>
-          {isEmailOtpSent ? (
-            <input
-              placeholder="Enter OTP"
-              type="number"
-              value={emailOtp}
-              onChange={(e) => setEmailOtp(e.target.value)}
-            />
-          ) : (
-            <input
-              placeholder="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={{ border: isEmailEmpty ? "" : "2px solid red" }}
-            />
-          )}
 
-          {verifyEmail ? (
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                right: "5px",
-                transform: "translateY(-40%)",
-              }}
-            >
-              <img
-                src={rightTck}
-                alt=""
-                style={{ width: "2rem", height: "2rem" }}
-              />
-            </div>
-          ) : (
-            ""
-          )}
-          {isValid && !verifyEmail ? (
-            <div className="verify" onClick={handleEmailVerify}>
-              {isEmailOtpSent ? (
-                isEmailOtpLoading ? (
-                  <div className="loading"></div>
-                ) : (
-                  "Verify OTP"
-                )
-              ) : isEmailOtpLoading ? (
-                <div className="loading"></div>
-              ) : (
-                "Verify Email"
-              )}
-            </div>
-          ) : (
-            ""
-          )}
-        </div>
         <div className="password">
           <input
             placeholder="Password"
@@ -505,9 +363,7 @@ export default function SignUp() {
             fontSize: "1rem",
           }}
         >
-          Password must be at least 8 characters long and contain at least one
-          uppercase letter, one lowercase letter, one number, and one special
-          character
+          Password must be at least 6 characters long
         </h6>
 
         <div>
@@ -578,6 +434,9 @@ export default function SignUp() {
               <option value="dulha rath">Dulha Rath</option>
               <option value="kirtan mandli">Kirtan Mandli</option>
               <option value="mini truck">Mini Truck</option>
+              <option value="fruit seller">Fruit Seller</option>
+              <option value="paan wala">Paan Wala</option>
+              <option value="bhoonsa pual seller">Bhoonsa Pual Seller</option>
             </select>
           </div>
         ) : (

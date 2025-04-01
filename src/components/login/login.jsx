@@ -14,12 +14,12 @@ export default function Login() {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const [email, setEmail] = useState("");
+  const [phoneNo, setPhoneNo] = useState("");
   const [pass, setPass] = useState("");
   const [isEyeClicked, setIsEyeClicked] = useState(false);
   const [err, setErr] = useState("");
   const [success, setSuccess] = useState("");
-  const [isEmailEmpty, setIsEmailEmpty] = useState(true);
+  const [isPhoneNoEmpty, setIsPhoneNoEmpty] = useState(true);
   const [isPassEmpty, setIsPassEmpty] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -42,16 +42,16 @@ export default function Login() {
   }
 
   useEffect(() => {
-    setIsEmailEmpty(true);
-  }, [email]);
+    setIsPhoneNoEmpty(true);
+  }, [phoneNo]);
 
   useEffect(() => {
     setIsPassEmpty(true);
   }, [pass]);
 
   function handleLogin() {
-    if (email.length < 1) {
-      setIsEmailEmpty(false);
+    if (phoneNo.length < 1) {
+      setIsPhoneNoEmpty(false);
       return;
     }
     if (pass.length < 1) {
@@ -69,7 +69,7 @@ export default function Login() {
 
     axios
       .post(`${SERVER_URL}/${category}/login`, {
-        email: email,
+        phoneNo: phoneNo,
         password: pass,
       })
       .then((result) => {
@@ -127,11 +127,11 @@ export default function Login() {
       <div className="login__2ndChild">
         <div>
           <input
-            placeholder="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={{ border: isEmailEmpty ? "" : "2px solid red" }}
+            placeholder="Mobile Number"
+            type="phoneNo"
+            value={phoneNo}
+            onChange={(e) => setPhoneNo(e.target.value)}
+            style={{ border: isPhoneNoEmpty ? "" : "2px solid red" }}
           />
         </div>
         <div className="password">
