@@ -1,7 +1,7 @@
-import acmechanic from "../../resources/img/ac mechanic.jpg";
-import fridge from "../../resources/img/fridge mechanic.jpg";
-import driver from "../../resources/img/driver.webp";
-import tutor from "../../resources/img/home tutor.jpg";
+import acmechanic from "../../resources/img/ac_mechanic.jpg";
+import fridge from "../../resources/img/fridge_mechanic.jpg";
+import driver from "../../resources/img/driver.jpg";
+import tutor from "../../resources/img/home_tutor.jpg";
 import "./SecondComponent.css";
 import { useState } from "react";
 import { useNavigate } from "react-router";

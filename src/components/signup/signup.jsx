@@ -40,7 +40,7 @@ export default function SignUp() {
   const [err, setErr] = useState("");
   const [success, setSuccess] = useState("");
 
-  const [isValid, setIsValid] = useState(false);
+  // const [isValid, setIsValid] = useState(false);
   const [isValidPass, setIsValidPass] = useState(true);
 
   let category = location.state.category;
@@ -67,10 +67,6 @@ export default function SignUp() {
   }, [name]);
 
   useEffect(() => {
-    if (pass == "" && pass.length < 6) setIsValidPass(false);
-    else setIsValidPass(true);
-  }, [pass]);
-  useEffect(() => {
     setIsRePassMatch(true);
   }, [rePass]);
 
@@ -85,7 +81,7 @@ export default function SignUp() {
   useEffect(() => {
     setErr("");
   }, [otp]);
-
+  /*
   function handlePhoneVerify() {
     if (!navigator.onLine) {
       setErr("You are offline");
@@ -109,6 +105,7 @@ export default function SignUp() {
           phoneNo,
         })
         .then((res) => {
+          console.log(res.data);
           if (res.data.verified) {
             setOtpId(res.data.otpId);
             dispatch(setValidPhoneNoId(res.data.otpId));
@@ -150,7 +147,7 @@ export default function SignUp() {
         });
     }
   }
-
+*/
   function handleSignup() {
     if (name.length < 1) {
       setIsNameEmpty(false);
@@ -160,10 +157,7 @@ export default function SignUp() {
       setIsNumValid(false);
       return;
     }
-    if (rePass != pass) {
-      setIsRePassMatch(false);
-      return;
-    }
+
     if (pass.length <= 5) {
       setIsPassValid(false);
       return;
@@ -181,7 +175,7 @@ export default function SignUp() {
       return;
     }
 
-    if (verifyPhoneNo && isValid && isValidPass) {
+    if (true || (verifyPhoneNo && isValid && isValidPass)) {
       setIsLoading(true);
       axios
         .post(`${SERVER_URL}/${category}/signup`, {
@@ -214,7 +208,7 @@ export default function SignUp() {
         });
     } else {
       if (!isValid) setErr("Invalid Email");
-      else setErr("Verify Mobile Number and Email");
+      else setErr("Verify Mobile Number");
       setTimeout(() => {
         setErr("");
       }, 3000);
@@ -302,7 +296,7 @@ export default function SignUp() {
           ) : (
             ""
           )}
-          {phoneNo.length === 10 && !verifyPhoneNo ? (
+          {/* {phoneNo.length === 10 && !verifyPhoneNo ? (
             <div className="verify" onClick={handlePhoneVerify}>
               {isOtpSent ? (
                 isPhoneOtpLoading ? (
@@ -318,7 +312,8 @@ export default function SignUp() {
             </div>
           ) : (
             ""
-          )}
+          )} */}
+
           <h6
             style={{
               display: isNumValid ? "none" : "",
@@ -366,26 +361,6 @@ export default function SignUp() {
           Password must be at least 6 characters long
         </h6>
 
-        <div>
-          <input
-            placeholder="Re-Password"
-            type="text"
-            value={rePass}
-            onChange={(e) => setRePass(e.target.value)}
-            style={{
-              border: isRePassMatch ? "" : "2px solid red",
-            }}
-          />
-          <h6
-            style={{
-              display: isRePassMatch ? "none" : "",
-              color: "red",
-              textAlign: "left",
-            }}
-          >
-            Password didn't match
-          </h6>
-        </div>
         {category === "vendor" ? (
           <div>
             <select
@@ -393,7 +368,7 @@ export default function SignUp() {
               onChange={(e) => setJob(e.target.value)}
             >
               <option value="">Select Your Job</option>
-              <option value="labourer">Labourer</option>
+              <option value="labour">Labour</option>
               <option value="mason">Mason</option>
               <option value="electrician">Electrician</option>
               <option value="plumber">Plumber</option>
@@ -404,7 +379,7 @@ export default function SignUp() {
               <option value="milk man">Milk Man</option>
               <option value="parlour">Parlour</option>
               <option value="menhandi maker">Menhandi Maker</option>
-              <option value="pundits">Pundits</option>
+              <option value="pundit ji">Pundit Ji</option>
               <option value="carpenter">Carpenter</option>
               <option value="laptop repaire">Laptop Repaire</option>
               <option value="washer man">Washer Man</option>

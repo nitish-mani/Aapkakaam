@@ -366,7 +366,7 @@ export default function Profile() {
           )
         ) : userData[0].imgURL ? (
           <img
-            src={userData[0].imgURL}
+            src={`${userData[0].imgURL}?t=${Date.now()}`} // ⬅ Cache-busting timestamp
             alt=""
             style={{
               width: "5rem",
@@ -528,7 +528,6 @@ export default function Profile() {
           </span>
         </span>
       </div>
-     
       {/************************
        ******  Orders  *********
        *************************/}
@@ -602,7 +601,9 @@ export default function Profile() {
           >
             <img src={rupee} alt="" style={{ width: "1.15rem" }} />
             {userData[0]?.bonusAmount === 0 ? (
-              <span style={{ color: "red" }}>{`${userData[0]?.bonusAmount}`}</span>
+              <span
+                style={{ color: "red" }}
+              >{`${userData[0]?.bonusAmount}`}</span>
             ) : (
               <span
                 style={{ color: "green" }}
@@ -623,7 +624,7 @@ export default function Profile() {
               style={{ border: "none", margin: "0 .3rem" }}
             >
               <img src={rupee} alt="" style={{ width: "1.15rem" }} />
-              {userData[0]?.balance||0 === 0 ? (
+              {userData[0]?.balance || 0 === 0 ? (
                 <span style={{ color: "red" }}>{`${
                   userData[0]?.balance || 0
                 }`}</span>

@@ -174,7 +174,6 @@ export default function Address() {
                 dist,
                 state,
                 pincode,
-                token: userData[0].token,
                 vendorId: userData[0]?.vendorId,
               },
               {

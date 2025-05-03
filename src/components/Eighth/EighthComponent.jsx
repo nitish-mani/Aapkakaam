@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router";
 import "../Second/SecondComponent.css";
-import aatachakki from "../../resources/img/aatachakki.jpg";
-import latrinetank from "../../resources/img/latrin tank cleaner.jpg";
-import marriagehall from "../../resources/img/marriagehall.jpg";
-import shuttering from "../../resources/img/shettering.jpg";
+import aatachakki from "../../resources/img/aata_chakki.jpg";
+import latrinetank from "../../resources/img/latrine_tank_cleaner.jpg";
+import marriagehall from "../../resources/img/marriage_hall.jpg";
+import shuttering from "../../resources/img/shuttering.jpg";
 
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -44,7 +44,9 @@ export default function EighthComponent() {
     setTimeout(() => setBtnClicked2(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "marriage hall" } });
+        navigate("/checkBookingDate", {
+          state: { jobType: "marriage hall booking" },
+        });
       else navigate("/category");
     }, 200);
   }
@@ -53,7 +55,9 @@ export default function EighthComponent() {
     setTimeout(() => setBtnClicked3(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "shuttering" } });
+        navigate("/checkBookingDate", {
+          state: { jobType: "shuttering booking" },
+        });
       else navigate("/category");
     }, 200);
   }

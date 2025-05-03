@@ -67,7 +67,6 @@ export default function AvailableVendor() {
           setVendorPresent(result.data.vendors);
           const page = Math.floor(result.data.total / 12) + 1;
           setTotalPage(page);
-
           setIsLoading1(false);
           setTimeout(() => setIsLoading(false), 1000);
         })

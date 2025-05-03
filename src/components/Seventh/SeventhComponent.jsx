@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router";
 import "../First/FirstComponent.css";
 import generator from "../../resources/img/generator.jpg";
-import auto from "../../resources/img/auto-rickshaw.png";
-import dj from "../../resources/img/dj.png";
+import auto from "../../resources/img/auto.jpg";
+import dj from "../../resources/img/dj.jpg";
 import dhankutti from "../../resources/img/dhankutti.jpg";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -23,7 +23,9 @@ export default function SeventhComponent() {
     setTimeout(() => setBtnClicked(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "generator" } });
+        navigate("/checkBookingDate", {
+          state: { jobType: "generator booking" },
+        });
       else navigate("/category");
     }, 200);
   }
@@ -31,7 +33,8 @@ export default function SeventhComponent() {
     setBtnClicked1(true);
     setTimeout(() => setBtnClicked1(false), 100);
     setTimeout(() => {
-      if (token) navigate("/checkBookingDate", { state: { jobType: "auto" } });
+      if (token)
+        navigate("/checkBookingDate", { state: { jobType: "auto booking" } });
       else navigate("/category");
     }, 200);
   }
@@ -39,7 +42,8 @@ export default function SeventhComponent() {
     setBtnClicked2(true);
     setTimeout(() => setBtnClicked2(false), 100);
     setTimeout(() => {
-      if (token) navigate("/checkBookingDate", { state: { jobType: "dj" } });
+      if (token)
+        navigate("/checkBookingDate", { state: { jobType: "dj booking" } });
       else navigate("/category");
     }, 200);
   }
@@ -48,7 +52,9 @@ export default function SeventhComponent() {
     setTimeout(() => setBtnClicked3(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "dhankutti" } });
+        navigate("/checkBookingDate", {
+          state: { jobType: "dhankutti booking" },
+        });
       else navigate("/category");
     }, 200);
   }

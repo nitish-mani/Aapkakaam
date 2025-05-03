@@ -163,53 +163,72 @@ export default function Bookings() {
     setIsClicked(true);
     setIsDateClicked(false);
 
-    if (!cancelDate.includes(date)) {
+    if (!completeDate.includes(date) && !pendingDate.includes(date)) {
       axios
-        .patch(
-          `${SERVER_URL}/vendor/bookNowV/${userId}`,
-          { name, phoneNo, vill, pincode, post, dist, date, month, year },
+        .post(
+          `${SERVER_URL}/bookings/postToBookingsV`,
+          {
+            userId: userData[0].vendorId,
+            vendorId: userData[0].vendorId,
+            bookingDate: booked_date,
+            pincode: pincode,
+            type: userData[0].type,
+            isSelfBooking: true,
+          },
           {
             headers: { Authorization: token },
           }
         )
         .then((succ) => {
-          setIsClicked(false);
-          setSuccess(succ.data);
-          setTimeout(() => {
-            setSuccess("");
-            setName("");
-            setPhoneNo("");
-            setVill("");
-            setPincode("");
-            setPost("");
-            setDist("");
-            setBooking_date("");
-          }, 5000);
+          const bookingId = succ.data.bookingId;
+          axios
+            .patch(
+              `${SERVER_URL}/vendor/bookNowV/${userId}`,
+              {
+                bookingId,
+                vendorUser: userData[0].vendorId,
+                name,
+                phoneNo,
+                vill,
+                post,
+                dist,
+                pincode,
+                date,
+                month,
+                year,
+                isSelfBooking: true,
+              },
+              {
+                headers: { Authorization: token },
+              }
+            )
+            .then((succ) => {
+              console.log("2", succ.data.message);
+              setSuccess(succ.data.message);
+              setIsClicked(false);
+              setTimeout(() => {
+                setSuccess("");
+                setName("");
+                setPhoneNo("");
+                setVill("");
+                setPincode("");
+                setPost("");
+                setDist("");
+                setBooking_date("");
+              }, 5000);
+            })
+            .catch((err) => {
+              setIsClicked(false);
+              setErr(err.data);
+              setTimeout(() => {
+                setErr("");
+              }, 5000);
+            });
         })
         .catch((err) => {
+          console.log("3", err);
           setIsClicked(false);
-          setErr(err.data);
-          setTimeout(() => {
-            setErr("");
-          }, 5000);
-        });
-
-      axios
-        .post(`${SERVER_URL}/bookings/postToBookings`, {
-          userId: userData[0].vendorId,
-          vendorId: userData[0].vendorId,
-          bookingDate: booked_date,
-          pincode: pincode,
-          type: userData[0].type,
-        })
-        .then((succ) => {
-          setSuccess(succ.data);
-          setTimeout(() => {
-            setSuccess("");
-          }, 5000);
-        })
-        .catch((err) => {
-          setErr("vendor already booked");
+          setErr(err.response.data.message);
           setTimeout(() => {
             setErr("");
           }, 5000);
@@ -249,7 +268,7 @@ export default function Bookings() {
             top: "-8rem",
           }}
         >
-          {success.message}
+          {success}
         </div>
         {bookingsType === "view" ? (
           <div className="viewNow">

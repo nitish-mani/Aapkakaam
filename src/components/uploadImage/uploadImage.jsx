@@ -85,8 +85,9 @@ const UploadImage = () => {
           axios
             .put(url, selectedFile, {
               headers: {
-                "Content-Type": "multipart/form-data",
+                "Content-Type": selectedFile.type,
               },
+
               onUploadProgress: (progressEvent) => {
                 const percentCompleted = Math.round(
                   (progressEvent.loaded * 100) / progressEvent.total
@@ -121,6 +122,7 @@ const UploadImage = () => {
                 });
             })
             .catch((error) => {
+              console.log("1", error);
               setImgLoading(false);
               setErr("Error uploading image");
               setTimeout(() => {
@@ -129,6 +131,7 @@ const UploadImage = () => {
             });
         })
         .catch((err) => {
+          console.log("2", err);
           setImgLoading(false);
           setErr("Error uploading image");
           setTimeout(() => {

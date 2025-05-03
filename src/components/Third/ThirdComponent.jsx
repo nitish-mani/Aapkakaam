@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router";
-import pundit from "../../resources/img/pundit.jpeg";
-import milkman from "../../resources/img/milkman.jpg";
-import parlour from "../../resources/img/beauty-parlour-pic-01.jpg";
-import mehandimaker from "../../resources/img/mehandi maker.jpg";
+import pundit from "../../resources/img/pandit.jpg";
+import milkman from "../../resources/img/milk_man.jpg";
+import parlour from "../../resources/img/parlour.jpg";
+import mehandimaker from "../../resources/img/mehandi_maker.jpg";
 import "../First/FirstComponent.css";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -40,7 +40,7 @@ export default function ThirdComponent() {
     setTimeout(() => setBtnClicked2(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "menhandi maker" } });
+        navigate("/checkBookingDate", { state: { jobType: "mehandi maker" } });
       else navigate("/category");
     }, 200);
   }
@@ -49,7 +49,7 @@ export default function ThirdComponent() {
     setTimeout(() => setBtnClicked3(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "pundits" } });
+        navigate("/checkBookingDate", { state: { jobType: "pundit ji" } });
       else navigate("/category");
     }, 200);
   }

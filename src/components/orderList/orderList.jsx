@@ -65,12 +65,15 @@ export default function OrderList({ element, orderStatus }) {
             }
           )
           .then((succ) => {
-            const data = { ...userData[0], balance: succ.data.balance };
+            const data = { ...userData[0], bonusAmount: succ.data.bonusAmount };
             dispatch(addDataUser(data));
             localStorage.setItem(category, JSON.stringify(data));
             setSuccess(succ.data.message);
             dispatch(setCancelOrder(!cancelOrder));
             setIsLoadingCancelOrder(false);
+            setCancelOrder1(false);
+            setPopupCancel(false);
+            setPopupComplete(false);
             setTimeout(() => {
               setSuccess("");
             }, 1000);
@@ -94,12 +97,15 @@ export default function OrderList({ element, orderStatus }) {
             }
           )
           .then((succ) => {
-            const data = { ...userData[0], balance: succ.data.balance };
+            const data = { ...userData[0], bonusAmount: succ.data.bonusAmount };
             dispatch(addDataVendor(data));
             localStorage.setItem(category, JSON.stringify(data));
             setSuccess(succ.data.message);
             dispatch(setCancelOrder(!cancelOrder));
             setIsLoadingCancelOrder(false);
+            setCancelOrder1(false);
+            setPopupCancel(false);
+            setPopupComplete(false);
             setTimeout(() => {
               setSuccess("");
             }, 1000);
@@ -142,6 +148,9 @@ export default function OrderList({ element, orderStatus }) {
             setSuccess(succ.data.message);
             dispatch(setCancelOrder(!cancelOrder));
             setIsLoadingCompleteOrder(false);
+            setMarkAsComplete(false);
+            setPopupCancel(false);
+            setPopupComplete(false);
             setTimeout(() => {
               setSuccess("");
             }, 1000);
@@ -168,6 +177,9 @@ export default function OrderList({ element, orderStatus }) {
             setSuccess(succ.data.message);
             dispatch(setCancelOrder(!cancelOrder));
             setIsLoadingCompleteOrder(false);
+            setMarkAsComplete(false);
+            setPopupCancel(false);
+            setPopupComplete(false);
             setTimeout(() => {
               setSuccess("");
             }, 1000);

@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router";
 import "../First/FirstComponent.css";
-import waiter from "../../resources/img/Waiter.webp";
-import marblestone from "../../resources/img/marble fitter.jpg";
-import erikshaw from "../../resources/img/e-riksha.jpg";
-import pualcutter from "../../resources/img/pual cutter.jpg";
+import waiter from "../../resources/img/waiters.jpg";
+import marblestone from "../../resources/img/marble_fitter.jpg";
+import erikshaw from "../../resources/img/e-rikshaw.jpg";
+import pualcutter from "../../resources/img/pual_cutter.jpg";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -23,7 +23,9 @@ export default function NinethComponent() {
     setTimeout(() => setBtnClicked(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "waiter" } });
+        navigate("/checkBookingDate", {
+          state: { jobType: "waiters booking" },
+        });
       else navigate("/category");
     }, 200);
   }
@@ -32,7 +34,7 @@ export default function NinethComponent() {
     setTimeout(() => setBtnClicked1(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "marble fitter" } });
+        navigate("/checkBookingDate", { state: { jobType: "marble worker" } });
       else navigate("/category");
     }, 200);
   }
@@ -41,7 +43,9 @@ export default function NinethComponent() {
     setTimeout(() => setBtnClicked2(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "e-riksha" } });
+        navigate("/checkBookingDate", {
+          state: { jobType: "e-rikshaw booking" },
+        });
       else navigate("/category");
     }, 200);
   }
@@ -50,7 +54,9 @@ export default function NinethComponent() {
     setTimeout(() => setBtnClicked3(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "pual cutter" } });
+        navigate("/checkBookingDate", {
+          state: { jobType: "pual cutter booking" },
+        });
       else navigate("/category");
     }, 200);
   }

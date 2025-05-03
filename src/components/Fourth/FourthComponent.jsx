@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router";
 import "../Second/SecondComponent.css";
-import carpenter from "../../resources/img/Carpenter-Services..jpg";
-import laptoprepaire from "../../resources/img/laptop repaire.jpg";
-import dhobi from "../../resources/img/dhobi.jpg";
-import cook from "../../resources/img/cook.jpeg";
+import carpenter from "../../resources/img/carpenter.jpg";
+import laptoprepaire from "../../resources/img/laptop_repaire.jpg";
+import dhobi from "../../resources/img/washer_man.jpg";
+import cook from "../../resources/img/cook.jpg";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -32,7 +32,7 @@ export default function FourthComponent() {
     setTimeout(() => setBtnClicked1(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "laptop repaire" } });
+        navigate("/checkBookingDate", { state: { jobType: "laptop repair" } });
       else navigate("/category");
     }, 200);
   }

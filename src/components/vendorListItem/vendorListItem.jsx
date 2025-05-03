@@ -33,7 +33,7 @@ export default function VendorListItem({
   const [btnHovered, setBtnHovered] = useState(false);
   const dispatch = useDispatch();
   const pincode = pinLocation || userData[0].address[0].pincode;
-  const balance = userData[0].balance;
+  const balance = userData[0].bonusAmount;
 
   function handleBookNow(vendorId) {
     if (balance >= 5) {
@@ -76,7 +76,10 @@ export default function VendorListItem({
                 }
               )
               .then((succ) => {
-                const data = { ...userData[0], balance: succ.data.balance };
+                const data = {
+                  ...userData[0],
+                  bonusAmount: succ.data.bonusAmount,
+                };
                 dispatch(addDataUser(data));
                 localStorage.setItem(category, JSON.stringify(data));
 
@@ -140,7 +143,10 @@ export default function VendorListItem({
                 }
               )
               .then((succ) => {
-                const data = { ...userData[0], balance: succ.data.balance };
+                const data = {
+                  ...userData[0],
+                  bonusAmount: succ.data.bonusAmount,
+                };
                 dispatch(addDataVendor(data));
                 localStorage.setItem(category, JSON.stringify(data));
                 setIsLoading(false);
