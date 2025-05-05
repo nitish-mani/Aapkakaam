@@ -81,73 +81,70 @@ export default function SignUp() {
   useEffect(() => {
     setErr("");
   }, [otp]);
-  /*
+
   function handlePhoneVerify() {
     if (!navigator.onLine) {
       setErr("You are offline");
-      setTimeout(() => {
-        setErr("");
-      }, 3000);
+      setTimeout(() => setErr(""), 3000);
       return;
     }
-    setIsPhoneOtpLoading(true);
+
     if (!isOtpSent) {
-      if (phoneNo.length != 10) {
-        setIsPhoneOtpLoading(false);
+      if (!/^\d{10}$/.test(phoneNo)) {
         setErr("Mobile Number must be 10 digits");
-        setTimeout(() => {
-          setErr("");
-        }, 3000);
+        setTimeout(() => setErr(""), 3000);
         return;
       }
+
+      setIsPhoneOtpLoading(true);
+
       axios
-        .post(`${SERVER_URL}/${category}/phoneVerification`, {
-          phoneNo,
-        })
+        .post(`${SERVER_URL}/${category}/phoneVerification`, { phoneNo })
         .then((res) => {
-          console.log(res.data);
           if (res.data.verified) {
             setOtpId(res.data.otpId);
             dispatch(setValidPhoneNoId(res.data.otpId));
             setIsOtpSent(true);
-            setIsPhoneOtpLoading(false);
             setSuccess(res.data.message);
-            setTimeout(() => {
-              setSuccess("");
-            }, 2000);
+            setTimeout(() => setSuccess(""), 2000);
           } else {
-            setErr(
-              "Too many otp request has been sent on this number. Try after 30 minutes"
-            );
-            setIsPhoneOtpLoading(false);
-            setTimeout(() => {
-              setErr("");
-            }, 15000);
+            console.log(res);
+            setErr("Too many OTP requests. Try after 30 minutes");
+            setTimeout(() => setErr(""), 15000);
           }
+        })
+        .catch(() => {
+          setErr("Server error. Please try again.");
+          setTimeout(() => setErr(""), 3000);
+        })
+        .finally(() => {
+          setIsPhoneOtpLoading(false);
         });
     } else {
+      setIsPhoneOtpLoading(true);
+
       axios
-        .post(`${SERVER_URL}/${category}/otpVerification`, {
-          otp,
-          otpId,
-        })
+        .post(`${SERVER_URL}/${category}/otpVerification`, { otp, otpId })
         .then((res) => {
-          setVerifyPhoneNo(res.data.verify);
           if (res.data.verify) {
+            setVerifyPhoneNo(true);
             setIsOtpSent(false);
-            setIsPhoneOtpLoading(false);
             setSuccess("OTP verified successfully");
-            setTimeout(() => {
-              setSuccess("");
-            }, 2000);
+            setTimeout(() => setSuccess(""), 2000);
           } else {
-            setErr(res.data.message);
-            setIsPhoneOtpLoading(false);
+            setErr(res.data.message || "OTP verification failed");
           }
+        })
+        .catch(() => {
+          setErr("Server error. Please try again.");
+          setTimeout(() => setErr(""), 3000);
+        })
+        .finally(() => {
+          setIsPhoneOtpLoading(false);
         });
     }
   }
-*/
+
   function handleSignup() {
     if (name.length < 1) {
       setIsNameEmpty(false);
@@ -296,7 +293,7 @@ export default function SignUp() {
           ) : (
             ""
           )}
-          {/* {phoneNo.length === 10 && !verifyPhoneNo ? (
+          {phoneNo.length === 10 && !verifyPhoneNo ? (
             <div className="verify" onClick={handlePhoneVerify}>
               {isOtpSent ? (
                 isPhoneOtpLoading ? (
@@ -312,7 +309,7 @@ export default function SignUp() {
             </div>
           ) : (
             ""
-          )} */}
+          )}
 
           <h6
             style={{
