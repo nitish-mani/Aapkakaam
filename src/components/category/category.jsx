@@ -1,5 +1,5 @@
 import "./category.css";
-import rightArrow from "../../resources/svg/right-arrow-svgrepo-com.svg";
+// import rightArrow from "../../resources/svg/right-arrow-svgrepo-com.svg";
 import { useNavigate, useParams } from "react-router";
 import { useDispatch } from "react-redux";
 import { setCategory } from "../../utils/categoryslice";
@@ -8,6 +8,7 @@ export default function Category() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { cd, id } = useParams();
+  // cd :-> category of shared by
 
   function handleUserLogin() {
     dispatch(setCategory("user"));
@@ -25,7 +26,7 @@ export default function Category() {
     <div className="category">
       <div className="category-child">
         <div onClick={handleUserLogin}>
-          Login/Signup As a User
+          Continue As a User
           <span className="right-arrow">
             <svg
               dataSlot="icon"
@@ -45,7 +46,7 @@ export default function Category() {
           </span>
         </div>
         <div onClick={handleVendorLogin}>
-          Login/Signup As a Vendor
+          Continue As a Vendor
           <span className="right-arrow">
             <svg
               dataSlot="icon"

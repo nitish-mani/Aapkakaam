@@ -59,13 +59,12 @@ export default function Eleventh() {
     }, 200);
   }
   return (
-    <div className="flex">
+    <div className="first-div">
       <div
         className="first-div-div"
         onClick={handleClicked}
         style={{
           transform: btnClicked ? "translateY(5px)" : "",
-          width: "fit-content",
         }}
       >
         <img src={miniTruck} alt="Mini truck" />
@@ -76,7 +75,6 @@ export default function Eleventh() {
         onClick={handleClicked1}
         style={{
           transform: btnClicked ? "translateY(5px)" : "",
-          width: "fit-content",
         }}
       >
         <img src={paanWala} alt="Mini truck" />
@@ -87,7 +85,6 @@ export default function Eleventh() {
         onClick={handleClicked2}
         style={{
           transform: btnClicked ? "translateY(5px)" : "",
-          width: "fit-content",
         }}
       >
         <img src={fruitSeller} alt="Mini truck" />
@@ -98,7 +95,6 @@ export default function Eleventh() {
         onClick={handleClicked3}
         style={{
           transform: btnClicked ? "translateY(5px)" : "",
-          width: "fit-content",
         }}
       >
         <img src={bhoonsaPualSeller} alt="Mini truck" />

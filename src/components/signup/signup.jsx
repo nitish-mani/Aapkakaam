@@ -268,6 +268,7 @@ export default function SignUp() {
               placeholder="Phone No."
               type="number"
               value={phoneNo}
+              readOnly={verifyPhoneNo ? true : false}
               onChange={(e) => setPhoneNo(e.target.value)}
               style={{
                 marginBottom: isNumValid ? "" : "0",
