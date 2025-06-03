@@ -1,6 +1,6 @@
 import "./Footer.css";
 import appStore from "../../resources/img/appStore.jpg";
-import playStore from "../../resources/img/playStore.jpg";
+import playStore from "../../resources/img/playstore.jpg";
 import facebook from "../../resources/svg/facebook-svgrepo-com.svg";
 import linkedin from "../../resources/svg/linkedin-svgrepo-com.svg";
 import insta from "../../resources/svg/instagram-svgrepo-com.svg";
