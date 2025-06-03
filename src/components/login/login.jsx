@@ -1,6 +1,8 @@
+// optimized and production ready
+
 import { useLocation, useNavigate } from "react-router";
 import "./login.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import eye from "../../resources/svg/eye-svgrepo-com.svg";
 import line from "../../resources/svg/line-svgrepo-com.svg";
 import axios from "axios";
@@ -14,141 +16,191 @@ export default function Login() {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const [phoneNo, setPhoneNo] = useState("");
-  const [pass, setPass] = useState("");
-  const [isEyeClicked, setIsEyeClicked] = useState(false);
-  const [err, setErr] = useState("");
-  const [success, setSuccess] = useState("");
-  const [isPhoneNoEmpty, setIsPhoneNoEmpty] = useState(true);
-  const [isPassEmpty, setIsPassEmpty] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  // State management
+  const [formData, setFormData] = useState({
+    phoneNo: "",
+    pass: "",
+  });
+  const [uiState, setUiState] = useState({
+    isEyeClicked: false,
+    isPhoneNoEmpty: true,
+    isPassEmpty: true,
+    isLoading: false,
+  });
+  const [messages, setMessages] = useState({
+    err: "",
+    success: "",
+  });
 
-  let category = location.state.category;
-  let cd = location.state.cd;
-  let id = location.state.id;
+  // Memoized values from location state
+  const { category, cd, id } = useMemo(
+    () => location.state || {},
+    [location.state]
+  );
+  const profileCategory = useMemo(
+    () =>
+      category ? `${category.charAt(0).toUpperCase()}${category.slice(1)}` : "",
+    [category]
+  );
 
-  const address =
-    category === "user"
-      ? JSON.parse(localStorage.getItem(category))?.address
-      : JSON.parse(localStorage.getItem(category))?.address;
+  // Derived values
+  const address = useMemo(() => {
+    if (!category) return null;
+    const storedData = JSON.parse(localStorage.getItem(category));
+    return storedData?.address;
+  }, [category]);
 
-  const profile_category = category;
-  let category_result = "";
-  for (let i = 0; i < profile_category.length; i++) {
-    if (i == 0) category_result += profile_category.charAt(i).toUpperCase();
-    else {
-      category_result += profile_category.charAt(i);
-    }
-  }
+  // Effect hooks
+  useEffect(() => {
+    setUiState((prev) => ({
+      ...prev,
+      isPhoneNoEmpty: formData.phoneNo.length > 0,
+    }));
+  }, [formData.phoneNo]);
 
   useEffect(() => {
-    setIsPhoneNoEmpty(true);
-  }, [phoneNo]);
+    setUiState((prev) => ({ ...prev, isPassEmpty: formData.pass.length > 0 }));
+  }, [formData.pass]);
 
-  useEffect(() => {
-    setIsPassEmpty(true);
-  }, [pass]);
+  // Handlers
+  const showMessage = useCallback((type, message, duration = 3000) => {
+    setMessages((prev) => ({ ...prev, [type]: message }));
+    setTimeout(() => {
+      setMessages((prev) => ({ ...prev, [type]: "" }));
+    }, duration);
+  });
 
-  function handleLogin() {
-    if (phoneNo.length < 1) {
-      setIsPhoneNoEmpty(false);
+  const handleInputChange = useCallback((field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  }, []);
+
+  const handleLogin = useCallback(async () => {
+    if (!formData.phoneNo) {
+      setUiState((prev) => ({ ...prev, isPhoneNoEmpty: false }));
       return;
     }
-    if (pass.length < 1) {
-      setIsPassEmpty(false);
+    if (!formData.pass) {
+      setUiState((prev) => ({ ...prev, isPassEmpty: false }));
       return;
     }
     if (!navigator.onLine) {
-      setErr("You are offline");
-      setTimeout(() => {
-        setErr("");
-      }, 3000);
+      showMessage("err", "You are offline");
       return;
     }
-    setIsLoading(true);
 
-    axios
-      .post(`${SERVER_URL}/${category}/login`, {
-        phoneNo: phoneNo,
-        password: pass,
-      })
-      .then((result) => {
-        setSuccess(result.data);
-        localStorage.setItem(category, JSON.stringify(result.data));
-        setIsLoading(false);
-        setTimeout(() => {
-          setSuccess("");
-          navigate("/");
-          if (category == "user") dispatch(addDataUser(result.data));
-          else if (category == "vendor") dispatch(addDataVendor(result.data));
-        }, 2000);
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        setErr(err.response.data.message);
-        setTimeout(() => {
-          setErr("");
-        }, 3000);
+    setUiState((prev) => ({ ...prev, isLoading: true }));
+
+    try {
+      const response = await axios.post(`${SERVER_URL}/${category}/login`, {
+        phoneNo: formData.phoneNo,
+        password: formData.pass,
       });
-  }
 
-  function handlePasswordChange() {
+      showMessage("success", response.data.message);
+      localStorage.setItem(category, JSON.stringify(response.data));
+
+      setTimeout(() => {
+        navigate("/");
+        if (category === "user") {
+          dispatch(addDataUser(response.data));
+        } else if (category === "vendor") {
+          dispatch(addDataVendor(response.data));
+        }
+      }, 2000);
+    } catch (error) {
+      showMessage("err", error.response?.data?.message || "Login failed");
+    } finally {
+      setUiState((prev) => ({ ...prev, isLoading: false }));
+    }
+  }, [
+    formData.phoneNo,
+    formData.pass,
+    category,
+    dispatch,
+    navigate,
+    showMessage,
+  ]);
+
+  const handlePasswordChange = useCallback(() => {
     navigate("/editPhoneEmail", { state: { editType: "pass" } });
-  }
+  }, [navigate]);
 
-  function handleSignup() {
-    navigate("/signup", { state: { category: category, cd, id } });
-  }
+  const handleSignup = useCallback(() => {
+    navigate("/signup", { state: { category, cd, id } });
+  }, [navigate, category, cd, id]);
 
-  function handleEyeClicked() {
-    setIsEyeClicked(!isEyeClicked);
+  const handleEyeClicked = useCallback(() => {
+    setUiState((prev) => ({ ...prev, isEyeClicked: !prev.isEyeClicked }));
+  }, []);
+
+  // Early return if category is not available
+  if (!category) {
+    return (
+      <div className="login">
+        <div className="err" style={{ opacity: 1 }}>
+          Invalid access. Please try again from proper navigation.
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="login">
+      {/* Error Message */}
       <div
         className="err"
-        style={{ opacity: err ? "1" : "", border: err ? "none" : "none" }}
+        style={{
+          opacity: messages.err ? "1" : "",
+          border: messages.err ? "none" : "none",
+        }}
       >
-        {err}
+        {messages.err}
       </div>
+
+      {/* Success Message */}
       <div
         className="success"
         style={{
-          opacity: success ? "1" : "",
-          border: success ? "none" : "none",
+          opacity: messages.success ? "1" : "",
+          border: messages.success ? "none" : "none",
         }}
       >
-        {success.message}
+        {messages.success}
       </div>
+
+      {/* Login Form */}
       <div className="login__1stChild">
-        <h3>{category_result} Login</h3>
+        <h3>{profileCategory} Login</h3>
       </div>
+
       <div className="login__2ndChild">
+        {/* Phone Number Input */}
         <div>
           <input
             placeholder="Mobile Number"
-            type="phoneNo"
-            value={phoneNo}
-            onChange={(e) => setPhoneNo(e.target.value)}
-            style={{ border: isPhoneNoEmpty ? "" : "2px solid red" }}
+            type="tel"
+            value={formData.phoneNo}
+            onChange={(e) => handleInputChange("phoneNo", e.target.value)}
+            style={{ border: uiState.isPhoneNoEmpty ? "" : "2px solid red" }}
           />
         </div>
+
+        {/* Password Input */}
         <div className="password">
           <input
             placeholder="Password"
-            type={isEyeClicked ? "" : "password"}
-            value={pass}
-            onChange={(e) => setPass(e.target.value)}
-            style={{ border: isPassEmpty ? "" : "2px solid red" }}
+            type={uiState.isEyeClicked ? "text" : "password"}
+            value={formData.pass}
+            onChange={(e) => handleInputChange("pass", e.target.value)}
+            style={{ border: uiState.isPassEmpty ? "" : "2px solid red" }}
           />
           <div className="eyesvg" onClick={handleEyeClicked}>
-            <img src={eye} alt="eye" />
+            <img src={eye} alt="Toggle password visibility" />
           </div>
           <div
             className="cross-line"
             style={{
-              display: isEyeClicked ? "block" : "",
+              display: uiState.isEyeClicked ? "block" : "none",
               pointerEvents: "none",
             }}
           >
@@ -156,12 +208,21 @@ export default function Login() {
           </div>
         </div>
 
-        <button className="btn" onClick={handleLogin}>
-          {isLoading ? <div className="loading"></div> : "Login"}
+        {/* Login Button */}
+        <button
+          className="btn"
+          onClick={handleLogin}
+          disabled={uiState.isLoading}
+        >
+          {uiState.isLoading ? <div className="loading"></div> : "Login"}
         </button>
+
+        {/* Forgot Password */}
         <div className="forgetPass" onClick={handlePasswordChange}>
-          <h5>Forget Password?</h5>
+          <h5>Forgot Password?</h5>
         </div>
+
+        {/* Signup Link */}
         <div>
           <h5>
             Don't Have an Account?{" "}
