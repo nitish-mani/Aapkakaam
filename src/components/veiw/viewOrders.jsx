@@ -61,10 +61,10 @@ export default function ViewOrders() {
           setIsLoading(false);
         })
         .catch((err) => {
-          setErr("something bad happens")
+          setErr("something bad happens");
           setTimeout(() => {
-            setErr("")
-          navigate("/");
+            setErr("");
+            navigate("/");
           }, 3000);
         });
     } else if (category === "vendor") {
@@ -79,10 +79,10 @@ export default function ViewOrders() {
           setIsLoading(false);
         })
         .catch((err) => {
-          setErr("something bad happens")
+          setErr("something bad happens");
           setTimeout(() => {
-            setErr("")
-          navigate("/");
+            setErr("");
+            navigate("/");
           }, 3000);
         });
     }

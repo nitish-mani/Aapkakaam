@@ -18,6 +18,7 @@ second component
   margin: 2rem;
   height: 30rem;
   transition: all 200ms;
+  aspect-ratio: 4 / 3; /* Maintains shape */
   position: relative;
   overflow: hidden;
   border-radius: 2rem;

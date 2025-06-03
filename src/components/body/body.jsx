@@ -43,6 +43,7 @@ export default function Body() {
           const newData = {
             ...userData[0],
             balance: data.balance,
+            bonusAmount: data.bonusAmount,
             rating: data.rating,
             ratingCount: data.ratingCount,
           };
@@ -57,7 +58,7 @@ export default function Body() {
           );
           const newData = {
             ...userData[0],
-            balance: data.balance,
+            bonusAmount: data.bonusAmount,
           };
           dispatch(addDataUser(newData));
           localStorage.setItem(category, JSON.stringify(newData));

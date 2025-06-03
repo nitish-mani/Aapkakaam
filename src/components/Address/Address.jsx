@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+// optimized and production ready
+
+import { useEffect, useState, useCallback, useMemo } from "react";
 import "./Address.css";
 import { useDispatch, useSelector } from "react-redux";
 import { addDataUser, clearDataUser } from "../../utils/userslice";
@@ -9,348 +11,324 @@ import { useLocation, useNavigate } from "react-router";
 import { setLocationPincode, setLocationPost } from "../../utils/categoryslice";
 import cross from "../../resources/svg/multiply-svgrepo-com.svg";
 import CamleCase from "../camleCase/camleCase";
+import PropTypes from "prop-types";
 
-export default function Address() {
+const PINCODE_API_URL = "https://api.postalpincode.in/pincode";
+
+const Address = () => {
+  // Hooks and initial setup
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const category = localStorage.getItem("category");
 
-  const userData =
-    category === "user"
-      ? useSelector((store) => store.user.data)
-      : useSelector((store) => store.vendor.data);
+  // Select user data based on category
+  const userData = useSelector((store) =>
+    category === "user" ? store.user.data : store.vendor.data
+  );
 
-  const viewOnLocation = location.state?.viewOnLocation;
-
-  const [vill, setVill] = useState("");
-  const [post, setPost] = useState("");
-  const [dist, setDist] = useState("");
-  const [state, setState] = useState("");
-  const [pincode, setPincode] = useState("");
-  const [PostOfficeDetails, setPostOfficeDetails] = useState([
+  // State management
+  const [formData, setFormData] = useState({
+    vill: "",
+    post: "",
+    dist: "",
+    state: "",
+    pincode: "",
+  });
+  const [errors, setErrors] = useState({
+    vill: false,
+    post: false,
+    pincode: false,
+    general: "",
+  });
+  const [success, setSuccess] = useState({ message: "" });
+  const [isLoading, setIsLoading] = useState({
+    address: false,
+    submit: false,
+  });
+  const [postOfficeDetails, setPostOfficeDetails] = useState([
     { Name: "Select Post Office" },
   ]);
-  const [isClicked, setIsClicked] = useState(false);
-  const [err, setErr] = useState("");
-  const [villEmpty, setVillEmpty] = useState(false);
-  const [postEmpty, setPostEmpty] = useState(false);
-  const [pincodeEmpty, setPincodeEmpty] = useState(false);
-  const [success, setSuccess] = useState("");
-  const [isDisable, setIsDisable] = useState(true);
-  const [isAddressLoading, setIsAddressLoading] = useState(false);
 
+  // Derived values
+  const viewOnLocation = location.state?.viewOnLocation;
   const token = `Bearer ${userData[0]?.token}`;
+  const isOnline = navigator.onLine;
+  const isPincodeValid = formData.pincode.length === 6;
+  const isFormValid = !viewOnLocation
+    ? formData.vill &&
+      isPincodeValid &&
+      formData.post &&
+      formData.post !== "Select Post Office"
+    : isPincodeValid;
 
-  useEffect(() => {
-    setVillEmpty(false);
-    setErr("");
-  }, [vill]);
+  // Memoized user ID based on category
+  const userId = useMemo(() => {
+    return category === "user" ? userData[0]?.userId : userData[0]?.vendorId;
+  }, [category, userData]);
 
-  useEffect(() => {
-    setPostEmpty(false);
-    setErr("");
-  }, [post]);
-  useEffect(() => {
-    setDist("");
-    setState("");
-  }, [pincode]);
+  // API call to fetch post office details
+  const fetchPostOfficeDetails = useCallback(async () => {
+    if (!isPincodeValid) return;
 
-  useEffect(() => {
-    setPostOfficeDetails([{ Name: "Select Post Office" }]);
-    setErr("");
-    setPincodeEmpty(false);
-    if (pincode.length === 6) {
-      if (!navigator.onLine) {
-        setErr("You are offline");
-        setTimeout(() => {
-          setErr("");
-        }, 3000);
-        return;
-      }
-      setIsAddressLoading(true);
-      axios
-        .get(`https://api.postalpincode.in/pincode/${pincode}`)
-        .then((result) => {
-          if (result.data[0]?.Status === "Success") {
-            setPostOfficeDetails([
-              ...PostOfficeDetails,
-              ...result.data[0]?.PostOffice,
-            ]);
-            setDist(() => result.data[0]?.PostOffice[0]?.District);
-            setState(() => result.data[0]?.PostOffice[0]?.State);
-            setIsDisable(false);
-            setIsAddressLoading(false);
-          } else {
-            setErr("Enter Valid Pincode");
-            setIsAddressLoading(false);
-          }
-        })
-        .catch((err) => {
-          setErr("Enter Valid Pincode");
-          setIsAddressLoading(false);
-        });
-    }
-  }, [pincode]);
-
-  function handleSubmitAddress() {
-    if (!navigator.onLine) {
-      setErr("You are offline");
-      setTimeout(() => {
-        setErr("");
-      }, 3000);
+    if (!isOnline) {
+      setErrors((prev) => ({ ...prev, general: "You are offline" }));
+      setTimeout(() => setErrors((prev) => ({ ...prev, general: "" })), 3000);
       return;
     }
-    if (viewOnLocation) {
-      if (pincode.length != 6) {
-        setErr("Pincode Must Have 6 Charactor");
-        setPincodeEmpty(true);
-        return;
-      }
-      dispatch(setLocationPincode(pincode));
-      dispatch(setLocationPost(post));
-      navigate("/");
-    } else {
-      if (vill.length === 0) {
-        setErr("Village Required");
-        setVillEmpty(true);
-        return;
-      }
-      if (pincode.length != 6) {
-        setErr("Pincode Must Have 6 Charactor");
-        setPincodeEmpty(true);
-        return;
-      }
-      if (post === "") {
-        setErr("Select Post Office");
-        setPostEmpty(true);
-        return;
-      }
 
-      if (!isDisable) {
-        const villC = CamleCase({ element: vill });
-        setIsClicked(true);
-        if (category === "user") {
-          axios
-            .patch(
-              `${SERVER_URL}/${category}/update/address`,
-              {
-                vill: villC,
-                post,
-                dist,
-                state,
-                pincode,
-                userId: userData[0]?.userId,
-              },
-              {
-                headers: { Authorization: token },
-              }
-            )
-            .then((result) => {
-              setIsClicked(false);
-              setSuccess(result.data);
-              const data = { ...userData[0], address: result.data.address };
-              dispatch(addDataUser(data));
-              localStorage.setItem(category, JSON.stringify(data));
-              setTimeout(() => {
-                setSuccess("");
-                navigate("/");
-              }, 5000);
-            })
-            .catch((err) => {
-              setIsClicked(false);
-              setErr(err.data);
-              setTimeout(() => {
-                setErr("");
-              }, 5000);
-            });
-        } else if (category === "vendor") {
-          axios
-            .patch(
-              `${SERVER_URL}/${category}/update/address`,
-              {
-                vill: villC,
-                post,
-                dist,
-                state,
-                pincode,
-                token: userData[0].token,
-                vendorId: userData[0]?.vendorId,
-              },
-              {
-                headers: { Authorization: token },
-              }
-            )
-            .then((result) => {
-              setIsClicked(false);
-              setSuccess(result.data);
+    setIsLoading((prev) => ({ ...prev, address: true }));
 
-              const data = { ...userData[0], address: result.data.address };
-              dispatch(addDataVendor(data));
-              localStorage.setItem(category, JSON.stringify(data));
-              setTimeout(() => {
-                setSuccess("");
-                navigate("/");
-              }, 3000);
-            })
-            .catch((err) => {
-              setIsClicked(false);
-              setErr(err.data);
-              setTimeout(() => {
-                setErr("");
-              }, 3000);
-            });
-        }
+    try {
+      const response = await axios.get(
+        `${PINCODE_API_URL}/${formData.pincode}`
+      );
+      const result = response.data[0];
+
+      if (result?.Status === "Success") {
+        setPostOfficeDetails([
+          { Name: "Select Post Office" },
+          ...result.PostOffice,
+        ]);
+        setFormData((prev) => ({
+          ...prev,
+          dist: result.PostOffice[0]?.District,
+          state: result.PostOffice[0]?.State,
+        }));
+      } else {
+        setErrors((prev) => ({ ...prev, general: "Enter Valid Pincode" }));
       }
+    } catch (error) {
+      setErrors((prev) => ({ ...prev, general: "Enter Valid Pincode" }));
+    } finally {
+      setIsLoading((prev) => ({ ...prev, address: false }));
     }
-  }
-  function handleCrossInAddress() {
+  }, [formData.pincode, isOnline, isPincodeValid]);
+
+  // Handle form field changes
+  const handleChange = useCallback((field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => ({ ...prev, [field]: false, general: "" }));
+
+    // Reset district and state when pincode changes
+    if (field === "pincode") {
+      setFormData((prev) => ({ ...prev, dist: "", state: "" }));
+      setPostOfficeDetails([{ Name: "Select Post Office" }]);
+    }
+  }, []);
+
+  // Handle form submission
+  const handleSubmitAddress = useCallback(async () => {
+    if (!isOnline) {
+      setErrors((prev) => ({ ...prev, general: "You are offline" }));
+      setTimeout(() => setErrors((prev) => ({ ...prev, general: "" })), 3000);
+      return;
+    }
+
+    // Validation
+    const newErrors = {
+      vill: viewOnLocation ? false : !formData.vill,
+      post: viewOnLocation
+        ? false
+        : !formData.post || formData.post === "Select Post Office",
+      pincode: !isPincodeValid,
+      general: "",
+    };
+
+    if (newErrors.vill || newErrors.post || newErrors.pincode) {
+      setErrors(newErrors);
+      newErrors.general = newErrors.vill
+        ? "Village Required"
+        : newErrors.pincode
+        ? "Pincode Must Have 6 Characters"
+        : "Select Post Office";
+      return;
+    }
+
+    if (viewOnLocation) {
+      dispatch(setLocationPincode(formData.pincode));
+      dispatch(setLocationPost(formData.post));
+      navigate("/");
+      return;
+    }
+
+    setIsLoading((prev) => ({ ...prev, submit: true }));
+
+    try {
+      const villC = CamleCase({ element: formData.vill });
+      const payload = {
+        vill: villC,
+        post: formData.post,
+        dist: formData.dist,
+        state: formData.state,
+        pincode: formData.pincode,
+        [category === "user" ? "userId" : "vendorId"]: userId,
+      };
+
+      const response = await axios.patch(
+        `${SERVER_URL}/${category}/update/address`,
+        payload,
+        { headers: { Authorization: token } }
+      );
+
+      const updatedData = { ...userData[0], address: response.data.address };
+      const action = category === "user" ? addDataUser : addDataVendor;
+
+      dispatch(action(updatedData));
+      localStorage.setItem(category, JSON.stringify(updatedData));
+
+      setSuccess({ message: response.data.message });
+      setTimeout(() => {
+        setSuccess({ message: "" });
+        navigate("/");
+      }, 3000);
+    } catch (error) {
+      setErrors((prev) => ({
+        ...prev,
+        general: error.response?.data?.message || "An error occurred",
+      }));
+    } finally {
+      setIsLoading((prev) => ({ ...prev, submit: false }));
+    }
+  }, [
+    formData,
+    isOnline,
+    isPincodeValid,
+    viewOnLocation,
+    category,
+    userId,
+    token,
+    userData,
+    dispatch,
+    navigate,
+  ]);
+
+  // Effects
+  useEffect(() => {
+    const timer = errors.general
+      ? setTimeout(() => setErrors((prev) => ({ ...prev, general: "" })), 5000)
+      : null;
+    return () => timer && clearTimeout(timer);
+  }, [errors.general]);
+
+  useEffect(() => {
+    const timer = success.message
+      ? setTimeout(() => setSuccess({ message: "" }), 5000)
+      : null;
+    return () => timer && clearTimeout(timer);
+  }, [success.message]);
+
+  useEffect(() => {
+    fetchPostOfficeDetails();
+  }, [fetchPostOfficeDetails]);
+
+  // Helper functions
+  const handleCrossInAddress = useCallback(() => navigate("/"), [navigate]);
+
+  const resetLocation = useCallback(() => {
+    dispatch(setLocationPincode(""));
+    dispatch(setLocationPost(""));
     navigate("/");
-  }
+  }, [dispatch, navigate]);
+
+  // Render functions
+  const renderInputField = (
+    field,
+    placeholder,
+    type = "text",
+    readOnly = false
+  ) => (
+    <input
+      placeholder={isLoading.address ? "Loading..." : placeholder}
+      type={type}
+      value={formData[field]}
+      onChange={(e) => handleChange(field, e.target.value)}
+      style={{
+        border: errors[field] ? "2px solid red" : "",
+        textAlign: isLoading.address ? "center" : "left",
+      }}
+      readOnly={readOnly}
+    />
+  );
+
+  const renderPostOfficeSelect = () =>
+    postOfficeDetails.length !== 1 ? (
+      <select
+        className="post-select"
+        value={formData.post}
+        onChange={(e) => handleChange("post", e.target.value)}
+        style={{ border: errors.post ? "2px solid red" : "" }}
+      >
+        {postOfficeDetails.map((data, i) => (
+          <option key={i} value={data.Name}>
+            {data.Name}
+          </option>
+        ))}
+      </select>
+    ) : (
+      renderInputField("post", "Post", "text", true)
+    );
+
   return (
     <div className="address">
+      {/* Close button */}
       <img
         src={cross}
-        alt="cross"
-        style={{
-          width: "20px",
-          position: "absolute",
-          top: ".5rem",
-          right: ".5rem",
-          cursor: "pointer",
-          backgroundColor: "#fff",
-          borderRadius: "5px",
-        }}
+        alt="close"
+        className="address__close-button"
         onClick={handleCrossInAddress}
       />
 
-      <div
-        className="err"
-        style={{
-          opacity: err ? "1" : "",
-          top: "-5rem",
-          border: err ? "none" : "none",
-        }}
-      >
-        {err}
-      </div>
-      <div
-        className="success"
-        style={{
-          opacity: success ? "1" : "",
-          top: "-5rem",
+      {/* Error and success messages */}
+      {errors.general && (
+        <div className="address__message address__message--error">
+          {errors.general}
+        </div>
+      )}
+      {success.message && (
+        <div className="address__message address__message--success">
+          {success.message}
+        </div>
+      )}
 
-          border: success ? "none" : "none",
-        }}
-      >
-        {success.message}
+      {/* Header */}
+      <div className="address__header">
+        <h3>
+          {viewOnLocation
+            ? "Location"
+            : `${CamleCase({ element: category })} Address`}
+        </h3>
       </div>
-      <div className="address__1stChild">
-        {viewOnLocation ? (
-          <h3>Location</h3>
-        ) : (
-          <h3>
-            <CamleCase element={category} /> Address
-          </h3>
-        )}
-      </div>
-      <div className="address__2ndChild">
-        {viewOnLocation ? (
-          ""
-        ) : (
-          <div>
-            <input
-              placeholder="Village"
-              type="text"
-              value={vill}
-              onChange={(e) => setVill(e.target.value)}
-              style={{ border: villEmpty ? "2px solid red" : "" }}
-            />
-          </div>
-        )}
-        <div>
-          <input
-            placeholder="Enter Pincode"
-            type="number"
-            value={pincode}
-            onChange={(e) => setPincode(e.target.value)}
-            style={{ border: pincodeEmpty ? "2px solid red" : "" }}
-          />
-        </div>
-        <div>
-          {PostOfficeDetails.length != 1 ? (
-            <select
-              className="post-select"
-              value={post}
-              onChange={(e) => setPost(e.target.value)}
-              style={{ border: postEmpty ? "2px solid red" : "" }}
-            >
-              {PostOfficeDetails.map((data, i) => {
-                return (
-                  <option key={i} value={data.Name}>
-                    {data.Name}
-                  </option>
-                );
-              })}
-            </select>
-          ) : (
-            <div>
-              <input
-                placeholder={isAddressLoading ? "Loading..." : "Post"}
-                style={{ textAlign: isAddressLoading ? "center" : "" }}
-                type="text"
-              />
-            </div>
-          )}
-        </div>
 
-        <div>
-          <input
-            placeholder={isAddressLoading ? "Loading..." : "District"}
-            style={{ textAlign: isAddressLoading ? "center" : "" }}
-            type="text"
-            value={dist}
-            readOnly
-          />
-        </div>
-        <div>
-          <input
-            placeholder={isAddressLoading ? "Loading..." : "State"}
-            style={{ textAlign: isAddressLoading ? "center" : "" }}
-            type="text"
-            value={state}
-            readOnly
-          />
-        </div>
+      {/* Form fields */}
+      <div className="address__form">
+        {!viewOnLocation && <div>{renderInputField("vill", "Village")}</div>}
+
+        {renderInputField("pincode", "Enter Pincode", "number")}
+        <div>{renderPostOfficeSelect()}</div>
+        {renderInputField("dist", "District", "text", true)}
+        {renderInputField("state", "State", "text", true)}
 
         <button
-          className="btn"
+          className="address__submit-button"
           onClick={handleSubmitAddress}
-          style={{ cursor: isDisable ? "not-allowed" : "" }}
+          disabled={!isFormValid || isLoading.submit}
         >
-          {isClicked ? <div className="loading"></div> : "Submit"}
+          {isLoading.submit ? <div className="loading"></div> : "Submit"}
         </button>
 
-        {viewOnLocation ? (
-          <p
-            style={{
-              color: "blue",
-              fontSize: "1.2rem",
-              marginTop: "1rem",
-              cursor: "pointer",
-            }}
-            onClick={() => {
-              dispatch(setLocationPincode(""));
-              dispatch(setLocationPost(""));
-              navigate("/");
-            }}
-          >
+        {viewOnLocation && (
+          <p className="address__pick-from-address" onClick={resetLocation}>
             Pick from Address
           </p>
-        ) : (
-          ""
         )}
       </div>
     </div>
   );
-}
+};
+
+Address.propTypes = {
+  // Add prop types if this component receives any props
+};
+
+export default Address;

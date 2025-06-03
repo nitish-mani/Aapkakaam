@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router";
 import "../Second/SecondComponent.css";
-import ro from "../../resources/img/ro.webp";
+import ro from "../../resources/img/ro.jpg";
 import chaat from "../../resources/img/chaat.jpg";
-import dulhaRath from "../../resources/img/dulha rath.jpg";
-import kirtan from "../../resources/img/kirtan.jpg";
+import dulhaRath from "../../resources/img/dulha_rath.jpg";
+import kirtan from "../../resources/img/kirtan_mandali.jpg";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -22,7 +22,10 @@ export default function TenthComponent() {
     setBtnClicked(true);
     setTimeout(() => setBtnClicked(false), 100);
     setTimeout(() => {
-      if (token) navigate("/checkBookingDate", { state: { jobType: "ro" } });
+      if (token)
+        navigate("/checkBookingDate", {
+          state: { jobType: "ro water booking" },
+        });
       else navigate("/category");
     }, 200);
   }
@@ -30,7 +33,8 @@ export default function TenthComponent() {
     setBtnClicked1(true);
     setTimeout(() => setBtnClicked1(false), 100);
     setTimeout(() => {
-      if (token) navigate("/checkBookingDate", { state: { jobType: "chaat" } });
+      if (token)
+        navigate("/checkBookingDate", { state: { jobType: "chaat booking" } });
       else navigate("/category");
     }, 200);
   }
@@ -39,7 +43,9 @@ export default function TenthComponent() {
     setTimeout(() => setBtnClicked2(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "dulha rath" } });
+        navigate("/checkBookingDate", {
+          state: { jobType: "dulha rath booking" },
+        });
       else navigate("/category");
     }, 200);
   }
@@ -48,7 +54,9 @@ export default function TenthComponent() {
     setTimeout(() => setBtnClicked3(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "kirtan mandli" } });
+        navigate("/checkBookingDate", {
+          state: { jobType: "kirtan mandali booking" },
+        });
       else navigate("/category");
     }, 200);
   }

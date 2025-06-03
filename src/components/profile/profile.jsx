@@ -1,12 +1,9 @@
+// optimized and production ready
+
 import "./profile.css";
 import { useDispatch, useSelector } from "react-redux";
-import cross from "../../resources/svg/multiply-svgrepo-com.svg";
-import male from "../../resources/svg/male-svgrepo-com.svg";
-import female from "../../resources/svg/female-svgrepo-com.svg";
-import rupee from "../../resources/svg/rupee-1-frame-svgrepo-com.svg";
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import axios from "axios";
-import { SERVER_URL } from "../../utils/base";
 import { useNavigate } from "react-router";
 import {
   addDataUser,
@@ -25,29 +22,42 @@ import {
   setLocationPost,
   setURL,
 } from "../../utils/categoryslice";
+import cross from "../../resources/svg/multiply-svgrepo-com.svg";
+import male from "../../resources/svg/male-svgrepo-com.svg";
+import female from "../../resources/svg/female-svgrepo-com.svg";
+import rupee from "../../resources/svg/rupee-1-frame-svgrepo-com.svg";
+import { SERVER_URL } from "../../utils/base";
 
-export default function Profile() {
-  const [nameEdit, setNameEdit] = useState(false);
-  const [emailEdit, setEmailEdit] = useState(false);
-  const [phoneNoEdit, setPhoneNoEdit] = useState(false);
-  const [wageRateEdit, setWageRateEdit] = useState(false);
-
+const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const category = localStorage.getItem("category");
 
-  const userData =
+  // Memoized selectors
+  const userData = useSelector((store) =>
+    category === "user" ? store.user.data : store.vendor.data
+  );
+  const isPrVisible = useSelector((store) =>
     category === "user"
-      ? useSelector((store) => store.user.data)
-      : useSelector((store) => store.vendor.data);
+      ? store.user.isPrVisibleUser
+      : store.vendor.isPrVisibleVendor
+  );
 
-  const isPrVisible =
-    category === "user"
-      ? useSelector((store) => store.user.isPrVisibleUser)
-      : useSelector((store) => store.vendor.isPrVisibleVendor);
+  const token = useMemo(() => `Bearer ${userData[0]?.token}`, [userData]);
 
-  const token = `Bearer ${userData[0]?.token}`;
-
+  // State management
+  const [editStates, setEditStates] = useState({
+    name: false,
+    email: false,
+    phoneNo: false,
+    wageRate: false,
+  });
+  const [formData, setFormData] = useState({
+    name: userData[0]?.name || "",
+    email: userData[0]?.email || "",
+    phoneNo: userData[0]?.phoneNo || "",
+    wageRate: userData[0]?.wageRate || "",
+  });
   const [isLoading, setIsLoading] = useState({
     name: false,
     email: false,
@@ -55,277 +65,237 @@ export default function Profile() {
     shareNo: false,
     wageRate: false,
   });
-
-  const [name, setName] = useState(userData[0]?.name);
-  const [email, setEmail] = useState(userData[0]?.email);
-  const [phoneNo, setPhoneNo] = useState(userData[0]?.phoneNo);
-  const [wageRate, setWageRate] = useState(userData[0]?.wageRate);
   const [err, setErr] = useState("");
 
-  function handleLogout() {
-    if (category === "user") dispatch(clearDataUser());
-    else if (category === "vendor") dispatch(clearDataVendor());
+  // Handlers
+  const handleLogout = useCallback(() => {
+    if (category === "user") {
+      dispatch(clearDataUser());
+      dispatch(setPrIsVisibleUser(false));
+    } else if (category === "vendor") {
+      dispatch(clearDataVendor());
+      dispatch(setPrIsVisibleVendor(false));
+    }
 
-    if (category === "user") dispatch(setPrIsVisibleUser(false));
-    else if (category === "vendor") dispatch(setPrIsVisibleVendor(false));
     dispatch(setLocationPincode(""));
     dispatch(setLocationPost(""));
     dispatch(setCategory(""));
     localStorage.clear();
     navigate("/");
-  }
+  }, [category, dispatch, navigate]);
 
-  function handleCrossInProfile() {
-    if (category === "user") dispatch(setPrIsVisibleUser(false));
-    else if (category === "vendor") dispatch(setPrIsVisibleVendor(false));
-    setNameEdit(false);
-    setEmailEdit(false);
-    setPhoneNoEdit(false);
-  }
+  const handleCrossInProfile = useCallback(() => {
+    if (category === "user") {
+      dispatch(setPrIsVisibleUser(false));
+    } else if (category === "vendor") {
+      dispatch(setPrIsVisibleVendor(false));
+    }
+    setEditStates({
+      name: false,
+      email: false,
+      phoneNo: false,
+      wageRate: false,
+    });
+  }, [category, dispatch]);
 
-  {
-    /******************************
-     ******handle Name edit*********
-     *******************************/
-  }
+  const showError = useCallback((message) => {
+    setErr(message);
+    setTimeout(() => setErr(""), 3000);
+  }, []);
 
-  function handleNameEdit() {
+  const handleEditToggle = useCallback((field) => {
+    setEditStates((prev) => ({ ...prev, [field]: !prev[field] }));
+  }, []);
+
+  const handleInputChange = useCallback((field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  }, []);
+
+  // API call handlers
+  const handleNameUpdate = useCallback(async () => {
     if (!navigator.onLine) {
-      setErr("You are offline");
-      setTimeout(() => {
-        setErr("");
-      }, 3000);
+      showError("You are offline");
       return;
     }
-    setNameEdit(true);
 
-    if (nameEdit) {
-      setIsLoading((state) => ({ ...state, name: true }));
+    setIsLoading((prev) => ({ ...prev, name: true }));
+
+    try {
+      const endpoint = `${SERVER_URL}/${category}/edit/name`;
+      const body =
+        category === "user"
+          ? { name: formData.name, userId: userData[0].userId }
+          : { name: formData.name, vendorId: userData[0].vendorId };
+
+      const response = await axios.patch(endpoint, body, {
+        headers: { Authorization: token },
+      });
+
+      const updatedData = { ...userData[0], name: response.data.name };
+
       if (category === "user") {
-        axios
-          .patch(
-            `${SERVER_URL}/${category}/edit/name`,
-
-            {
-              name: name,
-              userId: userData[0].userId,
-            },
-            {
-              headers: { Authorization: token },
-            }
-          )
-          .then((result) => {
-            const data = { ...userData[0], name: result.data.name };
-            dispatch(addDataUser(data));
-            localStorage.setItem(category, JSON.stringify(data));
-
-            setNameEdit(false);
-            setIsLoading((state) => ({ ...state, name: false }));
-          })
-          .catch((err) => {
-            setErr("something bad happens");
-            setTimeout(() => {
-              setErr("");
-            }, 3000);
-          });
-      } else if (category === "vendor") {
-        axios
-          .patch(
-            `${SERVER_URL}/${category}/edit/name`,
-
-            {
-              name: name,
-              vendorId: userData[0].vendorId,
-            },
-            {
-              headers: { Authorization: token },
-            }
-          )
-          .then((result) => {
-            const data = { ...userData[0], name: result.data.name };
-            dispatch(addDataVendor(data));
-            localStorage.setItem(category, JSON.stringify(data));
-
-            setNameEdit(false);
-            setIsLoading((state) => ({ ...state, name: false }));
-          })
-          .catch((err) => {
-            setErr("something bad happens");
-            setTimeout(() => {
-              setErr("");
-            }, 3000);
-          });
+        dispatch(addDataUser(updatedData));
+      } else {
+        dispatch(addDataVendor(updatedData));
       }
+
+      localStorage.setItem(category, JSON.stringify(updatedData));
+      handleEditToggle("name");
+    } catch (error) {
+      showError("Something went wrong");
+    } finally {
+      setIsLoading((prev) => ({ ...prev, name: false }));
     }
-  }
+  }, [
+    category,
+    formData.name,
+    userData,
+    token,
+    dispatch,
+    handleEditToggle,
+    showError,
+  ]);
 
-  {
-    /***********************************
-     ******handle Phone No edit*********
-     ***********************************/
-  }
-
-  function handlePhoneNoEdit() {
-    navigate("/editPhoneEmail", { state: { editType: "phoneNo" } });
-    if (category === "user") dispatch(setPrIsVisibleUser(false));
-    else if (category === "vendor") dispatch(setPrIsVisibleVendor(false));
-  }
-
-  {
-    /********************************
-     ******handle Email edit*********
-     ********************************/
-  }
-
-  function handleEmailEdit() {
-    navigate("/editPhoneEmail", { state: { editType: "email" } });
-    if (category === "user") dispatch(setPrIsVisibleUser(false));
-    else if (category === "vendor") dispatch(setPrIsVisibleVendor(false));
-  }
-
-  {
-    /********************************
-     ******handle Orders View*********
-     ********************************/
-  }
-
-  function handleOrdersView() {
-    navigate("/viewOrders", { state: { category: category } });
-
-    if (category === "user") dispatch(setPrIsVisibleUser(false));
-    else if (category === "vendor") dispatch(setPrIsVisibleVendor(false));
-  }
-
-  {
-    /********************************
-     ******handle Share View*********
-     ********************************/
-  }
-
-  function handleShareView() {
-    navigate("/viewShare", { state: { category: category } });
-
-    if (category === "user") dispatch(setPrIsVisibleUser(false));
-    else if (category === "vendor") dispatch(setPrIsVisibleVendor(false));
-  }
-
-  {
-    /****************************
-     ******handle Share**********
-     ****************************/
-  }
-  function handleShare() {
-    navigate("/share");
-    if (category === "user") dispatch(setPrIsVisibleUser(false));
-    else if (category === "vendor") dispatch(setPrIsVisibleVendor(false));
-  }
-
-  {
-    /***********************************
-     ******handle Bookings View*********
-     ***********************************/
-  }
-  function handleBookingsView() {
-    navigate("/viewBookings", { state: { bookingsType: "view" } });
-    dispatch(setPrIsVisibleVendor(false));
-  }
-
-  {
-    /*******************************
-     ******handle bookings**********
-     *******************************/
-  }
-  function handleBookings() {
-    navigate("/bookNow", { state: { bookingsType: "book" } });
-    dispatch(setPrIsVisibleVendor(false));
-  }
-
-  {
-    /**********************************
-     ******handle add address**********
-     **********************************/
-  }
-  function handleAddAddress() {
-    navigate("/address");
-    dispatch(setPrIsVisibleVendor(false));
-    dispatch(setPrIsVisibleUser(false));
-  }
-
-  {
-    /**********************************
-     ******handle wage rate**********
-     **********************************/
-  }
-  function handleWageRate() {
+  const handleWageRateUpdate = useCallback(async () => {
     if (!navigator.onLine) {
-      setErr("You are offline");
-      setTimeout(() => {
-        setErr("");
-      }, 3000);
+      showError("You are offline");
       return;
     }
-    setWageRateEdit(true);
 
-    if (wageRateEdit) {
-      setIsLoading((state) => ({ ...state, wageRate: true }));
+    setIsLoading((prev) => ({ ...prev, wageRate: true }));
 
-      axios
-        .patch(
-          `${SERVER_URL}/${category}/wageRate`,
+    try {
+      const response = await axios.patch(
+        `${SERVER_URL}/${category}/wageRate`,
+        {
+          wageRate: formData.wageRate,
+          vendorId: userData[0].vendorId,
+        },
+        { headers: { Authorization: token } }
+      );
 
-          {
-            wageRate: wageRate,
-            vendorId: userData[0].vendorId,
-          },
-          {
-            headers: { Authorization: token },
-          }
-        )
-        .then((result) => {
-          const data = { ...userData[0], wageRate: result.data.wageRate };
-          dispatch(addDataVendor(data));
-          localStorage.setItem(category, JSON.stringify(data));
-
-          setWageRateEdit(false);
-          setIsLoading((state) => ({ ...state, wageRate: false }));
-        })
-        .catch((err) => {
-          setErr("something bad happens");
-          setTimeout(() => {
-            setErr("");
-          }, 3000);
-        });
+      const updatedData = { ...userData[0], wageRate: response.data.wageRate };
+      dispatch(addDataVendor(updatedData));
+      localStorage.setItem(category, JSON.stringify(updatedData));
+      handleEditToggle("wageRate");
+    } catch (error) {
+      showError("Something went wrong");
+    } finally {
+      setIsLoading((prev) => ({ ...prev, wageRate: false }));
     }
-  }
+  }, [
+    category,
+    formData.wageRate,
+    userData,
+    token,
+    dispatch,
+    handleEditToggle,
+    showError,
+  ]);
 
-  function handleAddMoney() {
-    navigate("/addMoney");
-    dispatch(setPrIsVisibleVendor(false));
-    dispatch(setPrIsVisibleUser(false));
-  }
+  // Navigation handlers
+  const navigateTo = useCallback(
+    (path, state = {}) => {
+      navigate(path, { state });
+      if (category === "user") {
+        dispatch(setPrIsVisibleUser(false));
+      } else {
+        dispatch(setPrIsVisibleVendor(false));
+      }
+    },
+    [category, dispatch, navigate]
+  );
 
-  function handleProfileImage() {
-    navigate("/uploads");
-    dispatch(setPrIsVisibleVendor(false));
-    dispatch(setPrIsVisibleUser(false));
-  }
+  const handlePhoneNoEdit = useCallback(() => {
+    navigateTo("/editPhoneEmail", { editType: "phoneNo" });
+  }, [navigateTo]);
 
-  /***
-   *******************************************************************
-   *******************************************************************
-   *************************              ****************************
-   *************************   Main Code  ****************************
-   *************************              ****************************
-   *******************************************************************
-   *******************************************************************
-   */
+  const handleEmailEdit = useCallback(() => {
+    navigateTo("/editPhoneEmail", { editType: "email" });
+  }, [navigateTo]);
+
+  const handleOrdersView = useCallback(() => {
+    navigateTo("/viewOrders", { category });
+  }, [category, navigateTo]);
+
+  const handleShareView = useCallback(() => {
+    navigateTo("/viewShare", { category });
+  }, [category, navigateTo]);
+
+  const handleShare = useCallback(() => {
+    navigateTo("/share");
+  }, [navigateTo]);
+
+  const handleBookingsView = useCallback(() => {
+    navigateTo("/viewBookings", { bookingsType: "view" });
+  }, [navigateTo]);
+
+  const handleBookings = useCallback(() => {
+    navigateTo("/bookNow", { bookingsType: "book" });
+  }, [navigateTo]);
+
+  const handleAddAddress = useCallback(() => {
+    navigateTo("/address");
+  }, [navigateTo]);
+
+  const handleAddMoney = useCallback(() => {
+    navigateTo("/addMoney");
+  }, [navigateTo]);
+
+  const handleProfileImage = useCallback(() => {
+    navigateTo("/uploads");
+  }, [navigateTo]);
+
+  // Memoized profile image component
+  const ProfileImage = useMemo(() => {
+    const gender = userData[0]?.gender;
+    const imgURL = userData[0]?.imgURL;
+    const imgStyle = {
+      width: "5rem",
+      height: "5rem",
+      borderRadius: "50%",
+      cursor: "pointer",
+    };
+
+    if (gender === "Male") {
+      return imgURL ? (
+        <img
+          src={imgURL}
+          alt=""
+          style={imgStyle}
+          onClick={handleProfileImage}
+        />
+      ) : (
+        <img
+          src={male}
+          alt=""
+          style={{ width: "5rem", cursor: "pointer" }}
+          onClick={handleProfileImage}
+        />
+      );
+    } else {
+      return imgURL ? (
+        <img
+          src={`${imgURL}?t=${Date.now()}`}
+          alt=""
+          style={imgStyle}
+          onClick={handleProfileImage}
+        />
+      ) : (
+        <img
+          src={female}
+          alt=""
+          style={{ width: "5rem", cursor: "pointer" }}
+          onClick={handleProfileImage}
+        />
+      );
+    }
+  }, [userData, handleProfileImage]);
+
+  if (!isPrVisible) return null;
 
   return (
-    <div
-      className="profile"
-      style={{ display: isPrVisible ? "block" : "none" }}
-    >
-      {" "}
+    <div className="profile">
       <div
         className="err"
         style={{
@@ -336,6 +306,7 @@ export default function Profile() {
       >
         {err}
       </div>
+
       <div
         style={{
           display: "flex",
@@ -343,48 +314,9 @@ export default function Profile() {
           backgroundColor: "transparent",
         }}
       >
-        {userData[0].gender == "Male" ? (
-          userData[0].imgURL ? (
-            <img
-              src={userData[0].imgURL}
-              alt=""
-              style={{
-                width: "5rem",
-                height: "5rem",
-                borderRadius: "50%",
-                cursor: "pointer",
-              }}
-              onClick={handleProfileImage}
-            />
-          ) : (
-            <img
-              src={male}
-              alt=""
-              style={{ width: "5rem", cursor: "pointer" }}
-              onClick={handleProfileImage}
-            />
-          )
-        ) : userData[0].imgURL ? (
-          <img
-            src={userData[0].imgURL}
-            alt=""
-            style={{
-              width: "5rem",
-              height: "5rem",
-              borderRadius: "50%",
-              cursor: "pointer",
-            }}
-            onClick={handleProfileImage}
-          />
-        ) : (
-          <img
-            src={female}
-            alt=""
-            style={{ width: "5rem", cursor: "pointer" }}
-            onClick={handleProfileImage}
-          />
-        )}
+        {ProfileImage}
       </div>
+
       <p
         onClick={handleProfileImage}
         style={{
@@ -397,11 +329,14 @@ export default function Profile() {
       >
         Upload Profile Image
       </p>
+
       <h2>
         <CamleCase element={category} /> Profile
       </h2>
+
       <img
         src={cross}
+        className="profile__close-button"
         alt="cross"
         style={{
           width: "20px",
@@ -412,21 +347,18 @@ export default function Profile() {
         }}
         onClick={handleCrossInProfile}
       />
-      {/**********************
-       ******  Name  *********
-       ***********************/}
+
+      {/* Name Field */}
       <div>
         <span className="border-bottom">Name </span>
         <span className="span email-grid ">
-          {nameEdit ? (
+          {editStates.name ? (
             <input
               type="text"
               placeholder="Name"
               autoFocus
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-              }}
+              value={formData.name}
+              onChange={(e) => handleInputChange("name", e.target.value)}
               style={{
                 height: "2.5rem",
                 border: "2px solid black",
@@ -438,20 +370,22 @@ export default function Profile() {
             <CamleCase element={userData[0]?.name} />
           )}
 
-          {/***** Name Edit btn  *****/}
-
           <span
             className="verify-btn span-child"
-            onClick={handleNameEdit}
+            onClick={
+              editStates.name
+                ? handleNameUpdate
+                : () => handleEditToggle("name")
+            }
             style={{
-              color: nameEdit ? "white" : "",
-              border: nameEdit ? "none" : "",
-              backgroundColor: nameEdit ? "blue" : "",
+              color: editStates.name ? "white" : "",
+              border: editStates.name ? "none" : "",
+              backgroundColor: editStates.name ? "blue" : "",
               width: isLoading.name ? "5rem" : "",
               height: isLoading.name ? "3rem" : "",
             }}
           >
-            {nameEdit ? (
+            {editStates.name ? (
               isLoading.name ? (
                 <div className="loading"></div>
               ) : (
@@ -463,267 +397,198 @@ export default function Profile() {
           </span>
         </span>
       </div>
-      {/*************************
-       ******  Phone No *********
-       **************************/}
+
+      {/* Phone Number Field */}
       <div>
         <span className="border-bottom">Mobile No</span>
         <span className="span email-grid ">
-          {phoneNoEdit ? (
-            <input
-              type="number"
-              placeholder="Number"
-              autoFocus
-              value={phoneNo}
-              onChange={(e) => {
-                setPhoneNo(e.target.value);
-              }}
-              style={{
-                height: "2.5rem",
-                border: "2px solid black",
-                paddingLeft: "1rem",
-                borderRadius: ".5rem",
-              }}
-            />
-          ) : (
-            userData[0]?.phoneNo
-          )}
+          {userData[0]?.phoneNo}
 
-          {/***** Phone No Edit btn  *****/}
-
-          <span
-            className="verify-btn span-child"
-            onClick={handlePhoneNoEdit}
-            style={{
-              color: phoneNoEdit ? "white" : "",
-              border: phoneNoEdit ? "none" : "",
-              backgroundColor: phoneNoEdit ? "blue" : "",
-              width: isLoading.phoneNo ? "5rem" : "",
-              height: isLoading.phoneNo ? "3rem" : "",
-            }}
-          >
-            {phoneNoEdit ? (
-              isLoading.phoneNo ? (
-                <div className="loading"></div>
-              ) : (
-                "Submit"
-              )
-            ) : (
-              "Edit"
-            )}
+          <span className="verify-btn span-child" onClick={handlePhoneNoEdit}>
+            Edit
           </span>
-
-          {/***** Phone No  Verify btn  *****/}
 
           <span
             className="verify-btn"
             style={{
-              backgroundColor:
-                userData[0]?.verifyPhoneNo === true ? "green" : "",
-              color: userData[0]?.verifyPhoneNo === true ? "white" : "",
-              border: userData[0]?.verifyPhoneNo === true ? "none" : "",
+              backgroundColor: userData[0]?.verifyPhoneNo ? "green" : "",
+              color: userData[0]?.verifyPhoneNo ? "white" : "",
+              border: userData[0]?.verifyPhoneNo ? "none" : "",
             }}
           >
-            {userData[0]?.verifyPhoneNo === true ? "Verified" : "Verify"}
+            {userData[0]?.verifyPhoneNo ? "Verified" : "Verify"}
           </span>
         </span>
       </div>
-     
-      {/************************
-       ******  Orders  *********
-       *************************/}
+
+      {/* Orders Field */}
       <div>
         <span className="border-bottom">Orders </span>
         <span className="span email-grid ">
           <span>{userData[0]?.orders}</span>
-
-          {/***** Orders View btn  *****/}
-
           <span className="verify-btn" onClick={handleOrdersView}>
             view
           </span>
         </span>
       </div>
-      {/***********************
-       ******  Share  *********
-       ************************/}
+
+      {/* Share Field */}
       <div>
         <span className="border-bottom">Share</span>
         <span className="span email-grid ">
           <span>{userData[0]?.share}</span>
-
-          {/***** Share View btn  *****/}
-
           <span className="verify-btn" onClick={handleShareView}>
             view
           </span>
-
-          {/***** Share share btn  *****/}
-
           <span className="verify-btn btn1" onClick={handleShare}>
             Share
           </span>
         </span>
       </div>
-      {/************************************
-       ******  Bookings for vendor *********
-       *************************************/}
-      {category === "vendor" ? (
-        <div>
-          <span className="border-bottom">Bookings </span>
-          <span className="span email-grid ">
-            <span>{userData[0]?.bookings}</span>
 
-            {/***** Bookings View btn  *****/}
-
-            <span className="verify-btn" onClick={handleBookingsView}>
-              view
+      {/* Vendor-specific fields */}
+      {category === "vendor" && (
+        <>
+          {/* Bookings Field */}
+          <div>
+            <span className="border-bottom">Bookings </span>
+            <span className="span email-grid ">
+              <span>{userData[0]?.bookings}</span>
+              <span className="verify-btn" onClick={handleBookingsView}>
+                view
+              </span>
+              <span className="verify-btn btn1" onClick={handleBookings}>
+                Book Now
+              </span>
             </span>
+          </div>
 
-            {/***** Bookings bookings btn  *****/}
-
-            <span className="verify-btn btn1" onClick={handleBookings}>
-              Book Now
+          {/* Balance Field */}
+          <div>
+            <span className="span email-grid ">Balance</span>
+            <span>
+              <span
+                className="verify-btn"
+                style={{ border: "none", margin: "0 .3rem" }}
+              >
+                <img src={rupee} alt="" style={{ width: "1.15rem" }} />
+                <span style={{ color: userData[0]?.balance ? "green" : "red" }}>
+                  {userData[0]?.balance || 0}
+                </span>
+              </span>
+              <span
+                className="verify-btn btn1"
+                onClick={handleAddMoney}
+                style={{ padding: ".4rem" }}
+              >
+                Add Money
+              </span>
             </span>
-          </span>
-        </div>
-      ) : (
-        ""
+          </div>
+
+          {/* Ratings Field */}
+          <div>
+            <span className="span email-grid ">Ratings</span>
+            <span style={{ color: "green" }}>
+              {userData[0]?.rating
+                ? `${userData[0]?.rating} / 5 (${userData[0]?.ratingCount})`
+                : "No Ratings"}
+            </span>
+          </div>
+
+          {/* Wage Rate Field */}
+          <div>
+            <span>Wage-rate</span>
+            <span className="span email-grid ">
+              <span>
+                {editStates.wageRate ? (
+                  <input
+                    type="Number"
+                    placeholder="Wage Rate"
+                    autoFocus
+                    value={formData.wageRate}
+                    onChange={(e) =>
+                      handleInputChange("wageRate", e.target.value)
+                    }
+                    style={{
+                      height: "2.5rem",
+                      border: "2px solid black",
+                      paddingLeft: "1rem",
+                      borderRadius: ".5rem",
+                    }}
+                  />
+                ) : (
+                  <span>
+                    {userData[0]?.wageRate ? (
+                      <span>
+                        <img src={rupee} alt="" style={{ width: "1.15rem" }} />
+                        <span style={{ color: "blue" }}>
+                          {userData[0]?.wageRate} / Day
+                        </span>
+                      </span>
+                    ) : (
+                      "No Wage Rate"
+                    )}
+                  </span>
+                )}
+              </span>
+              <span
+                className="verify-btn btn1"
+                onClick={
+                  editStates.wageRate
+                    ? handleWageRateUpdate
+                    : () => handleEditToggle("wageRate")
+                }
+              >
+                {isLoading.wageRate ? (
+                  <div className="loading"></div>
+                ) : editStates.wageRate ? (
+                  "Submit"
+                ) : (
+                  "Set Wage Rate"
+                )}
+              </span>
+            </span>
+          </div>
+
+          {/* Job Profile Field */}
+          <div>
+            <span className="border-bottom">Job Profile </span>
+            <span className="span email-grid ">
+              <span style={{ color: "blue" }}>
+                <CamleCase element={userData[0]?.type} />
+              </span>
+            </span>
+          </div>
+        </>
       )}
-      {/*************************
-       ******  Bonus Amount  *********
-       **************************/}
+
+      {/* Bonus Amount Field */}
       <div>
-        <span className="span email-grid ">Bonus Amount </span>{" "}
+        <span className="span email-grid ">Bonus Amount </span>
         <span>
           <span
             className="verify-btn"
             style={{ border: "none", margin: "0 .3rem" }}
           >
             <img src={rupee} alt="" style={{ width: "1.15rem" }} />
-            {userData[0]?.bonusAmount === 0 ? (
-              <span style={{ color: "red" }}>{`${userData[0]?.bonusAmount}`}</span>
-            ) : (
-              <span
-                style={{ color: "green" }}
-              >{`${userData[0]?.bonusAmount}`}</span>
-            )}
+            <span style={{ color: userData[0]?.bonusAmount ? "green" : "red" }}>
+              {userData[0]?.bonusAmount || 0}
+            </span>
           </span>
         </span>
       </div>
-      {/****************************************
-       ****** for vendor Balance  *********
-       *****************************************/}
-      {category == "vendor" ? (
-        <div>
-          <span className="span email-grid ">Balance</span>{" "}
-          <span>
-            <span
-              className="verify-btn"
-              style={{ border: "none", margin: "0 .3rem" }}
-            >
-              <img src={rupee} alt="" style={{ width: "1.15rem" }} />
-              {userData[0]?.balance||0 === 0 ? (
-                <span style={{ color: "red" }}>{`${
-                  userData[0]?.balance || 0
-                }`}</span>
-              ) : (
-                <span style={{ color: "green" }}>{`${
-                  userData[0]?.balance || 0
-                }`}</span>
-              )}
-            </span>
-            <span
-              className="verify-btn btn1"
-              onClick={handleAddMoney}
-              style={{ padding: ".4rem" }}
-            >
-              Add Money
-            </span>
-          </span>
-        </div>
-      ) : (
-        ""
-      )}
-      {/**********************************
-       ******  Rating for Vendor *********
-       ***********************************/}
-      {category === "vendor" ? (
-        <div>
-          <span className="span email-grid ">Ratings</span>
-          <span style={{ color: "green" }}>
-            {userData[0]?.rating
-              ? `${userData[0]?.rating} / 5 (${userData[0]?.ratingCount})`
-              : "No Ratings"}
-          </span>
-        </div>
-      ) : (
-        ""
-      )}
-      {/**********************************
-       ******  WageRate for Vendor *********
-       ***********************************/}
-      {category === "vendor" ? (
-        <div>
-          <span>Wage-rate</span>
-          <span className="span email-grid ">
-            <span>
-              {wageRateEdit ? (
-                <input
-                  type="Number"
-                  placeholder="Wage Rate"
-                  autoFocus
-                  value={wageRate}
-                  onChange={(e) => {
-                    setWageRate(e.target.value);
-                  }}
-                  style={{
-                    height: "2.5rem",
-                    border: "2px solid black",
-                    paddingLeft: "1rem",
-                    borderRadius: ".5rem",
-                  }}
-                />
-              ) : (
-                <span>
-                  {userData[0]?.wageRate ? (
-                    <span>
-                      <img src={rupee} alt="" style={{ width: "1.15rem" }} />
-                      <span style={{ color: "blue" }}>
-                        {userData[0]?.wageRate} / Day
-                      </span>
-                    </span>
-                  ) : (
-                    "No Wage Rate"
-                  )}
-                </span>
-              )}
-            </span>
-            <span className="verify-btn btn1" onClick={handleWageRate}>
-              {isLoading.wageRate ? (
-                <div className="loading"></div>
-              ) : (
-                "Set Wage Rate"
-              )}
-            </span>
-          </span>
-        </div>
-      ) : (
-        ""
-      )}
-      {/*************************
-       ******  Address  *********
-       **************************/}
+
+      {/* Address Field */}
       <div>
         <span className="span ">Address </span>
-        {userData[0]?.address[0] ? (
+        {userData[0]?.address?.[0] ? (
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div>{userData[0]?.address[0].vill}</div>
             <div>{userData[0]?.address[0].post}</div>
             <div>{userData[0]?.address[0].dist}</div>
             <div>{userData[0]?.address[0].state}</div>
             <div>{userData[0]?.address[0].pincode}</div>
-
             <button
               className="verify-btn btn1 b600"
               onClick={handleAddAddress}
@@ -740,30 +605,15 @@ export default function Profile() {
           >
             Add Address
           </button>
-        )}{" "}
+        )}
       </div>
-      {/****************************************
-       ******  Job Profile for Vendor  *********
-       *****************************************/}
-      {category === "vendor" ? (
-        <div>
-          <span className="border-bottom">Job Profile </span>
-          <span className="span email-grid ">
-            <span style={{ color: "blue" }}>
-              <CamleCase element={userData[0]?.type} />
-            </span>
-          </span>
-        </div>
-      ) : (
-        ""
-      )}
-      {/*************************
-       ******  Log Out  btn *********
-       **************************/}
+
+      {/* Logout Button */}
       <button className="btn" onClick={handleLogout}>
         Logout
       </button>
-      {/* <h3 className="vendor-registration">Register As a Vendor</h3> */}
     </div>
   );
-}
+};
+
+export default Profile;

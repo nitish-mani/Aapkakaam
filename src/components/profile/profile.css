@@ -12,6 +12,22 @@
   border-radius: 1rem;
   z-index: 1;
 }
+.profile__close-button {
+  width: 2.5rem;
+  height: 2.5rem;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.profile__close-button:hover {
+  transform: rotate(90deg);
+}
+
 .profile > h2 {
   border-bottom: 1px solid #c5c5c5;
   padding: 1rem;

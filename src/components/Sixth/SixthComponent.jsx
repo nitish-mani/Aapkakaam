@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router";
 import "../Second/SecondComponent.css";
-import car from "../../resources/img/car booking.jpg";
-import lights from "../../resources/img/light booking.jpg";
-import bus from "../../resources/img/bus booking.jpg";
-import tenthouse from "../../resources/img/tent house.jpg";
+import car from "../../resources/img/car.jpg";
+import lights from "../../resources/img/lights_booking.jpg";
+import bus from "../../resources/img/bus.jpg";
+import tenthouse from "../../resources/img/tent.jpg";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -23,7 +23,9 @@ export default function SixthComponent() {
     setTimeout(() => setBtnClicked(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "four wheeler" } });
+        navigate("/checkBookingDate", {
+          state: { jobType: "four wheeler booking" },
+        });
       else navigate("/category");
     }, 200);
   }
@@ -32,7 +34,7 @@ export default function SixthComponent() {
     setTimeout(() => setBtnClicked1(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "lights" } });
+        navigate("/checkBookingDate", { state: { jobType: "lights booking" } });
       else navigate("/category");
     }, 200);
   }
@@ -40,7 +42,8 @@ export default function SixthComponent() {
     setBtnClicked2(true);
     setTimeout(() => setBtnClicked2(false), 100);
     setTimeout(() => {
-      if (token) navigate("/checkBookingDate", { state: { jobType: "bus" } });
+      if (token)
+        navigate("/checkBookingDate", { state: { jobType: "bus booking" } });
       else navigate("/category");
     }, 200);
   }
@@ -49,7 +52,9 @@ export default function SixthComponent() {
     setTimeout(() => setBtnClicked3(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "tent house" } });
+        navigate("/checkBookingDate", {
+          state: { jobType: "tent house booking" },
+        });
       else navigate("/category");
     }, 200);
   }

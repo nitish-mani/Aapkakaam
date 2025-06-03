@@ -1,11 +1,11 @@
 import "./Footer.css";
-import appStore from "../../resources/img/appstore.png";
-import playStore from "../../resources/img/playstore.webp";
+import appStore from "../../resources/img/appStore.jpg";
+import playStore from "../../resources/img/playStore.jpg";
 import facebook from "../../resources/svg/facebook-svgrepo-com.svg";
 import linkedin from "../../resources/svg/linkedin-svgrepo-com.svg";
 import insta from "../../resources/svg/instagram-svgrepo-com.svg";
 import youtube from "../../resources/svg/youtube-168-svgrepo-com.svg";
-import twitter from "../../resources/img/twitter-x.png";
+import twitter from "../../resources/img/x.jpg";
 
 export default function Footer() {
   return (
@@ -29,14 +29,20 @@ export default function Footer() {
             <div>Advertise with Us</div>
           </div>
         </div>
-        <div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
           <div className="title">EXPERIENCE AAPKAKAAM APP</div>
-          <div>
+          <div style={{ display: "flex", flexDirection: "row", gap: "1rem" }}>
             <div style={{ cursor: "pointer" }}>
-              <img src={appStore} alt="logo" />
+              <img src={appStore} alt="logo" style={{ width: "50px" }} />
             </div>
             <div style={{ cursor: "pointer" }}>
-              <img src={playStore} alt="logo" />
+              <img src={playStore} alt="logo" style={{ width: "50px" }} />
             </div>
           </div>
         </div>
@@ -45,7 +51,7 @@ export default function Footer() {
         style={{ borderTop: "1px solid rgba(0, 0, 0, 0.12)", width: "100vw" }}
       >
         <div className="footer-div2nd">
-          <div className="copyRight">© 2024 Uslugi Technology Pvt. Ltd.</div>
+          <div className="copyRight">© 2025 Uslugi Technology Pvt. Ltd.</div>
           <div></div>
           <div className="connect">
             <div

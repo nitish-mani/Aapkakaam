@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router";
 import "../First/FirstComponent.css";
-import painter from "../../resources/img/painter.jpeg";
-import bikerepaire from "../../resources/img/bike repaire.jpg";
-import carrepaire from "../../resources/img/car repaire.avif";
-import tilesfitter from "../../resources/img/tiles fitter.jpg";
+import painter from "../../resources/img/painter.jpg";
+import bikerepaire from "../../resources/img/bike_repaire.jpg";
+import carrepaire from "../../resources/img/car_repaire.jpg";
+import tilesfitter from "../../resources/img/tile_fitter.jpg";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -32,7 +32,7 @@ export default function FifthComponent() {
     setTimeout(() => setBtnClicked1(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "bike repaire" } });
+        navigate("/checkBookingDate", { state: { jobType: "bike repair" } });
       else navigate("/category");
     }, 200);
   }
@@ -41,7 +41,7 @@ export default function FifthComponent() {
     setTimeout(() => setBtnClicked2(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "car repaire" } });
+        navigate("/checkBookingDate", { state: { jobType: "car repair" } });
       else navigate("/category");
     }, 200);
   }
@@ -50,7 +50,7 @@ export default function FifthComponent() {
     setTimeout(() => setBtnClicked3(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "tiles fitter" } });
+        navigate("/checkBookingDate", { state: { jobType: "tile fitter" } });
       else navigate("/category");
     }, 200);
   }

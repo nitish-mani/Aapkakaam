@@ -1,8 +1,8 @@
 import "./FirstComponent.css";
-import labour from "../../resources/img/manual-labor-2097522_1280.jpg";
-import mason from "../../resources/img/mason-2376322_1280.jpg";
-import electrician from "../../resources/img/electrician-2755683_1280.jpg";
-import plumber from "../../resources/img/plumber-228010_1280 (2).jpg";
+import labour from "../../resources/img/labour.jpg";
+import mason from "../../resources/img/mason.jpg";
+import electrician from "../../resources/img/electrician.jpg";
+import plumber from "../../resources/img/plumber.jpg";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
@@ -23,7 +23,7 @@ export default function FirstComponent() {
     setTimeout(() => setBtnClicked(false), 100);
     setTimeout(() => {
       if (token)
-        navigate("/checkBookingDate", { state: { jobType: "labourer" } });
+        navigate("/checkBookingDate", { state: { jobType: "labour" } });
       else navigate("/category");
     }, 200);
   }

@@ -1,3 +1,6 @@
+// optimized and production ready
+
+import React, { useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import "./calendar.css";
 import {
@@ -5,7 +8,10 @@ import {
   setIsSelectedDateValid,
 } from "../../utils/categoryslice";
 
-export default function Calendar({
+const DAYS_OF_WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const MIN_YEAR = 2000;
+
+const Calendar = ({
   bookingDate,
   orderStatus,
   months,
@@ -17,357 +23,206 @@ export default function Calendar({
   calendar,
   setIsDateClicked,
   setBooking_date = () => {},
-}) {
-  const current_date = new Date().getDate();
-  const current_month = new Date().getMonth();
-  const current_year = new Date().getFullYear();
-
+}) => {
   const dispatch = useDispatch();
 
-  function isCurrentDay(year, month, day) {
-    let isCurrentDate;
-    const date = new Date();
-    if (
-      year == date.getFullYear() &&
-      month == date.getMonth() &&
-      day == date.getDate()
-    ) {
-      isCurrentDate = true;
-    } else isCurrentDate = false;
+  // Current date values
+  const currentDate = useMemo(() => new Date(), []);
+  const current_date = currentDate.getDate();
+  const current_month = currentDate.getMonth();
+  const current_year = currentDate.getFullYear();
 
-    return isCurrentDate;
-  }
+  // Check if a day is the current day
+  const isCurrentDay = useCallback(
+    (year, month, day) =>
+      year === current_year && month === current_month && day === current_date,
+    [current_year, current_month, current_date]
+  );
 
-  function handlePrevMonth() {
-    if (month < 1) {
-      setMonth(11);
-      setYear(year - 1);
-    } else setMonth(() => month - 1);
+  // Navigation handlers
+  const handlePrevMonth = useCallback(() => {
+    const newMonth = month < 1 ? 11 : month - 1;
+    const newYear = month < 1 ? year - 1 : year;
+    setMonth(newMonth);
+    setYear(Math.max(newYear, MIN_YEAR));
     dispatch(setClearDateField(""));
-    if (year <= 2000) setYear(2000);
-  }
+  }, [month, year, setMonth, setYear, dispatch]);
 
-  function handleNextMonth() {
-    if (month > 10) {
-      setMonth(0);
-      setYear(year + 1);
-    } else setMonth(() => month + 1);
-
+  const handleNextMonth = useCallback(() => {
+    const newMonth = month > 10 ? 0 : month + 1;
+    const newYear = month > 10 ? year + 1 : year;
+    setMonth(newMonth);
+    setYear(newYear);
     dispatch(setClearDateField(""));
-  }
+  }, [month, year, setMonth, setYear, dispatch]);
 
-  function handlePrevYear() {
-    if (year <= 2000) setYear(2000);
-    else setYear(() => year - 1);
-
+  const handlePrevYear = useCallback(() => {
+    const newYear = Math.max(year - 1, MIN_YEAR);
+    setYear(newYear);
     dispatch(setClearDateField(""));
-  }
+  }, [year, setYear, dispatch]);
 
-  function handleNextYear() {
-    setYear(() => year + 1);
-
+  const handleNextYear = useCallback(() => {
+    setYear(year + 1);
     dispatch(setClearDateField(""));
-  }
+  }, [year, setYear, dispatch]);
 
-  function selectDate(date) {
-    if (bookingDate.includes(date)) alert("Already Booked...");
-    else {
-      if (
-        (current_year == year &&
-          current_month == month &&
+  // Date selection handler
+  const selectDate = useCallback(
+    (date) => {
+      if (bookingDate.includes(date)) {
+        alert("Already Booked...");
+        return;
+      }
+
+      const isValidDate =
+        (current_year === year &&
+          current_month === month &&
           current_date <= date) ||
-        (current_year <= year && current_month < month) ||
-        current_year < year
-      ) {
+        (current_year === year && current_month < month) ||
+        current_year < year;
+
+      if (isValidDate) {
         setDate(date);
         setBooking_date(`${date} / ${month + 1} / ${year}`);
         setIsDateClicked(true);
-
         dispatch(setClearDateField(true));
         dispatch(setIsSelectedDateValid(true));
       } else {
         dispatch(setIsSelectedDateValid(false));
-        setTimeout(() => {
-          dispatch(setIsSelectedDateValid(true));
-        }, 1000);
-
+        setTimeout(() => dispatch(setIsSelectedDateValid(true)), 1000);
         dispatch(setClearDateField(""));
       }
-    }
-  }
+    },
+    [
+      bookingDate,
+      current_year,
+      current_month,
+      current_date,
+      year,
+      month,
+      setDate,
+      setBooking_date,
+      setIsDateClicked,
+      dispatch,
+    ]
+  );
+
+  // Render a single date cell
+  const renderDateCell = useCallback(
+    (dayData) => {
+      const { day, isCurrentMonth } = dayData;
+      const isBooked = bookingDate.includes(day) && isCurrentMonth;
+
+      let statusClass = "";
+      if (isBooked) {
+        statusClass =
+          orderStatus === "complete"
+            ? "isBooked"
+            : orderStatus === "cancel"
+            ? "isCanceled"
+            : orderStatus === "pending"
+            ? "isPending"
+            : "";
+      }
+
+      return (
+        <div
+          className={`date 
+          ${isCurrentDay(year, month, day) ? "isCurrentDay" : ""} 
+          ${statusClass}`}
+          style={{
+            opacity: isCurrentMonth ? 1 : 0,
+            cursor: "pointer",
+            borderRadius: "5px",
+          }}
+          key={day}
+          onClick={() => selectDate(day)}
+        >
+          {day}
+        </div>
+      );
+    },
+    [bookingDate, orderStatus, isCurrentDay, year, month, selectDate]
+  );
+
+  // Render status indicator
+  const renderStatusIndicator = useMemo(() => {
+    if (!orderStatus) return null;
+
+    const statusText = {
+      complete: "Completed",
+      cancel: "Canceled",
+      pending: "Pending",
+    }[orderStatus];
+
+    const statusClass = {
+      complete: "calendar__colorDetailing--booked",
+      cancel: "calendar__colorDetailing--canceled",
+      pending: "calendar__colorDetailing--pending",
+    }[orderStatus];
+
+    return (
+      <>
+        <div>{statusText}</div>
+        <div className={statusClass}></div>
+      </>
+    );
+  }, [orderStatus]);
 
   return (
     <div className="calendar">
+      {/* Calendar Header */}
       <div className="calendar__header">
-        <div onClick={handlePrevYear} className="year">
+        <div
+          onClick={handlePrevYear}
+          className="year"
+          aria-label="Previous year"
+        >
           &lt;&lt;
         </div>
-        <div onClick={handlePrevMonth} className="month">
+        <div
+          onClick={handlePrevMonth}
+          className="month"
+          aria-label="Previous month"
+        >
           &lt;
         </div>
-        <div className="year-month">
+        <div className="year-month" aria-label="Current month and year">
           {months[month]} {year}
         </div>
-        <div onClick={handleNextMonth} className="month">
+        <div
+          onClick={handleNextMonth}
+          className="month"
+          aria-label="Next month"
+        >
           &gt;
         </div>
-        <div onClick={handleNextYear} className="year">
+        <div onClick={handleNextYear} className="year" aria-label="Next year">
           &gt;&gt;
         </div>
       </div>
-      <div className="calendar__body">
-        <div key={"a"}>Mon</div>
-        <div key={"b"}>Tue</div>
-        <div key={"c"}>Wed</div>
-        <div key={"d"}>Thu</div>
-        <div key={"e"}>Fri</div>
-        <div key={"f"}>Sat</div>
-        <div key={"g"}>Sun</div>
 
-        {calendar.map((data) => {
-          return (
-            <>
-              <div
-                className={`date ${
-                  isCurrentDay(year, month, data[0].day) ? "isCurrentDay" : ""
-                } ${
-                  bookingDate.includes(data[0].day) &&
-                  data[0].isCurrentMonth &&
-                  orderStatus == "complete"
-                    ? "isBooked"
-                    : ""
-                } ${
-                  bookingDate.includes(data[0].day) &&
-                  data[0].isCurrentMonth &&
-                  orderStatus == "cancel"
-                    ? "isCanceled"
-                    : ""
-                } ${
-                  bookingDate.includes(data[0].day) &&
-                  data[0].isCurrentMonth &&
-                  orderStatus == "pending"
-                    ? "isPending"
-                    : ""
-                }`}
-                style={{
-                  opacity: data[0].isCurrentMonth ? "" : "0",
-                  cursor: "pointer",
-                  borderRadius: "5px",
-                }}
-                key={data[0].day}
-                onClick={() => selectDate(data[0].day)}
-              >
-                {data[0].day}
-              </div>
-              <div
-                className={`date ${
-                  isCurrentDay(year, month, data[1].day) ? "isCurrentDay" : ""
-                } ${
-                  bookingDate.includes(data[1].day) &&
-                  data[1].isCurrentMonth &&
-                  orderStatus == "complete"
-                    ? "isBooked"
-                    : ""
-                } ${
-                  bookingDate.includes(data[1].day) &&
-                  data[1].isCurrentMonth &&
-                  orderStatus == "cancel"
-                    ? "isCanceled"
-                    : ""
-                } ${
-                  bookingDate.includes(data[1].day) &&
-                  data[1].isCurrentMonth &&
-                  orderStatus == "pending"
-                    ? "isPending"
-                    : ""
-                }`}
-                style={{
-                  opacity: data[1].isCurrentMonth ? "" : "0",
-                  cursor: "pointer",
-                  borderRadius: "5px",
-                }}
-                key={data[1].day}
-                onClick={() => selectDate(data[1].day)}
-              >
-                {data[1].day}
-              </div>
-              <div
-                className={`date ${
-                  isCurrentDay(year, month, data[2].day) ? "isCurrentDay" : ""
-                } ${
-                  bookingDate.includes(data[2].day) &&
-                  data[2].isCurrentMonth &&
-                  orderStatus == "complete"
-                    ? "isBooked"
-                    : ""
-                } ${
-                  bookingDate.includes(data[2].day) &&
-                  data[2].isCurrentMonth &&
-                  orderStatus == "cancel"
-                    ? "isCanceled"
-                    : ""
-                } ${
-                  bookingDate.includes(data[2].day) &&
-                  data[2].isCurrentMonth &&
-                  orderStatus == "pending"
-                    ? "isPending"
-                    : ""
-                }`}
-                style={{
-                  opacity: data[2].isCurrentMonth ? "" : "0",
-                  cursor: "pointer",
-                  borderRadius: "5px",
-                }}
-                key={data[2].day}
-                onClick={() => selectDate(data[2].day)}
-              >
-                {data[2].day}
-              </div>
-              <div
-                className={`date ${
-                  isCurrentDay(year, month, data[3].day) ? "isCurrentDay" : ""
-                } ${
-                  bookingDate.includes(data[3].day) &&
-                  data[3].isCurrentMonth &&
-                  orderStatus == "complete"
-                    ? "isBooked"
-                    : ""
-                } ${
-                  bookingDate.includes(data[3].day) &&
-                  data[3].isCurrentMonth &&
-                  orderStatus == "cancel"
-                    ? "isCanceled"
-                    : ""
-                } ${
-                  bookingDate.includes(data[3].day) &&
-                  data[3].isCurrentMonth &&
-                  orderStatus == "pending"
-                    ? "isPending"
-                    : ""
-                }`}
-                style={{
-                  opacity: data[3].isCurrentMonth ? "" : "0",
-                  cursor: "pointer",
-                  borderRadius: "5px",
-                }}
-                key={data[3].day}
-                onClick={() => selectDate(data[3].day)}
-              >
-                {data[3].day}
-              </div>
-              <div
-                className={`date ${
-                  isCurrentDay(year, month, data[4].day) ? "isCurrentDay" : ""
-                } ${
-                  bookingDate.includes(data[4].day) &&
-                  data[4].isCurrentMonth &&
-                  orderStatus == "complete"
-                    ? "isBooked"
-                    : ""
-                } ${
-                  bookingDate.includes(data[4].day) &&
-                  data[4].isCurrentMonth &&
-                  orderStatus == "cancel"
-                    ? "isCanceled"
-                    : ""
-                } ${
-                  bookingDate.includes(data[4].day) &&
-                  data[4].isCurrentMonth &&
-                  orderStatus == "pending"
-                    ? "isPending"
-                    : ""
-                }`}
-                style={{
-                  opacity: data[4].isCurrentMonth ? "" : "0",
-                  cursor: "pointer",
-                  borderRadius: "5px",
-                }}
-                key={data[4].day}
-                onClick={() => selectDate(data[4].day)}
-              >
-                {data[4].day}
-              </div>
-              <div
-                className={`date ${
-                  isCurrentDay(year, month, data[5].day) ? "isCurrentDay" : ""
-                } ${
-                  bookingDate.includes(data[5].day) &&
-                  data[5].isCurrentMonth &&
-                  orderStatus == "complete"
-                    ? "isBooked"
-                    : ""
-                } ${
-                  bookingDate.includes(data[5].day) &&
-                  data[5].isCurrentMonth &&
-                  orderStatus == "cancel"
-                    ? "isCanceled"
-                    : ""
-                } ${
-                  bookingDate.includes(data[5].day) &&
-                  data[5].isCurrentMonth &&
-                  orderStatus == "pending"
-                    ? "isPending"
-                    : ""
-                }`}
-                style={{
-                  opacity: data[5].isCurrentMonth ? "" : "0",
-                  cursor: "pointer",
-                  borderRadius: "5px",
-                }}
-                key={data[5].day}
-                onClick={() => selectDate(data[5].day)}
-              >
-                {data[5].day}
-              </div>
-              <div
-                className={`date ${
-                  isCurrentDay(year, month, data[6].day) ? "isCurrentDay" : ""
-                } ${
-                  bookingDate.includes(data[6].day) &&
-                  data[6].isCurrentMonth &&
-                  orderStatus == "complete"
-                    ? "isBooked"
-                    : ""
-                } ${
-                  bookingDate.includes(data[6].day) &&
-                  data[6].isCurrentMonth &&
-                  orderStatus == "cancel"
-                    ? "isCanceled"
-                    : ""
-                } ${
-                  bookingDate.includes(data[6].day) &&
-                  data[6].isCurrentMonth &&
-                  orderStatus == "pending"
-                    ? "isPending"
-                    : ""
-                }`}
-                style={{
-                  opacity: data[6].isCurrentMonth ? "" : "0",
-                  cursor: "pointer",
-                  borderRadius: "5px",
-                }}
-                key={data[6].day}
-                onClick={() => selectDate(data[6].day)}
-              >
-                {data[6].day}
-              </div>
-            </>
-          );
-        })}
+      {/* Calendar Body */}
+      <div className="calendar__body">
+        {/* Days of week */}
+        {DAYS_OF_WEEK.map((day) => (
+          <div key={day}>{day}</div>
+        ))}
+
+        {/* Calendar dates */}
+        {calendar.map((week, weekIndex) => (
+          <React.Fragment key={`week-${weekIndex}`}>
+            {week.map((dayData) => renderDateCell(dayData))}
+          </React.Fragment>
+        ))}
       </div>
 
+      {/* Calendar Legend */}
       <div className="calendar__colorDetailing">
         <div className="calendar__colorDetailing-1st">
           <div>Today</div>
-          <div>
-            {orderStatus == "complete"
-              ? "Completed"
-              : orderStatus == "cancel"
-              ? "Canceled"
-              : orderStatus == "pending"
-              ? "Pending"
-              : ""}
-          </div>
+          {renderStatusIndicator && <div>{renderStatusIndicator[0]}</div>}
         </div>
         <div className="calendar__colorDetailing-2nd">
           <div
@@ -376,18 +231,13 @@ export default function Calendar({
               boxShadow: "0 0 0 2px black",
               borderRadius: "5px",
             }}
+            aria-hidden="true"
           ></div>
-          {orderStatus == "complete" ? (
-            <div className="calendar__colorDetailing--booked"></div>
-          ) : orderStatus == "cancel" ? (
-            <div className="calendar__colorDetailing--canceled"></div>
-          ) : orderStatus == "pending" ? (
-            <div className="calendar__colorDetailing--pending"></div>
-          ) : (
-            ""
-          )}
+          {renderStatusIndicator && renderStatusIndicator[1]}
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default React.memo(Calendar);

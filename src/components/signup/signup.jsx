@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router";
 import "./signup.css";
 import eye from "../../resources/svg/eye-svgrepo-com.svg";
@@ -9,282 +9,370 @@ import { SERVER_URL } from "../../utils/base";
 import { useDispatch, useSelector } from "react-redux";
 import { setValidEmailId, setValidPhoneNoId } from "../../utils/categoryslice";
 
+const JOB_OPTIONS = [
+  "labour",
+  "mason",
+  "electrician",
+  "plumber",
+  "ac mechanic",
+  "fridge mechanic",
+  "driver",
+  "home tutor",
+  "milk man",
+  "parlour",
+  "menhandi maker",
+  "pundit ji",
+  "carpenter",
+  "laptop repaire",
+  "washer man",
+  "cook",
+  "painter",
+  "car repaire",
+  "bike repaire",
+  "tiles fitter",
+  "four wheeler",
+  "lights",
+  "bus",
+  "tent house",
+  "generator",
+  "auto",
+  "dj",
+  "dhankutti",
+  "aata chakki",
+  "latrine tank cleaner",
+  "marriage hall",
+  "shuttering",
+  "waiter",
+  "marble fitter",
+  "e-riksha",
+  "pual cutter",
+  "ro",
+  "chaat",
+  "dulha rath",
+  "kirtan mandli",
+  "mini truck",
+  "fruit seller",
+  "paan wala",
+  "bhoonsa pual seller",
+];
+
 export default function SignUp() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNo, setPhoneNo] = useState("");
-  const [otp, setOtp] = useState("");
-  const [pass, setPass] = useState("");
-  const [rePass, setRePass] = useState("");
-  const [job, setJob] = useState("");
-  const [gender, setGender] = useState("");
+  // State management
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phoneNo: "",
+    otp: "",
+    pass: "",
+    rePass: "",
+    job: "",
+    gender: "",
+  });
 
-  const [isPassValid, setIsPassValid] = useState(true);
-  const [isNumValid, setIsNumValid] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isPhoneOtpLoading, setIsPhoneOtpLoading] = useState(false);
-  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [validation, setValidation] = useState({
+    isPassValid: true,
+    isNumValid: true,
+    isNameEmpty: true,
+    isRePassMatch: true,
+    isGender: true,
+    isValidPass: true,
+  });
 
-  const [verifyPhoneNo, setVerifyPhoneNo] = useState(false);
+  const [uiState, setUiState] = useState({
+    isLoading: false,
+    isPhoneOtpLoading: false,
+    isOtpSent: false,
+    isEyeClicked: false,
+    verifyPhoneNo: false,
+  });
+
+  const [messages, setMessages] = useState({
+    err: "",
+    success: "",
+  });
+
   const [otpId, setOtpId] = useState("");
-
-  const [isNameEmpty, setIsNameEmpty] = useState(true);
-  const [isRePassMatch, setIsRePassMatch] = useState(true);
-  const [isEyeClicked, setIsEyeClicked] = useState(false);
-  const [isGender, setIsGender] = useState(true);
-
-  const [err, setErr] = useState("");
-  const [success, setSuccess] = useState("");
-
-  const [isValid, setIsValid] = useState(false);
-  const [isValidPass, setIsValidPass] = useState(true);
-
-  let category = location.state.category;
   const validPhoneNoId = useSelector((state) => state.category.validPhoneNoId);
 
-  let cd = location.state.cd;
-  let id = location.state.id;
+  // Derived values
+  const { category, cd, id } = useMemo(
+    () => location.state || {},
+    [location.state]
+  );
+  const profileCategory = useMemo(
+    () =>
+      category ? `${category.charAt(0).toUpperCase()}${category.slice(1)}` : "",
+    [category]
+  );
 
-  const profile_category = category;
-  let category_result = "";
-  for (let i = 0; i < profile_category.length; i++) {
-    if (i == 0) category_result += profile_category.charAt(i).toUpperCase();
-    else {
-      category_result += profile_category.charAt(i);
-    }
-  }
+  // Effect hooks for validation
+  useEffect(() => {
+    setValidation((prev) => ({ ...prev, isPassValid: true }));
+  }, [formData.pass]);
 
   useEffect(() => {
-    setIsPassValid(true);
-  }, [pass]);
+    setValidation((prev) => ({
+      ...prev,
+      isNameEmpty: formData.name.length > 0,
+    }));
+  }, [formData.name]);
 
   useEffect(() => {
-    setIsNameEmpty(true);
-  }, [name]);
+    setValidation((prev) => ({ ...prev, isRePassMatch: true }));
+  }, [formData.rePass]);
 
   useEffect(() => {
-    if (pass == "" && pass.length < 6) setIsValidPass(false);
-    else setIsValidPass(true);
-  }, [pass]);
-  useEffect(() => {
-    setIsRePassMatch(true);
-  }, [rePass]);
+    setValidation((prev) => ({ ...prev, isNumValid: true }));
+  }, [formData.phoneNo]);
 
   useEffect(() => {
-    setIsNumValid(true);
-  }, [phoneNo]);
+    setValidation((prev) => ({
+      ...prev,
+      isGender: formData.gender.length > 0,
+    }));
+  }, [formData.gender]);
 
   useEffect(() => {
-    setIsGender(true);
-  }, [gender]);
+    setMessages((prev) => ({ ...prev, err: "" }));
+  }, [formData.otp]);
 
-  useEffect(() => {
-    setErr("");
-  }, [otp]);
+  // Helper functions
+  const showMessage = useCallback((type, message, duration = 3000) => {
+    setMessages((prev) => ({ ...prev, [type]: message }));
+    setTimeout(() => {
+      setMessages((prev) => ({ ...prev, [type]: "" }));
+    }, duration);
+  });
 
-  function handlePhoneVerify() {
+  const handleInputChange = useCallback((field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  }, []);
+
+  // API handlers
+  const handlePhoneVerify = useCallback(async () => {
     if (!navigator.onLine) {
-      setErr("You are offline");
-      setTimeout(() => {
-        setErr("");
-      }, 3000);
+      showMessage("err", "You are offline");
       return;
     }
-    setIsPhoneOtpLoading(true);
-    if (!isOtpSent) {
-      if (phoneNo.length != 10) {
-        setIsPhoneOtpLoading(false);
-        setErr("Mobile Number must be 10 digits");
-        setTimeout(() => {
-          setErr("");
-        }, 3000);
+
+    if (!uiState.isOtpSent) {
+      if (!/^\d{10}$/.test(formData.phoneNo)) {
+        showMessage("err", "Mobile Number must be 10 digits");
         return;
       }
-      axios
-        .post(`${SERVER_URL}/${category}/phoneVerification`, {
-          phoneNo,
-        })
-        .then((res) => {
-          if (res.data.verified) {
-            setOtpId(res.data.otpId);
-            dispatch(setValidPhoneNoId(res.data.otpId));
-            setIsOtpSent(true);
-            setIsPhoneOtpLoading(false);
-            setSuccess(res.data.message);
-            setTimeout(() => {
-              setSuccess("");
-            }, 2000);
-          } else {
-            setErr(
-              "Too many otp request has been sent on this number. Try after 30 minutes"
-            );
-            setIsPhoneOtpLoading(false);
-            setTimeout(() => {
-              setErr("");
-            }, 15000);
+
+      setUiState((prev) => ({ ...prev, isPhoneOtpLoading: true }));
+
+      try {
+        const res = await axios.post(
+          `${SERVER_URL}/${category}/phoneVerification`,
+          {
+            phoneNo: formData.phoneNo,
           }
-        });
+        );
+
+        if (res.data.verified) {
+          setOtpId(res.data.otpId);
+          dispatch(setValidPhoneNoId(res.data.otpId));
+          setUiState((prev) => ({
+            ...prev,
+            isOtpSent: true,
+            isPhoneOtpLoading: false,
+          }));
+          showMessage("success", res.data.message, 2000);
+        } else {
+          showMessage(
+            "err",
+            "Too many OTP requests. Try after 30 minutes",
+            15000
+          );
+        }
+      } catch (error) {
+        showMessage("err", "Server error. Please try again.");
+      } finally {
+        setUiState((prev) => ({ ...prev, isPhoneOtpLoading: false }));
+      }
     } else {
-      axios
-        .post(`${SERVER_URL}/${category}/otpVerification`, {
-          otp,
-          otpId,
-        })
-        .then((res) => {
-          setVerifyPhoneNo(res.data.verify);
-          if (res.data.verify) {
-            setIsOtpSent(false);
-            setIsPhoneOtpLoading(false);
-            setSuccess("OTP verified successfully");
-            setTimeout(() => {
-              setSuccess("");
-            }, 2000);
-          } else {
-            setErr(res.data.message);
-            setIsPhoneOtpLoading(false);
+      setUiState((prev) => ({ ...prev, isPhoneOtpLoading: true }));
+
+      try {
+        const res = await axios.post(
+          `${SERVER_URL}/${category}/otpVerification`,
+          {
+            otp: formData.otp,
+            otpId,
           }
-        });
-    }
-  }
+        );
 
-  function handleSignup() {
-    if (name.length < 1) {
-      setIsNameEmpty(false);
-      return;
+        if (res.data.verify) {
+          setUiState((prev) => ({
+            ...prev,
+            verifyPhoneNo: true,
+            isOtpSent: false,
+            isPhoneOtpLoading: false,
+          }));
+          showMessage("success", "OTP verified successfully", 2000);
+        } else {
+          showMessage("err", res.data.message || "OTP verification failed");
+        }
+      } catch (error) {
+        showMessage("err", "Server error. Please try again.");
+      } finally {
+        setUiState((prev) => ({ ...prev, isPhoneOtpLoading: false }));
+      }
     }
-    if (phoneNo.length != 10) {
-      setIsNumValid(false);
-      return;
-    }
-    if (rePass != pass) {
-      setIsRePassMatch(false);
-      return;
-    }
-    if (pass.length <= 5) {
-      setIsPassValid(false);
-      return;
-    }
+  }, [
+    formData.phoneNo,
+    formData.otp,
+    otpId,
+    category,
+    dispatch,
+    uiState.isOtpSent,
+    showMessage,
+  ]);
 
-    if (gender.length === 0) {
-      setIsGender(false);
+  const handleSignup = useCallback(async () => {
+    // Validation checks
+    if (!formData.name) {
+      setValidation((prev) => ({ ...prev, isNameEmpty: false }));
+      return;
+    }
+    if (formData.phoneNo.length !== 10) {
+      setValidation((prev) => ({ ...prev, isNumValid: false }));
+      return;
+    }
+    if (formData.pass.length <= 5) {
+      setValidation((prev) => ({
+        ...prev,
+        isPassValid: false,
+        isValidPass: false,
+      }));
+      return;
+    }
+    if (!formData.gender) {
+      setValidation((prev) => ({ ...prev, isGender: false }));
       return;
     }
     if (!navigator.onLine) {
-      setErr("You are offline");
-      setTimeout(() => {
-        setErr("");
-      }, 3000);
+      showMessage("err", "You are offline");
       return;
     }
 
-    if (verifyPhoneNo && isValid && isValidPass) {
-      setIsLoading(true);
-      axios
-        .post(`${SERVER_URL}/${category}/signup`, {
-          name: name,
-          phoneNo: phoneNo,
-          password: pass,
-          sharedBy: id,
-          gender: gender,
-          type: job,
-          cd,
-          validPhoneNoId,
-        })
-        .then((result) => {
-          setIsLoading(false);
-          setSuccess(result.data.message),
-            setTimeout(() => {
-              setSuccess("");
-              navigate("/login", { state: { category: category } });
-            }, 5000);
-        })
-        .catch((err) => {
-          setIsLoading(false);
-          setErr(err.response.data.message);
-          setTimeout(() => {
-            setEmailOtp("");
-            setValidEmailId("");
-            setVerifyEmail(false);
-            setErr("");
-          }, 3000);
-        });
-    } else {
-      if (!isValid) setErr("Invalid Email");
-      else setErr("Verify Mobile Number and Email");
+    setUiState((prev) => ({ ...prev, isLoading: true }));
+
+    try {
+      const result = await axios.post(`${SERVER_URL}/${category}/signup`, {
+        name: formData.name,
+        phoneNo: formData.phoneNo,
+        password: formData.pass,
+        sharedBy: id,
+        gender: formData.gender,
+        type: formData.job,
+        cd,
+        validPhoneNoId,
+      });
+
+      showMessage("success", result.data.message, 5000);
       setTimeout(() => {
-        setErr("");
-      }, 3000);
+        navigate("/login", { state: { category } });
+      }, 5000);
+    } catch (err) {
+      showMessage("err", err.response?.data?.message || "Signup failed");
+    } finally {
+      setUiState((prev) => ({ ...prev, isLoading: false }));
     }
-  }
+  }, [formData, category, id, cd, validPhoneNoId, navigate, showMessage]);
 
-  function handleLogin() {
-    navigate("/login", { state: { category: category } });
-  }
+  // Navigation handlers
+  const handleLogin = useCallback(() => {
+    navigate("/login", { state: { category } });
+  }, [navigate, category]);
 
-  function handleEyeClicked() {
-    setIsEyeClicked(!isEyeClicked);
+  const handleEyeClicked = useCallback(() => {
+    setUiState((prev) => ({ ...prev, isEyeClicked: !prev.isEyeClicked }));
+  }, []);
+
+  // Early return if category is missing
+  if (!category) {
+    return (
+      <div className="signup">
+        <div className="err" style={{ opacity: 1, top: "-5rem" }}>
+          Invalid access. Please try again from proper navigation.
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="signup">
+      {/* Messages */}
       <div
         className="err"
         style={{
-          opacity: err ? "1" : "",
-          border: err ? "none" : "none",
+          opacity: messages.err ? "1" : "",
+          border: messages.err ? "none" : "none",
           top: "-5rem",
         }}
       >
-        {err}
+        {messages.err}
       </div>
       <div
         className="success"
         style={{
-          opacity: success ? "1" : "",
-          border: success ? "none" : "none",
+          opacity: messages.success ? "1" : "",
+          border: messages.success ? "none" : "none",
           top: "-5rem",
         }}
       >
-        {success}
+        {messages.success}
       </div>
+
+      {/* Form Header */}
       <div className="signup__1stChild">
-        <h3>{category_result} Signup</h3>
+        <h3>{profileCategory} Signup</h3>
       </div>
+
+      {/* Form Body */}
       <div className="signup__2ndChild">
+        {/* Name Input */}
         <div>
           <input
             placeholder="Full Name"
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            style={{ border: isNameEmpty ? "" : "2px solid red" }}
+            value={formData.name}
+            onChange={(e) => handleInputChange("name", e.target.value)}
+            style={{ border: validation.isNameEmpty ? "" : "2px solid red" }}
           />
         </div>
+
+        {/* Phone Verification */}
         <div style={{ position: "relative" }}>
-          {isOtpSent ? (
+          {uiState.isOtpSent ? (
             <input
               placeholder="Enter OTP"
               type="number"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
+              value={formData.otp}
+              onChange={(e) => handleInputChange("otp", e.target.value)}
             />
           ) : (
             <input
               placeholder="Phone No."
               type="number"
-              value={phoneNo}
-              onChange={(e) => setPhoneNo(e.target.value)}
+              value={formData.phoneNo}
+              readOnly={uiState.verifyPhoneNo}
+              onChange={(e) => handleInputChange("phoneNo", e.target.value)}
               style={{
-                marginBottom: isNumValid ? "" : "0",
-                border: isNumValid ? "" : "2px solid red",
+                marginBottom: validation.isNumValid ? "" : "0",
+                border: validation.isNumValid ? "" : "2px solid red",
               }}
             />
           )}
-          {verifyPhoneNo ? (
+
+          {uiState.verifyPhoneNo && (
             <div
               style={{
                 position: "absolute",
@@ -295,33 +383,31 @@ export default function SignUp() {
             >
               <img
                 src={rightTck}
-                alt=""
+                alt="Verified"
                 style={{ width: "2rem", height: "2rem" }}
               />
             </div>
-          ) : (
-            ""
           )}
-          {phoneNo.length === 10 && !verifyPhoneNo ? (
+
+          {formData.phoneNo.length === 10 && !uiState.verifyPhoneNo && (
             <div className="verify" onClick={handlePhoneVerify}>
-              {isOtpSent ? (
-                isPhoneOtpLoading ? (
+              {uiState.isOtpSent ? (
+                uiState.isPhoneOtpLoading ? (
                   <div className="loading"></div>
                 ) : (
                   "Verify OTP"
                 )
-              ) : isPhoneOtpLoading ? (
+              ) : uiState.isPhoneOtpLoading ? (
                 <div className="loading"></div>
               ) : (
                 "Verify Mobile Number"
               )}
             </div>
-          ) : (
-            ""
           )}
+
           <h6
             style={{
-              display: isNumValid ? "none" : "",
+              display: validation.isNumValid ? "none" : "",
               color: "red",
               textAlign: "left",
             }}
@@ -330,34 +416,36 @@ export default function SignUp() {
           </h6>
         </div>
 
+        {/* Password Input */}
         <div className="password">
           <input
             placeholder="Password"
-            type={isEyeClicked ? "" : "password"}
-            value={pass}
-            onChange={(e) => setPass(e.target.value)}
+            type={uiState.isEyeClicked ? "text" : "password"}
+            value={formData.pass}
+            onChange={(e) => handleInputChange("pass", e.target.value)}
             style={{
-              marginBottom: isPassValid ? "" : "0",
-              border: isPassValid ? "" : "2px solid red",
+              marginBottom: validation.isPassValid ? "" : "0",
+              border: validation.isPassValid ? "" : "2px solid red",
             }}
           />
 
           <div className="eyesvg" onClick={handleEyeClicked}>
-            <img src={eye} alt="eye" />
+            <img src={eye} alt="Toggle password visibility" />
           </div>
           <div
             className="cross-line"
             style={{
-              display: isEyeClicked ? "block" : "",
+              display: uiState.isEyeClicked ? "block" : "none",
               pointerEvents: "none",
             }}
           >
             <img src={line} alt="" />
           </div>
         </div>
+
         <h6
           style={{
-            display: isValidPass ? "none" : "",
+            display: validation.isValidPass ? "none" : "",
             color: "red",
             textAlign: "left",
             fontSize: "1rem",
@@ -366,89 +454,32 @@ export default function SignUp() {
           Password must be at least 6 characters long
         </h6>
 
-        <div>
-          <input
-            placeholder="Re-Password"
-            type="text"
-            value={rePass}
-            onChange={(e) => setRePass(e.target.value)}
-            style={{
-              border: isRePassMatch ? "" : "2px solid red",
-            }}
-          />
-          <h6
-            style={{
-              display: isRePassMatch ? "none" : "",
-              color: "red",
-              textAlign: "left",
-            }}
-          >
-            Password didn't match
-          </h6>
-        </div>
-        {category === "vendor" ? (
+        {/* Job Select (Vendor only) */}
+        {category === "vendor" && (
           <div>
             <select
               className="job-select"
-              onChange={(e) => setJob(e.target.value)}
+              value={formData.job}
+              onChange={(e) => handleInputChange("job", e.target.value)}
             >
               <option value="">Select Your Job</option>
-              <option value="labourer">Labourer</option>
-              <option value="mason">Mason</option>
-              <option value="electrician">Electrician</option>
-              <option value="plumber">Plumber</option>
-              <option value="ac mechanic">AC Mechanic</option>
-              <option value="fridge mechanic">Fridge Mechanic</option>
-              <option value="driver">Driver</option>
-              <option value="home tutor">Home Tutor</option>
-              <option value="milk man">Milk Man</option>
-              <option value="parlour">Parlour</option>
-              <option value="menhandi maker">Menhandi Maker</option>
-              <option value="pundits">Pundits</option>
-              <option value="carpenter">Carpenter</option>
-              <option value="laptop repaire">Laptop Repaire</option>
-              <option value="washer man">Washer Man</option>
-              <option value="cook">Cook</option>
-              <option value="painter">Painter</option>
-              <option value="car repaire">Car Repaire</option>
-              <option value="bike repaire">Bike Repaire</option>
-              <option value="tiles fitter">Tiles Fitter</option>
-              <option value="four wheeler">Four Wheeler</option>
-              <option value="lights">Lights</option>
-              <option value="bus">Bus</option>
-              <option value="tent house">Tent House</option>
-              <option value="generator">Generator</option>
-              <option value="auto">Auto</option>
-              <option value="dj">DJ</option>
-              <option value="dhankutti">Dhankutti</option>
-              <option value="aata chakki">Aata Chakki</option>
-              <option value="latrine tank cleaner">Latrine Tank Cleaner</option>
-              <option value="marriage hall">Marriage Hall</option>
-              <option value="shuttering">Shuttering</option>
-              <option value="waiter">Waiter</option>
-              <option value="marble fitter">Marble Fitter</option>
-              <option value="e-riksha">E-Riksha</option>
-              <option value="pual cutter">Pual Cutter</option>
-              <option value="ro">RO</option>
-              <option value="chaat">Chaat</option>
-              <option value="dulha rath">Dulha Rath</option>
-              <option value="kirtan mandli">Kirtan Mandli</option>
-              <option value="mini truck">Mini Truck</option>
-              <option value="fruit seller">Fruit Seller</option>
-              <option value="paan wala">Paan Wala</option>
-              <option value="bhoonsa pual seller">Bhoonsa Pual Seller</option>
+              {JOB_OPTIONS.map((job) => (
+                <option key={job} value={job}>
+                  {job.charAt(0).toUpperCase() + job.slice(1)}
+                </option>
+              ))}
             </select>
           </div>
-        ) : (
-          ""
         )}
 
+        {/* Gender Select */}
         <div>
           <select
             className="job-select"
-            onChange={(e) => setGender(e.target.value)}
+            value={formData.gender}
+            onChange={(e) => handleInputChange("gender", e.target.value)}
             style={{
-              border: isGender ? "" : "2px solid red",
+              border: validation.isGender ? "" : "2px solid red",
             }}
           >
             <option value="">Select Gender</option>
@@ -458,10 +489,16 @@ export default function SignUp() {
           </select>
         </div>
 
-        <button className="btn" onClick={handleSignup}>
-          {isLoading ? <div className="loading"></div> : "Signup"}
+        {/* Submit Button */}
+        <button
+          className="btn"
+          onClick={handleSignup}
+          disabled={uiState.isLoading}
+        >
+          {uiState.isLoading ? <div className="loading"></div> : "Signup"}
         </button>
 
+        {/* Login Link */}
         <div>
           <h5>
             Already Have an Account?
