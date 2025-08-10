@@ -6,6 +6,7 @@ import bhoonsaPualSeller from "../../resources/img/bhoonsa_pual_wala.jpg";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
 export default function Eleventh() {
   const navigate = useNavigate();
   const category = localStorage.getItem("category");
@@ -60,6 +61,7 @@ export default function Eleventh() {
   }
   return (
     <div className="first-div">
+      <h2 className="first-heading">Affordable, Fast, and Nearby Services!</h2>
       <div
         className="first-div-div"
         onClick={handleClicked}

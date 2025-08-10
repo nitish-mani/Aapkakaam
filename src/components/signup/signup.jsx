@@ -9,6 +9,9 @@ import { SERVER_URL } from "../../utils/base";
 import { useDispatch, useSelector } from "react-redux";
 import { setValidEmailId, setValidPhoneNoId } from "../../utils/categoryslice";
 
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
+import AdsterraBanner from "../../ads/adsterraNativeBanner";
+
 const JOB_OPTIONS = [
   "labour",
   "mason",
@@ -81,6 +84,8 @@ export default function SignUp() {
     isGender: true,
     isValidPass: true,
   });
+
+  const [agreed, setAgreed] = useState(false);
 
   const [uiState, setUiState] = useState({
     isLoading: false,
@@ -261,7 +266,13 @@ export default function SignUp() {
       showMessage("err", "You are offline");
       return;
     }
-
+    if (!agreed) {
+      showMessage(
+        "err",
+        "You must accept the Terms & Conditions and Privacy Policy"
+      );
+      return;
+    }
     setUiState((prev) => ({ ...prev, isLoading: true }));
 
     try {
@@ -274,6 +285,7 @@ export default function SignUp() {
         type: formData.job,
         cd,
         validPhoneNoId,
+        agreedToTnCnP: agreed,
       });
 
       showMessage("success", result.data.message, 5000);
@@ -308,210 +320,239 @@ export default function SignUp() {
   }
 
   return (
-    <div className="signup">
-      {/* Messages */}
-      <div
-        className="err"
-        style={{
-          opacity: messages.err ? "1" : "",
-          border: messages.err ? "none" : "none",
-          top: "-5rem",
-        }}
-      >
-        {messages.err}
-      </div>
-      <div
-        className="success"
-        style={{
-          opacity: messages.success ? "1" : "",
-          border: messages.success ? "none" : "none",
-          top: "-5rem",
-        }}
-      >
-        {messages.success}
-      </div>
-
-      {/* Form Header */}
-      <div className="signup__1stChild">
-        <h3>{profileCategory} Signup</h3>
-      </div>
-
-      {/* Form Body */}
-      <div className="signup__2ndChild">
-        {/* Name Input */}
-        <div>
-          <input
-            placeholder="Full Name"
-            type="text"
-            value={formData.name}
-            onChange={(e) => handleInputChange("name", e.target.value)}
-            style={{ border: validation.isNameEmpty ? "" : "2px solid red" }}
-          />
+    <>
+      <AdsterraBanner_320x50 />
+      <div className="signup">
+        {/* Messages */}
+        <div
+          className="err"
+          style={{
+            opacity: messages.err ? "1" : "",
+            border: messages.err ? "none" : "none",
+            top: "-5rem",
+          }}
+        >
+          {messages.err}
+        </div>
+        <div
+          className="success"
+          style={{
+            opacity: messages.success ? "1" : "",
+            border: messages.success ? "none" : "none",
+            top: "-5rem",
+          }}
+        >
+          {messages.success}
         </div>
 
-        {/* Phone Verification */}
-        <div style={{ position: "relative" }}>
-          {uiState.isOtpSent ? (
-            <input
-              placeholder="Enter OTP"
-              type="number"
-              value={formData.otp}
-              onChange={(e) => handleInputChange("otp", e.target.value)}
-            />
-          ) : (
-            <input
-              placeholder="Phone No."
-              type="number"
-              value={formData.phoneNo}
-              readOnly={uiState.verifyPhoneNo}
-              onChange={(e) => handleInputChange("phoneNo", e.target.value)}
-              style={{
-                marginBottom: validation.isNumValid ? "" : "0",
-                border: validation.isNumValid ? "" : "2px solid red",
-              }}
-            />
-          )}
+        {/* Form Header */}
+        <div className="signup__1stChild">
+          <h3 style={{ color: "whitesmoke" }}>{profileCategory} Signup</h3>
+        </div>
 
-          {uiState.verifyPhoneNo && (
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                right: "5px",
-                transform: "translateY(-40%)",
-              }}
-            >
-              <img
-                src={rightTck}
-                alt="Verified"
-                style={{ width: "2rem", height: "2rem" }}
+        {/* Form Body */}
+        <div className="signup__2ndChild">
+          {/* Name Input */}
+          <div>
+            <input
+              placeholder="Full Name"
+              type="text"
+              value={formData.name}
+              onChange={(e) => handleInputChange("name", e.target.value)}
+              style={{ border: validation.isNameEmpty ? "" : "2px solid red" }}
+            />
+          </div>
+
+          {/* Phone Verification */}
+          <div style={{ position: "relative" }}>
+            {uiState.isOtpSent ? (
+              <input
+                placeholder="Enter OTP"
+                type="number"
+                value={formData.otp}
+                onChange={(e) => handleInputChange("otp", e.target.value)}
               />
-            </div>
-          )}
+            ) : (
+              <input
+                placeholder="Phone No."
+                type="number"
+                value={formData.phoneNo}
+                readOnly={uiState.verifyPhoneNo}
+                onChange={(e) => handleInputChange("phoneNo", e.target.value)}
+                style={{
+                  marginBottom: validation.isNumValid ? "" : "0",
+                  border: validation.isNumValid ? "" : "2px solid red",
+                }}
+              />
+            )}
 
-          {formData.phoneNo.length === 10 && !uiState.verifyPhoneNo && (
-            <div className="verify" onClick={handlePhoneVerify}>
-              {uiState.isOtpSent ? (
-                uiState.isPhoneOtpLoading ? (
+            {uiState.verifyPhoneNo && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  right: "5px",
+                  transform: "translateY(-40%)",
+                }}
+              >
+                <img
+                  src={rightTck}
+                  alt="Verified"
+                  style={{ width: "2rem", height: "2rem" }}
+                />
+              </div>
+            )}
+
+            {formData.phoneNo.length === 10 && !uiState.verifyPhoneNo && (
+              <div className="verify" onClick={handlePhoneVerify}>
+                {uiState.isOtpSent ? (
+                  uiState.isPhoneOtpLoading ? (
+                    <div className="loading"></div>
+                  ) : (
+                    "Verify OTP"
+                  )
+                ) : uiState.isPhoneOtpLoading ? (
                   <div className="loading"></div>
                 ) : (
-                  "Verify OTP"
-                )
-              ) : uiState.isPhoneOtpLoading ? (
-                <div className="loading"></div>
-              ) : (
-                "Verify Mobile Number"
-              )}
+                  "Verify Mobile Number"
+                )}
+              </div>
+            )}
+
+            <h6
+              style={{
+                display: validation.isNumValid ? "none" : "",
+                color: "red",
+                textAlign: "left",
+              }}
+            >
+              Incorrect Number
+            </h6>
+          </div>
+
+          {/* Password Input */}
+          <div className="password">
+            <input
+              placeholder="Password"
+              type={uiState.isEyeClicked ? "text" : "password"}
+              value={formData.pass}
+              onChange={(e) => handleInputChange("pass", e.target.value)}
+              style={{
+                marginBottom: validation.isPassValid ? "" : "0",
+                border: validation.isPassValid ? "" : "2px solid red",
+              }}
+            />
+
+            <div className="eyesvg" onClick={handleEyeClicked}>
+              <img src={eye} alt="Toggle password visibility" />
             </div>
-          )}
+            <div
+              className="cross-line"
+              style={{
+                display: uiState.isEyeClicked ? "block" : "none",
+                pointerEvents: "none",
+              }}
+            >
+              <img src={line} alt="" />
+            </div>
+          </div>
 
           <h6
             style={{
-              display: validation.isNumValid ? "none" : "",
+              display: validation.isValidPass ? "none" : "",
               color: "red",
               textAlign: "left",
+              fontSize: "1rem",
             }}
           >
-            Incorrect Number
+            Password must be at least 6 characters long
           </h6>
-        </div>
 
-        {/* Password Input */}
-        <div className="password">
-          <input
-            placeholder="Password"
-            type={uiState.isEyeClicked ? "text" : "password"}
-            value={formData.pass}
-            onChange={(e) => handleInputChange("pass", e.target.value)}
-            style={{
-              marginBottom: validation.isPassValid ? "" : "0",
-              border: validation.isPassValid ? "" : "2px solid red",
-            }}
-          />
+          {/* Job Select (Vendor only) */}
+          {category === "vendor" && (
+            <div>
+              <select
+                className="job-select"
+                value={formData.job}
+                onChange={(e) => handleInputChange("job", e.target.value)}
+              >
+                <option value="">Select Your Job</option>
+                {JOB_OPTIONS.map((job) => (
+                  <option key={job} value={job}>
+                    {job.charAt(0).toUpperCase() + job.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
-          <div className="eyesvg" onClick={handleEyeClicked}>
-            <img src={eye} alt="Toggle password visibility" />
-          </div>
-          <div
-            className="cross-line"
-            style={{
-              display: uiState.isEyeClicked ? "block" : "none",
-              pointerEvents: "none",
-            }}
-          >
-            <img src={line} alt="" />
-          </div>
-        </div>
-
-        <h6
-          style={{
-            display: validation.isValidPass ? "none" : "",
-            color: "red",
-            textAlign: "left",
-            fontSize: "1rem",
-          }}
-        >
-          Password must be at least 6 characters long
-        </h6>
-
-        {/* Job Select (Vendor only) */}
-        {category === "vendor" && (
+          {/* Gender Select */}
           <div>
             <select
               className="job-select"
-              value={formData.job}
-              onChange={(e) => handleInputChange("job", e.target.value)}
+              value={formData.gender}
+              onChange={(e) => handleInputChange("gender", e.target.value)}
+              style={{
+                border: validation.isGender ? "" : "2px solid red",
+              }}
             >
-              <option value="">Select Your Job</option>
-              {JOB_OPTIONS.map((job) => (
-                <option key={job} value={job}>
-                  {job.charAt(0).toUpperCase() + job.slice(1)}
-                </option>
-              ))}
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
             </select>
           </div>
-        )}
+          <div style={{ marginBottom: "12px" }}>
+            <label style={{ fontSize: "12px" }}>
+              <input
+                type="checkbox"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+              />{" "}
+              I agree to the{" "}
+              <a
+                href="https://aapkakaam.com/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Terms & Conditions
+              </a>{" "}
+              and{" "}
+              <a
+                href="https://aapkakaam.com/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Privacy Policy
+              </a>
+            </label>
+          </div>
 
-        {/* Gender Select */}
-        <div>
-          <select
-            className="job-select"
-            value={formData.gender}
-            onChange={(e) => handleInputChange("gender", e.target.value)}
-            style={{
-              border: validation.isGender ? "" : "2px solid red",
-            }}
+          {/* Submit Button */}
+          <button
+            className="btn"
+            onClick={handleSignup}
+            disabled={uiState.isLoading}
           >
-            <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
+            {uiState.isLoading ? <div className="loading"></div> : "Signup"}
+          </button>
 
-        {/* Submit Button */}
-        <button
-          className="btn"
-          onClick={handleSignup}
-          disabled={uiState.isLoading}
-        >
-          {uiState.isLoading ? <div className="loading"></div> : "Signup"}
-        </button>
-
-        {/* Login Link */}
-        <div>
-          <h5>
-            Already Have an Account?
-            <span
-              className="verify-btn forgetPass"
-              onClick={handleLogin}
-              style={{ border: "none" }}
-            >
-              Login
-            </span>
-          </h5>
+          {/* Login Link */}
+          <div>
+            <h5>
+              Already Have an Account?
+              <span
+                className="verify-btn forgetPass"
+                onClick={handleLogin}
+                style={{ border: "none" }}
+              >
+                Login
+              </span>
+            </h5>
+          </div>
         </div>
       </div>
-    </div>
+      <AdsterraBanner />
+    </>
   );
 }

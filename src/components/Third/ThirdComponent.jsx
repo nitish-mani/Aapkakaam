@@ -6,6 +6,7 @@ import mehandimaker from "../../resources/img/mehandi_maker.jpg";
 import "../First/FirstComponent.css";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
 export default function ThirdComponent() {
   const navigate = useNavigate();
   const category = localStorage.getItem("category");
@@ -55,6 +56,9 @@ export default function ThirdComponent() {
   }
   return (
     <div className="first-div">
+      <h2 className="first-heading">
+        Connecting You to Trusted Service Providers!
+      </h2>
       <div
         className="first-div-div"
         onClick={handleClicked}

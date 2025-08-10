@@ -6,6 +6,7 @@ import carrepaire from "../../resources/img/car_repaire.jpg";
 import tilesfitter from "../../resources/img/tile_fitter.jpg";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
 
 export default function FifthComponent() {
   const navigate = useNavigate();
@@ -56,6 +57,9 @@ export default function FifthComponent() {
   }
   return (
     <div className="first-div">
+      <h2 className="first-heading">
+        Your Go-To Platform for Everyday Services!
+      </h2>
       <div
         className="first-div-div"
         onClick={handleClicked}

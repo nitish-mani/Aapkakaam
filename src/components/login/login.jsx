@@ -10,6 +10,8 @@ import { useDispatch } from "react-redux";
 import { addDataUser } from "../../utils/userslice";
 import { SERVER_URL } from "../../utils/base";
 import { addDataVendor } from "../../utils/vendorslice";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
+import AdsterraBanner from "../../ads/adsterraNativeBanner";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -95,7 +97,7 @@ export default function Login() {
         phoneNo: formData.phoneNo,
         password: formData.pass,
       });
-
+      console.log(response.data);
       showMessage("success", response.data.message);
       localStorage.setItem(category, JSON.stringify(response.data));
 
@@ -108,6 +110,7 @@ export default function Login() {
         }
       }, 2000);
     } catch (error) {
+      console.log(error.response?.data?.message);
       showMessage("err", error.response?.data?.message || "Login failed");
     } finally {
       setUiState((prev) => ({ ...prev, isLoading: false }));
@@ -145,97 +148,101 @@ export default function Login() {
   }
 
   return (
-    <div className="login">
-      {/* Error Message */}
-      <div
-        className="err"
-        style={{
-          opacity: messages.err ? "1" : "",
-          border: messages.err ? "none" : "none",
-        }}
-      >
-        {messages.err}
-      </div>
-
-      {/* Success Message */}
-      <div
-        className="success"
-        style={{
-          opacity: messages.success ? "1" : "",
-          border: messages.success ? "none" : "none",
-        }}
-      >
-        {messages.success}
-      </div>
-
-      {/* Login Form */}
-      <div className="login__1stChild">
-        <h3>{profileCategory} Login</h3>
-      </div>
-
-      <div className="login__2ndChild">
-        {/* Phone Number Input */}
-        <div>
-          <input
-            placeholder="Mobile Number"
-            type="tel"
-            value={formData.phoneNo}
-            onChange={(e) => handleInputChange("phoneNo", e.target.value)}
-            style={{ border: uiState.isPhoneNoEmpty ? "" : "2px solid red" }}
-          />
-        </div>
-
-        {/* Password Input */}
-        <div className="password">
-          <input
-            placeholder="Password"
-            type={uiState.isEyeClicked ? "text" : "password"}
-            value={formData.pass}
-            onChange={(e) => handleInputChange("pass", e.target.value)}
-            style={{ border: uiState.isPassEmpty ? "" : "2px solid red" }}
-          />
-          <div className="eyesvg" onClick={handleEyeClicked}>
-            <img src={eye} alt="Toggle password visibility" />
-          </div>
-          <div
-            className="cross-line"
-            style={{
-              display: uiState.isEyeClicked ? "block" : "none",
-              pointerEvents: "none",
-            }}
-          >
-            <img src={line} alt="" />
-          </div>
-        </div>
-
-        {/* Login Button */}
-        <button
-          className="btn"
-          onClick={handleLogin}
-          disabled={uiState.isLoading}
+    <>
+      <AdsterraBanner_320x50 />
+      <div className="login">
+        {/* Error Message */}
+        <div
+          className="err"
+          style={{
+            opacity: messages.err ? "1" : "",
+            border: messages.err ? "none" : "none",
+            top: "2rem",
+            width: "50%",
+          }}
         >
-          {uiState.isLoading ? <div className="loading"></div> : "Login"}
-        </button>
-
-        {/* Forgot Password */}
-        <div className="forgetPass" onClick={handlePasswordChange}>
-          <h5>Forgot Password?</h5>
+          {messages.err}
         </div>
+        {/* Success Message */}
+        <div
+          className="success"
+          style={{
+            opacity: messages.success ? "1" : "",
+            border: messages.success ? "none" : "none",
+            top: "2rem",
+            width: "50%",
+          }}
+        >
+          {messages.success}
+        </div>
+        {/* Login Form */}
+        <div className="login__1stChild">
+          <h3 style={{ color: "whitesmoke" }}>{profileCategory} Login</h3>
+        </div>
+        <div className="login__2ndChild">
+          {/* Phone Number Input */}
+          <div>
+            <input
+              placeholder="Mobile Number"
+              type="tel"
+              value={formData.phoneNo}
+              onChange={(e) => handleInputChange("phoneNo", e.target.value)}
+              style={{ border: uiState.isPhoneNoEmpty ? "" : "2px solid red" }}
+            />
+          </div>
 
-        {/* Signup Link */}
-        <div>
-          <h5>
-            Don't Have an Account?{" "}
-            <span
-              className="verify-btn forgetPass"
-              onClick={handleSignup}
-              style={{ border: "none" }}
+          {/* Password Input */}
+          <div className="password">
+            <input
+              placeholder="Password"
+              type={uiState.isEyeClicked ? "text" : "password"}
+              value={formData.pass}
+              onChange={(e) => handleInputChange("pass", e.target.value)}
+              style={{ border: uiState.isPassEmpty ? "" : "2px solid red" }}
+            />
+            <div className="eyesvg" onClick={handleEyeClicked}>
+              <img src={eye} alt="Toggle password visibility" />
+            </div>
+            <div
+              className="cross-line"
+              style={{
+                display: uiState.isEyeClicked ? "block" : "none",
+                pointerEvents: "none",
+              }}
             >
-              Signup
-            </span>
-          </h5>
+              <img src={line} alt="" />
+            </div>
+          </div>
+
+          {/* Login Button */}
+          <button
+            className="btn"
+            onClick={handleLogin}
+            disabled={uiState.isLoading}
+          >
+            {uiState.isLoading ? <div className="loading"></div> : "Login"}
+          </button>
+
+          {/* Forgot Password */}
+          <div className="forgetPass" onClick={handlePasswordChange}>
+            <h5>Forgot Password?</h5>
+          </div>
+
+          {/* Signup Link */}
+          <div>
+            <h5>
+              Don't Have an Account?{" "}
+              <span
+                className="verify-btn forgetPass"
+                onClick={handleSignup}
+                style={{ border: "none" }}
+              >
+                Signup
+              </span>
+            </h5>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

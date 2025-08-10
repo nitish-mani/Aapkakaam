@@ -1,11 +1,12 @@
 import "./Footer.css";
 import appStore from "../../resources/img/appStore.jpg";
-import playStore from "../../resources/img/playStore.jpg";
+import playStore from "../../resources/img/playstore.jpg";
 import facebook from "../../resources/svg/facebook-svgrepo-com.svg";
 import linkedin from "../../resources/svg/linkedin-svgrepo-com.svg";
 import insta from "../../resources/svg/instagram-svgrepo-com.svg";
 import youtube from "../../resources/svg/youtube-168-svgrepo-com.svg";
 import twitter from "../../resources/img/x.jpg";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
@@ -15,9 +16,17 @@ export default function Footer() {
         <div>
           <div className="title">ABOUT AAPKAKAAM</div>
           <div className="title_child">
-            <div>About</div>
-            <div>Terms & Conditions</div>
-            <div>Privacy Policy</div>
+            <div>
+              <Link to="/aboutUs">About Us</Link>
+            </div>
+            <div>
+              {" "}
+              <Link to="/privacy-policy">Privacy Policy</Link> |{" "}
+            </div>
+            <div>
+              {" "}
+              <Link to="/terms">Terms & Conditions</Link>
+            </div>
             <div>FAQs</div>
           </div>
         </div>
@@ -25,7 +34,9 @@ export default function Footer() {
           <div className="title">CONNECT WITH US</div>
           <div className="title_child">
             <div>Feedback</div>
-            <div>Contact Us</div>
+            <div>
+              <Link to="/contactUs">Contact Us</Link>
+            </div>
             <div>Advertise with Us</div>
           </div>
         </div>
@@ -51,7 +62,9 @@ export default function Footer() {
         style={{ borderTop: "1px solid rgba(0, 0, 0, 0.12)", width: "100vw" }}
       >
         <div className="footer-div2nd">
-          <div className="copyRight">© 2025 Uslugi Technology Pvt. Ltd.</div>
+          <div className="copyRight">
+            © {new Date().getFullYear()} Uslugi Technology Pvt. Ltd.
+          </div>
           <div></div>
           <div className="connect">
             <div

@@ -2,7 +2,7 @@
 .calendar {
   font-family: Arial, sans-serif;
   max-width: 400px;
-  margin: 8rem auto;
+  /* margin: 8rem auto; */
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;

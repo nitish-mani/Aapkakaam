@@ -6,6 +6,7 @@ import "./SecondComponent.css";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
 
 export default function SecondComponent() {
   const navigate = useNavigate();
@@ -58,6 +59,8 @@ export default function SecondComponent() {
   }
   return (
     <div className="second-div">
+      <h2 className="first-heading">The Easiest Way to Get Things Done!</h2>
+
       <div
         className="second-div-div"
         onClick={handleClicked}

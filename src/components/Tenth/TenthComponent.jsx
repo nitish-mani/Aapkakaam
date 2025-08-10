@@ -6,6 +6,7 @@ import dulhaRath from "../../resources/img/dulha_rath.jpg";
 import kirtan from "../../resources/img/kirtan_mandali.jpg";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
 
 export default function TenthComponent() {
   const navigate = useNavigate();
@@ -63,6 +64,7 @@ export default function TenthComponent() {
 
   return (
     <div className="second-div div-child">
+      <h2 className="first-heading">Everyday Solutions by Local Experts!</h2>
       <div
         className="second-div-div"
         onClick={handleClicked}

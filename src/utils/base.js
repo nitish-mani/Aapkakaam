@@ -1,2 +1,2 @@
-// export const SERVER_URL = "https://aapkakaam.com";
-export const SERVER_URL = "http://api.aapkakaam.com:3000";
+export const SERVER_URL = "http://localhost:3000";
+// export const SERVER_URL = "https://api.aapkakaam.com";

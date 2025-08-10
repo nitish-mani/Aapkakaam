@@ -5,11 +5,19 @@ import { useLocation, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { getCalendar } from "@skolacode/calendar-js";
 import { useSelector } from "react-redux";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
+import AdsterraBanner from "../../ads/adsterraNativeBanner";
 
 export default function CheckBookingDate() {
   const navigate = useNavigate();
   const location = useLocation();
   const jobType = location.state.jobType;
+  const category = localStorage.getItem("category");
+  const userData = useSelector((store) =>
+    category === "user" ? store.user.data : store.vendor.data
+  );
+  const post = userData[0]?.address[0]?.post;
+  const dist = userData[0]?.address[0]?.dist;
 
   const isSelectedDateValid = useSelector(
     (store) => store.category.isSelectedDateValid
@@ -68,56 +76,61 @@ export default function CheckBookingDate() {
   }
 
   return (
-    <div className="views-P">
-      <img src={cross} alt="cross" onClick={hanldeCrossInShare} />
-      <h1
-        style={{
-          marginBottom: "2rem",
-          paddingBottom: "1.5rem",
-          borderBottom: "1px solid rgba(105, 102, 102, 0.637)",
-        }}
-      >
-        Check Booking Date{" "}
-        <span style={{ fontSize: "1.5rem", marginLeft: "1rem" }}>
-          (for {jobType})
-        </span>
-      </h1>
-      <div className="checkBookingDate">
-        <div
-          className="err"
+    <>
+      <AdsterraBanner_320x50 />
+      <div className="views-P">
+        <img src={cross} alt="cross" onClick={hanldeCrossInShare} />
+        <h1
           style={{
-            opacity: isSelectedDateValid ? "" : "1",
-            border: "none",
-            marginTop: "1rem",
+            marginBottom: "2rem",
+            paddingBottom: "1.5rem",
+            borderBottom: "1px solid rgba(105, 102, 102, 0.637)",
           }}
         >
-          You can't select previous date.
-        </div>
-        <div>
-          <input
-            type="text"
-            placeholder="Select Date From Calendar"
-            value={booking_date}
-            readOnly
+          Check Booking Date{" "}
+          <span style={{ fontSize: "1.5rem", marginLeft: "1rem" }}>
+            (for {jobType} in {post}, {dist})
+          </span>
+        </h1>
+        <div className="checkBookingDate">
+          <div
+            className="err"
+            style={{
+              opacity: isSelectedDateValid ? "" : "1",
+              border: "none",
+              marginTop: "1rem",
+            }}
+          >
+            You can't select previous date.
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Select Date From Calendar"
+              value={booking_date}
+              readOnly
+            />
+            <button className="btn" onClick={handleCheckBookingDate}>
+              Proceed
+            </button>
+          </div>
+          <Calendar
+            bookingDate={bookingDate}
+            bookingUserData={bookingUserData}
+            month={month}
+            year={year}
+            months={months}
+            setDate={setDate}
+            setMonth={setMonth}
+            setYear={setYear}
+            calendar={calendar}
+            setIsDateClicked={setIsDateClicked}
+            setBooking_date={setBooking_date}
           />
-          <button className="btn" onClick={handleCheckBookingDate}>
-            Proceed
-          </button>
         </div>
-        <Calendar
-          bookingDate={bookingDate}
-          bookingUserData={bookingUserData}
-          month={month}
-          year={year}
-          months={months}
-          setDate={setDate}
-          setMonth={setMonth}
-          setYear={setYear}
-          calendar={calendar}
-          setIsDateClicked={setIsDateClicked}
-          setBooking_date={setBooking_date}
-        />
       </div>
-    </div>
+
+      <AdsterraBanner />
+    </>
   );
 }
