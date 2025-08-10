@@ -11,9 +11,8 @@ import { useLocation, useNavigate } from "react-router";
 import { setLocationPincode, setLocationPost } from "../../utils/categoryslice";
 import cross from "../../resources/svg/multiply-svgrepo-com.svg";
 import CamleCase from "../camleCase/camleCase";
-import PropTypes from "prop-types";
-
-const PINCODE_API_URL = "https://api.postalpincode.in/pincode";
+import AdsterraBanner from "../../ads/adsterraNativeBanner";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
 
 const Address = () => {
   // Hooks and initial setup
@@ -35,13 +34,12 @@ const Address = () => {
     state: "",
     pincode: "",
   });
-  const [errors, setErrors] = useState({
+  const [errors, setError] = useState({
     vill: false,
     post: false,
     pincode: false,
-    general: "",
   });
-  const [success, setSuccess] = useState({ message: "" });
+  const [success, setSuccess] = useState({ message: "", err: "" });
   const [isLoading, setIsLoading] = useState({
     address: false,
     submit: false,
@@ -72,34 +70,53 @@ const Address = () => {
     if (!isPincodeValid) return;
 
     if (!isOnline) {
-      setErrors((prev) => ({ ...prev, general: "You are offline" }));
-      setTimeout(() => setErrors((prev) => ({ ...prev, general: "" })), 3000);
+      setSuccess((prev) => ({ ...prev, err: "You are offline" }));
+      setTimeout(() => setSuccess((prev) => ({ ...prev, err: "" })), 3000);
       return;
     }
 
     setIsLoading((prev) => ({ ...prev, address: true }));
 
     try {
-      const response = await axios.get(
-        `${PINCODE_API_URL}/${formData.pincode}`
-      );
-      const result = response.data[0];
+      const endpoint = category === "user" ? "getU" : "getV";
+      const url = `${SERVER_URL}/pincode/${endpoint}`;
 
-      if (result?.Status === "Success") {
+      const response = await axios.post(
+        url,
+        {
+          pincode: formData.pincode,
+        },
+        {
+          headers: { Authorization: token },
+        }
+      );
+      const result = response.data.data.offices;
+
+      console.log(result, response.data.data);
+      if (response?.status === 200) {
+        const result = response.data.data;
+        const offices = result.offices || [];
+
+        const cleanedOffices = offices.map((office) => ({
+          Name: office.officename.replace(/\s(BO|SO|HO)$/, "").toUpperCase(), // remove " BO" or " SO"
+          original: office, // optional: keep full data
+        }));
+
         setPostOfficeDetails([
           { Name: "Select Post Office" },
-          ...result.PostOffice,
+          ...cleanedOffices,
         ]);
+
         setFormData((prev) => ({
           ...prev,
-          dist: result.PostOffice[0]?.District,
-          state: result.PostOffice[0]?.State,
+          dist: result.offices[0]?.district || "",
+          state: result.offices[0]?.statename || "",
         }));
       } else {
-        setErrors((prev) => ({ ...prev, general: "Enter Valid Pincode" }));
+        setSuccess((prev) => ({ ...prev, err: "Enter Valid Pincode" }));
       }
     } catch (error) {
-      setErrors((prev) => ({ ...prev, general: "Enter Valid Pincode" }));
+      setSuccess((prev) => ({ ...prev, err: "Enter Valid Pincode" }));
     } finally {
       setIsLoading((prev) => ({ ...prev, address: false }));
     }
@@ -108,7 +125,7 @@ const Address = () => {
   // Handle form field changes
   const handleChange = useCallback((field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    setErrors((prev) => ({ ...prev, [field]: false, general: "" }));
+    setSuccess((prev) => ({ ...prev, [field]: false, err: "" }));
 
     // Reset district and state when pincode changes
     if (field === "pincode") {
@@ -120,8 +137,8 @@ const Address = () => {
   // Handle form submission
   const handleSubmitAddress = useCallback(async () => {
     if (!isOnline) {
-      setErrors((prev) => ({ ...prev, general: "You are offline" }));
-      setTimeout(() => setErrors((prev) => ({ ...prev, general: "" })), 3000);
+      setSuccess((prev) => ({ ...prev, err: "You are offline" }));
+      setTimeout(() => setSuccess((prev) => ({ ...prev, err: "" })), 3000);
       return;
     }
 
@@ -132,12 +149,12 @@ const Address = () => {
         ? false
         : !formData.post || formData.post === "Select Post Office",
       pincode: !isPincodeValid,
-      general: "",
+      err: "",
     };
 
     if (newErrors.vill || newErrors.post || newErrors.pincode) {
-      setErrors(newErrors);
-      newErrors.general = newErrors.vill
+      setSuccess(newErrors);
+      newErrors.err = newErrors.vill
         ? "Village Required"
         : newErrors.pincode
         ? "Pincode Must Have 6 Characters"
@@ -183,9 +200,9 @@ const Address = () => {
         navigate("/");
       }, 3000);
     } catch (error) {
-      setErrors((prev) => ({
+      setSuccess((prev) => ({
         ...prev,
-        general: error.response?.data?.message || "An error occurred",
+        err: error.response?.data?.message || "An error occurred",
       }));
     } finally {
       setIsLoading((prev) => ({ ...prev, submit: false }));
@@ -205,11 +222,11 @@ const Address = () => {
 
   // Effects
   useEffect(() => {
-    const timer = errors.general
-      ? setTimeout(() => setErrors((prev) => ({ ...prev, general: "" })), 5000)
+    const timer = errors.err
+      ? setTimeout(() => setSuccess((prev) => ({ ...prev, err: "" })), 5000)
       : null;
     return () => timer && clearTimeout(timer);
-  }, [errors.general]);
+  }, [errors.err]);
 
   useEffect(() => {
     const timer = success.message
@@ -241,7 +258,7 @@ const Address = () => {
     <input
       placeholder={isLoading.address ? "Loading..." : placeholder}
       type={type}
-      value={formData[field]}
+      value={formData[field].toUpperCase()}
       onChange={(e) => handleChange(field, e.target.value)}
       style={{
         border: errors[field] ? "2px solid red" : "",
@@ -270,60 +287,74 @@ const Address = () => {
     );
 
   return (
-    <div className="address">
-      {/* Close button */}
-      <img
-        src={cross}
-        alt="close"
-        className="address__close-button"
-        onClick={handleCrossInAddress}
-      />
-
-      {/* Error and success messages */}
-      {errors.general && (
-        <div className="address__message address__message--error">
-          {errors.general}
+    <>
+      <AdsterraBanner_320x50 />
+      <div className="address">
+        {/* Close button */}
+        <img
+          src={cross}
+          alt="close"
+          className="address__close-button"
+          onClick={handleCrossInAddress}
+        />
+        {/* Error and success message */}
+        <div
+          className="err"
+          style={{
+            opacity: success.err ? "1" : "",
+            border: success.err ? "none" : "none",
+            top: "0rem",
+            width: "50%",
+          }}
+        >
+          {success.err}
         </div>
-      )}
-      {success.message && (
-        <div className="address__message address__message--success">
+        {/* Success Message */}
+        <div
+          className="success"
+          style={{
+            opacity: success.message ? "1" : "",
+            border: success.message ? "none" : "none",
+            top: "0rem",
+            width: "50%",
+          }}
+        >
           {success.message}
         </div>
-      )}
+        {/* Header */}
+        <div className="address__header">
+          <h3>
+            {viewOnLocation
+              ? "Location"
+              : `${CamleCase({ element: category })} Address`}
+          </h3>
+        </div>
+        {/* Form fields */}
+        <div className="address__form">
+          {!viewOnLocation && <div>{renderInputField("vill", "Village")}</div>}
 
-      {/* Header */}
-      <div className="address__header">
-        <h3>
-          {viewOnLocation
-            ? "Location"
-            : `${CamleCase({ element: category })} Address`}
-        </h3>
+          {renderInputField("pincode", "Enter Pincode", "number")}
+          <div>{renderPostOfficeSelect()}</div>
+          {renderInputField("dist", "District", "text", true)}
+          {renderInputField("state", "State", "text", true)}
+
+          <button
+            className="address__submit-button"
+            onClick={handleSubmitAddress}
+            disabled={!isFormValid || isLoading.submit}
+          >
+            {isLoading.submit ? <div className="loading"></div> : "Submit"}
+          </button>
+
+          {viewOnLocation && (
+            <p className="address__pick-from-address" onClick={resetLocation}>
+              Pick from Address
+            </p>
+          )}
+        </div>
       </div>
-
-      {/* Form fields */}
-      <div className="address__form">
-        {!viewOnLocation && <div>{renderInputField("vill", "Village")}</div>}
-
-        {renderInputField("pincode", "Enter Pincode", "number")}
-        <div>{renderPostOfficeSelect()}</div>
-        {renderInputField("dist", "District", "text", true)}
-        {renderInputField("state", "State", "text", true)}
-
-        <button
-          className="address__submit-button"
-          onClick={handleSubmitAddress}
-          disabled={!isFormValid || isLoading.submit}
-        >
-          {isLoading.submit ? <div className="loading"></div> : "Submit"}
-        </button>
-
-        {viewOnLocation && (
-          <p className="address__pick-from-address" onClick={resetLocation}>
-            Pick from Address
-          </p>
-        )}
-      </div>
-    </div>
+      <AdsterraBanner />
+    </>
   );
 };
 

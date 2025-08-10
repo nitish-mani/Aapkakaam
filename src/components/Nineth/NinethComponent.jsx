@@ -6,6 +6,7 @@ import erikshaw from "../../resources/img/e-rikshaw.jpg";
 import pualcutter from "../../resources/img/pual_cutter.jpg";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
 
 export default function NinethComponent() {
   const navigate = useNavigate();
@@ -62,6 +63,7 @@ export default function NinethComponent() {
   }
   return (
     <div className="first-div">
+      <h2 className="first-heading">Services You Need, When You Need Them!</h2>
       <div
         className="first-div-div"
         onClick={handleClicked}

@@ -2,6 +2,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCategory } from "../../utils/categoryslice";
 import "./category.css";
+import AdsterraBanner from "../../ads/adsterraNativeBanner";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
 
 const RightArrowIcon = () => (
   <svg
@@ -44,7 +46,12 @@ export default function Category() {
   ];
 
   return (
-    <div className="category">
+    <div
+      className="category"
+      style={{ display: "flex", flexDirection: "column" }}
+    >
+      <AdsterraBanner_320x50 />
+
       <div className="category-child">
         {loginOptions.map((option) => (
           <div
@@ -60,6 +67,7 @@ export default function Category() {
           </div>
         ))}
       </div>
+      <AdsterraBanner />
     </div>
   );
 }

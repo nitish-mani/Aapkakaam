@@ -10,6 +10,8 @@ import axios from "axios";
 import { SERVER_URL } from "../../utils/base";
 import { useSelector } from "react-redux";
 import BookingList from "../bookingList/bookingList";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
+import AdsterraBanner from "../../ads/adsterraNativeBanner";
 
 const MONTHS = [
   "January",
@@ -292,147 +294,150 @@ export default function Bookings() {
   };
 
   return (
-    <div className="views-P">
-      <img
-        src={cross}
-        alt="Close"
-        className="bookings__close-button"
-        onClick={handleCrossClick}
-      />
-      <h1
-        style={{
-          marginBottom: "2rem",
-          paddingBottom: "1.5rem",
-          borderBottom: "1px solid rgba(105, 102, 102, 0.637)",
-        }}
-      >
-        {bookingsType === "view" ? "Bookings" : "Book Now"}
-      </h1>
-
-      <div className="bookings">
-        {/* Error and Success Messages */}
-        {error && (
-          <div
-            className="err"
-            style={{ opacity: 1, border: "none", top: "-8rem" }}
-          >
-            {error}
-          </div>
-        )}
-        {success && (
-          <div
-            className="success"
-            style={{ opacity: 1, border: "none", top: "-8rem" }}
-          >
-            {success}
-          </div>
-        )}
-
-        {bookingsType === "view" ? (
-          <div className="viewNow">
-            <h3>
-              {MONTHS[month]} {year}
-            </h3>
-
-            <div
-              id="bookingView"
-              style={{
-                position: "sticky",
-                top: "3.7rem",
-                padding: ".5rem",
-                backgroundColor: "#fff",
-              }}
-            >
-              {renderStatusButton("pending", "Pending", "blue")}
-              {renderStatusButton("complete", "Completed", "green")}
-              {renderStatusButton("cancel", "Canceled", "red")}
-            </div>
-
-            {renderBookingsList()}
-          </div>
-        ) : (
-          <div className="book-now">
-            {!isSelectedDateValid && (
-              <div
-                className="err"
-                style={{ opacity: 1, border: "none", marginTop: "8rem" }}
-              >
-                You can't select previous date.
-              </div>
-            )}
-
-            <input
-              type="text"
-              placeholder="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <input
-              type="number"
-              placeholder="Mobile Number"
-              value={phoneNo}
-              onChange={(e) => setPhoneNo(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Vill"
-              value={vill}
-              onChange={(e) => setVill(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Pincode"
-              value={pincode}
-              onChange={(e) => setPincode(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Post"
-              value={post}
-              onChange={(e) => setPost(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Dist"
-              value={dist}
-              onChange={(e) => setDist(e.target.value)}
-            />
-
-            <input
-              type="text"
-              placeholder="Select Date from calendar"
-              value={bookingDate}
-              readOnly
-            />
-            <button
-              className="btn"
-              onClick={handleBookings}
-              disabled={isClicked}
-            >
-              {isClicked ? <div className="loading"></div> : "Book Now"}
-            </button>
-          </div>
-        )}
-
-        <Calendar
-          bookingDate={
-            orderStatus === "pending"
-              ? pendingDates
-              : orderStatus === "complete"
-              ? completeDates
-              : cancelDates
-          }
-          orderStatus={orderStatus}
-          month={month}
-          year={year}
-          months={MONTHS}
-          setDate={setDate}
-          setMonth={setMonth}
-          setYear={setYear}
-          calendar={calendar}
-          setIsDateClicked={setIsDateClicked}
+    <>
+      <AdsterraBanner_320x50 />
+      <div className="views-P">
+        <img
+          src={cross}
+          alt="Close"
+          className="bookings__close-button"
+          onClick={handleCrossClick}
         />
+        <h1
+          style={{
+            marginBottom: "2rem",
+            paddingBottom: "1.5rem",
+            borderBottom: "1px solid rgba(105, 102, 102, 0.637)",
+          }}
+        >
+          {bookingsType === "view" ? "Bookings" : "Book Now"}
+        </h1>
+        <div className="bookings">
+          {/* Error and Success Messages */}
+          {error && (
+            <div
+              className="err"
+              style={{ opacity: 1, border: "none", top: "-8rem" }}
+            >
+              {error}
+            </div>
+          )}
+          {success && (
+            <div
+              className="success"
+              style={{ opacity: 1, border: "none", top: "-8rem" }}
+            >
+              {success}
+            </div>
+          )}
+
+          {bookingsType === "view" ? (
+            <div className="viewNow">
+              <h3>
+                {MONTHS[month]} {year}
+              </h3>
+
+              <div
+                id="bookingView"
+                style={{
+                  position: "sticky",
+                  top: "3.7rem",
+                  padding: ".5rem",
+                  backgroundColor: "#fff",
+                }}
+              >
+                {renderStatusButton("pending", "Pending", "blue")}
+                {renderStatusButton("complete", "Completed", "green")}
+                {renderStatusButton("cancel", "Canceled", "red")}
+              </div>
+
+              {renderBookingsList()}
+            </div>
+          ) : (
+            <div className="book-now">
+              {!isSelectedDateValid && (
+                <div
+                  className="err"
+                  style={{ opacity: 1, border: "none", marginTop: "8rem" }}
+                >
+                  You can't select previous date.
+                </div>
+              )}
+
+              <input
+                type="text"
+                placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <input
+                type="number"
+                placeholder="Mobile Number"
+                value={phoneNo}
+                onChange={(e) => setPhoneNo(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Vill"
+                value={vill}
+                onChange={(e) => setVill(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Pincode"
+                value={pincode}
+                onChange={(e) => setPincode(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Post"
+                value={post}
+                onChange={(e) => setPost(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Dist"
+                value={dist}
+                onChange={(e) => setDist(e.target.value)}
+              />
+
+              <input
+                type="text"
+                placeholder="Select Date from calendar"
+                value={bookingDate}
+                readOnly
+              />
+              <button
+                className="btn"
+                onClick={handleBookings}
+                disabled={isClicked}
+              >
+                {isClicked ? <div className="loading"></div> : "Book Now"}
+              </button>
+            </div>
+          )}
+
+          <Calendar
+            bookingDate={
+              orderStatus === "pending"
+                ? pendingDates
+                : orderStatus === "complete"
+                ? completeDates
+                : cancelDates
+            }
+            orderStatus={orderStatus}
+            month={month}
+            year={year}
+            months={MONTHS}
+            setDate={setDate}
+            setMonth={setMonth}
+            setYear={setYear}
+            calendar={calendar}
+            setIsDateClicked={setIsDateClicked}
+          />
+        </div>
       </div>
-    </div>
+      <AdsterraBanner />
+    </>
   );
 }

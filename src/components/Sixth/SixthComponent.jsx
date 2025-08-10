@@ -6,6 +6,7 @@ import bus from "../../resources/img/bus.jpg";
 import tenthouse from "../../resources/img/tent.jpg";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
 
 export default function SixthComponent() {
   const navigate = useNavigate();
@@ -60,6 +61,9 @@ export default function SixthComponent() {
   }
   return (
     <div className="second-div">
+      <h2 className="first-heading">
+        Verified Pros. Fast Booking. Peace of Mind.
+      </h2>
       <div
         className="second-div-div"
         onClick={handleClicked}

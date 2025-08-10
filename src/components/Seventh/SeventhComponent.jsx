@@ -6,6 +6,7 @@ import dj from "../../resources/img/dj.jpg";
 import dhankutti from "../../resources/img/dhankutti.jpg";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
 
 export default function SeventhComponent() {
   const navigate = useNavigate();
@@ -60,6 +61,9 @@ export default function SeventhComponent() {
   }
   return (
     <div className="first-div">
+      <h2 className="first-heading">
+        Bringing Local Services to Your Doorstep!
+      </h2>
       <div
         className="first-div-div"
         onClick={handleClicked}

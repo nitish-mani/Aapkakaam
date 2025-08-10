@@ -10,6 +10,8 @@ import CamleCase from "../camleCase/camleCase";
 import cross from "../../resources/svg/multiply-svgrepo-com.svg";
 import VendorListItem from "../vendorListItem/vendorListItem";
 import PropTypes from "prop-types";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
+import AdsterraBanner from "../../ads/adsterraNativeBanner";
 
 const AvailableVendor = () => {
   // Constants and hooks
@@ -189,7 +191,7 @@ const AvailableVendor = () => {
 
   const renderVendors = () => {
     if (loading.initial) {
-      return <div className="available-vendor__loading" />;
+      return <div className="loading" />;
     }
 
     if (!pincode || vendorPresent.length === 0) {
@@ -205,22 +207,27 @@ const AvailableVendor = () => {
       );
     }
 
-    return vendorPresent.map((data, i) => (
-      <VendorListItem
-        key={`${data.vendorId}-${i}`}
-        data={data}
-        userData={userData}
-        date={date}
-        month={month}
-        year={year}
-        booked_date={booked_date}
-        jobType={jobType}
-        token={token}
-        category={category}
-        bookingHappen={bookingHappen}
-        setBookingHappen={setBookingHappen}
-      />
-    ));
+    return vendorPresent.map((data, i) => {
+      return (
+        i % 3 == 0 ? <></> : <div style={{ display: "none" }}></div>,
+        (
+          <VendorListItem
+            key={`${data.vendorId}-${i}`}
+            data={data}
+            userData={userData}
+            date={date}
+            month={month}
+            year={year}
+            booked_date={booked_date}
+            jobType={jobType}
+            token={token}
+            category={category}
+            bookingHappen={bookingHappen}
+            setBookingHappen={setBookingHappen}
+          />
+        )
+      );
+    });
   };
 
   const renderPagination = () => (
@@ -249,6 +256,7 @@ const AvailableVendor = () => {
 
   return (
     <div className="available-vendor__container">
+      <AdsterraBanner_320x50 />
       <img
         src={cross}
         alt="Close"
@@ -261,6 +269,7 @@ const AvailableVendor = () => {
       {renderHeader()}
       {renderFilters()}
       <div className="available-vendor__list">{renderVendors()}</div>
+      <AdsterraBanner />
       {renderPagination()}
     </div>
   );

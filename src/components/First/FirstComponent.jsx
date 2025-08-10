@@ -6,6 +6,7 @@ import plumber from "../../resources/img/plumber.jpg";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
 
 export default function FirstComponent() {
   const navigate = useNavigate();
@@ -56,6 +57,8 @@ export default function FirstComponent() {
 
   return (
     <div className="first-div">
+      <h2 className="first-heading">Need Help? Find Local Experts Near You!</h2>
+
       <div
         className="first-div-div d1"
         onClick={handleClicked}

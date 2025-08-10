@@ -3,7 +3,7 @@
   background-color: var(--primary-color);
   text-align: center;
   box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.367);
-  margin: 5rem auto;
+  margin: 1rem auto;
 }
 .login__1stChild {
   color: #fff;

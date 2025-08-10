@@ -7,6 +7,7 @@ import shuttering from "../../resources/img/shuttering.jpg";
 
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
 
 export default function EighthComponent() {
   const navigate = useNavigate();
@@ -63,6 +64,9 @@ export default function EighthComponent() {
   }
   return (
     <div className="second-div">
+      <h2 className="first-heading">
+        Solve Your Chores with One Simple Click!
+      </h2>
       <div
         className="second-div-div"
         onClick={handleClicked}

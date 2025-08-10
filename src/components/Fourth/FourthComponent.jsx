@@ -6,6 +6,7 @@ import dhobi from "../../resources/img/washer_man.jpg";
 import cook from "../../resources/img/cook.jpg";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
 
 export default function FourthComponent() {
   const navigate = useNavigate();
@@ -55,6 +56,9 @@ export default function FourthComponent() {
   }
   return (
     <div className="second-div">
+      <h2 className="first-heading">
+        Book Home & Local Services, Fast and Easy!
+      </h2>
       <div
         className="second-div-div"
         onClick={handleClicked}

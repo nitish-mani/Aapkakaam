@@ -15,10 +15,33 @@ import CheckBookingDate from "./components/checkBookingDate/checkBookingDate";
 import Share from "./components/share/share";
 import ChangePhoneEmailPassword from "./components/changePhoneEmail&Password/changePhoneEmail&Password";
 import UploadImage from "./components/uploadImage/uploadImage";
-import AddMoney from "./components/addMoney/addMoney";
+// import AddMoney from "./components/addMoney/addMoney";
+import PrivacyPolicy from "./pages/privacyPolicy";
+import TermsAndConditions from "./pages/termsAndConditions";
+import AboutUs from "./pages/aboutUs";
+import ContactUs from "./pages/contactUs";
+import DiscountCard from "./payments/checkoutPage";
+import PaymentSuccess from "./payments/paymentSuccessful";
+import PaymentFailed from "./payments/failedPayment";
 
 export default function App() {
   const router = createBrowserRouter([
+    {
+      path: "/aboutUs",
+      element: <AboutUs />,
+    },
+    {
+      path: "/contactUs",
+      element: <ContactUs />,
+    },
+    {
+      path: "/privacy-policy",
+      element: <PrivacyPolicy />,
+    },
+    {
+      path: "/terms",
+      element: <TermsAndConditions />,
+    },
     {
       path: "/",
       element: <Homepage />,
@@ -27,6 +50,7 @@ export default function App() {
           path: "/",
           element: <Body />,
         },
+
         {
           path: "/category",
           element: <Category />,
@@ -85,10 +109,13 @@ export default function App() {
         },
         {
           path: "/addMoney",
-          element: <AddMoney />,
+          element: <DiscountCard />,
         },
       ],
     },
+
+    { path: "/paymentSuccessful", element: <PaymentSuccess /> },
+    { path: "/paymentFailed", element: <PaymentFailed /> },
   ]);
   return (
     <Provider store={store}>

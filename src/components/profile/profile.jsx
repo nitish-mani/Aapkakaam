@@ -27,6 +27,8 @@ import male from "../../resources/svg/male-svgrepo-com.svg";
 import female from "../../resources/svg/female-svgrepo-com.svg";
 import rupee from "../../resources/svg/rupee-1-frame-svgrepo-com.svg";
 import { SERVER_URL } from "../../utils/base";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
+import AdsterraBanner from "../../ads/adsterraNativeBanner";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -296,6 +298,7 @@ const Profile = () => {
 
   return (
     <div className="profile">
+      <AdsterraBanner_320x50 />
       <div
         className="err"
         style={{
@@ -306,7 +309,6 @@ const Profile = () => {
       >
         {err}
       </div>
-
       <div
         style={{
           display: "flex",
@@ -316,7 +318,6 @@ const Profile = () => {
       >
         {ProfileImage}
       </div>
-
       <p
         onClick={handleProfileImage}
         style={{
@@ -329,11 +330,9 @@ const Profile = () => {
       >
         Upload Profile Image
       </p>
-
       <h2>
         <CamleCase element={category} /> Profile
       </h2>
-
       <img
         src={cross}
         className="profile__close-button"
@@ -347,7 +346,6 @@ const Profile = () => {
         }}
         onClick={handleCrossInProfile}
       />
-
       {/* Name Field */}
       <div>
         <span className="border-bottom">Name </span>
@@ -397,7 +395,6 @@ const Profile = () => {
           </span>
         </span>
       </div>
-
       {/* Phone Number Field */}
       <div>
         <span className="border-bottom">Mobile No</span>
@@ -420,7 +417,6 @@ const Profile = () => {
           </span>
         </span>
       </div>
-
       {/* Orders Field */}
       <div>
         <span className="border-bottom">Orders </span>
@@ -431,7 +427,6 @@ const Profile = () => {
           </span>
         </span>
       </div>
-
       {/* Share Field */}
       <div>
         <span className="border-bottom">Share</span>
@@ -445,7 +440,6 @@ const Profile = () => {
           </span>
         </span>
       </div>
-
       {/* Vendor-specific fields */}
       {category === "vendor" && (
         <>
@@ -562,7 +556,6 @@ const Profile = () => {
           </div>
         </>
       )}
-
       {/* Bonus Amount Field */}
       <div>
         <span className="span email-grid ">Bonus Amount </span>
@@ -608,6 +601,7 @@ const Profile = () => {
         )}
       </div>
 
+      <AdsterraBanner />
       {/* Logout Button */}
       <button className="btn" onClick={handleLogout}>
         Logout

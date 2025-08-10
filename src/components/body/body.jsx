@@ -16,6 +16,11 @@ import SeventhComponent from "../Seventh/SeventhComponent";
 import EighthComponent from "../Eighth/EighthComponent";
 import NinethComponent from "../Nineth/NinethComponent";
 import TenthComponent from "../Tenth/TenthComponent";
+import AdsterraBanner from "../../ads/adsterraNativeBanner";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
+import AdContainer from "../../ads/adContainer";
+import AdsterraBanner_ScriptOnly from "../../ads/adsterraSocialBar";
+import AdsterraBanner_728x90 from "../../ads/adsterraBanner_728_90";
 
 export default function Body() {
   const navigate = useNavigate();
@@ -163,22 +168,27 @@ export default function Body() {
   };
 
   return (
-    <>
+    <div style={{ backgroundColor: "white", padding: "0 1rem" }}>
       {renderError(err)}
       {renderProfileVisibilityMessage()}
       {renderWageRateMessage()}
       {renderBalanceMessage()}
+      <AdsterraBanner_320x50 />
       <FirstComponent />
+      <AdsterraBanner />
       <SecondComponent />
       <ThirdComponent />
       <FourthComponent />
       <FifthComponent />
+
       <SixthComponent />
       <SeventhComponent />
+
       <EighthComponent />
       <NinethComponent />
+
       <TenthComponent />
       <Eleventh />
-    </>
+    </div>
   );
 }
