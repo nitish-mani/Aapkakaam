@@ -97,7 +97,6 @@ export default function Login() {
         phoneNo: formData.phoneNo,
         password: formData.pass,
       });
-      console.log(response.data);
       showMessage("success", response.data.message);
       localStorage.setItem(category, JSON.stringify(response.data));
 
@@ -243,6 +242,7 @@ export default function Login() {
           </div>
         </div>
       </div>
+      <AdsterraBanner />
     </>
   );
 }

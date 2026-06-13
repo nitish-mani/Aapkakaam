@@ -58,12 +58,6 @@ const AvailableVendor = () => {
 
   // API call to fetch vendors
   const fetchVendors = useCallback(async () => {
-    if (!navigator.onLine) {
-      setError("You are offline");
-      setTimeout(() => setError(""), 3000);
-      return;
-    }
-
     if (!pincode) {
       setTimeout(() => {
         setLoading((prev) => ({ ...prev, initial: false }));
@@ -267,7 +261,7 @@ const AvailableVendor = () => {
       {error && <div className="available-vendor__error">{error}</div>}
 
       {renderHeader()}
-      {renderFilters()}
+      {/* {renderFilters()} */}
       <div className="available-vendor__list">{renderVendors()}</div>
       <AdsterraBanner />
       {renderPagination()}

@@ -33,10 +33,13 @@ export default function VendorListItem({
   const [btnHovered, setBtnHovered] = useState(false);
   const dispatch = useDispatch();
   const pincode = pinLocation || userData[0].address[0].pincode;
-  const balance = userData[0].bonusAmount;
+  const balance = userData[0].balance;
+  const bonusAmount = userData[0].bonusAmount;
 
-  function handleBookNow(vendorId) {
-    if (balance >= 5) {
+  console.log(data);
+
+  function handleBookNow(vendorId, phoneNo) {
+    if (balance >= 1 && bonusAmount >= 5) {
       setIsLoading(true);
       if (category === "user") {
         axios
@@ -44,60 +47,42 @@ export default function VendorListItem({
             `${SERVER_URL}/bookings/postToBookingsU`,
             {
               userId: userData[0].userId,
+              name: userData[0].name,
               vendorId: vendorId,
               bookingDate: booked_date,
               pincode: pincode,
               type: jobType,
+              phoneNo,
             },
             {
               headers: { Authorization: token },
             }
           )
-          .then((result) => {
-            const bookingId = result.data.bookingId;
-            axios
-              .patch(
-                `${SERVER_URL}/vendor/bookNowU/${vendorId}`,
-                {
-                  bookingId,
-                  userId: userData[0].userId,
-                  name: userData[0].name,
-                  phoneNo: userData[0].phoneNo,
-                  vill: userData[0].address[0].vill,
-                  post: userData[0].address[0].post,
-                  dist: userData[0].address[0].dist,
-                  pincode: pincode,
-                  date,
-                  month,
-                  year,
-                },
-                {
-                  headers: { Authorization: token },
-                }
-              )
-              .then((succ) => {
-                const data = {
-                  ...userData[0],
-                  bonusAmount: succ.data.bonusAmount,
-                };
-                dispatch(addDataUser(data));
-                localStorage.setItem(category, JSON.stringify(data));
 
-                setIsLoading(false);
-                setBookingHappen(!bookingHappen);
-                setSuccess(succ.data.message);
-                setTimeout(() => {
-                  setSuccess("");
-                }, 2000);
-              })
-              .catch((err) => {
-                setIsLoading(false);
-                setErr(err.response.data.message);
-                setTimeout(() => {
-                  setErr("");
-                }, 2000);
-              });
+          .then((succ) => {
+            const data = {
+              ...userData[0],
+              balance: succ.data.balance,
+              bonusAmount: succ.data.bonusAmount,
+            };
+            dispatch(addDataUser(data));
+            localStorage.setItem(category, JSON.stringify(data));
+
+            setIsLoading(false);
+            setBookingHappen(!bookingHappen);
+            setSuccess(succ.data.message);
+            setTimeout(() => {
+              setSuccess("");
+            }, 2000);
           })
+          .catch((err) => {
+            setIsLoading(false);
+            setErr(err.response.data.message);
+            setTimeout(() => {
+              setErr("");
+            }, 2000);
+          })
+
           .catch((err) => {
             setIsLoading(false);
             setErr(err.response.data.message);
@@ -111,58 +96,39 @@ export default function VendorListItem({
             `${SERVER_URL}/bookings/postToBookingsV`,
             {
               userId: userData[0].vendorId,
+              name: userData[0].name,
               vendorId: vendorId,
               bookingDate: booked_date,
               pincode: pincode,
               type: jobType,
+              phoneNo,
             },
             {
               headers: { Authorization: token },
             }
           )
-          .then((result) => {
-            const bookingId = result.data.bookingId;
-            axios
-              .patch(
-                `${SERVER_URL}/vendor/bookNowV/${vendorId}`,
-                {
-                  bookingId,
-                  vendorUser: userData[0].vendorId,
-                  name: userData[0].name,
-                  phoneNo: userData[0].phoneNo,
-                  vill: userData[0].address[0].vill,
-                  post: userData[0].address[0].post,
-                  dist: userData[0].address[0].dist,
-                  pincode: pincode,
-                  date,
-                  month,
-                  year,
-                },
-                {
-                  headers: { Authorization: token },
-                }
-              )
-              .then((succ) => {
-                const data = {
-                  ...userData[0],
-                  bonusAmount: succ.data.bonusAmount,
-                };
-                dispatch(addDataVendor(data));
-                localStorage.setItem(category, JSON.stringify(data));
-                setIsLoading(false);
-                setSuccess(succ.data.message);
-                setBookingHappen(!bookingHappen);
-                setTimeout(() => {
-                  setSuccess("");
-                }, 2000);
-              })
-              .catch((err) => {
-                setIsLoading(false);
-                setErr(err.response.data.message);
-                setTimeout(() => {
-                  setErr("");
-                }, 2000);
-              });
+
+          .then((succ) => {
+            const data = {
+              ...userData[0],
+              balance: succ.data.balance,
+              bonusAmount: succ.data.bonusAmount,
+            };
+            dispatch(addDataVendor(data));
+            localStorage.setItem(category, JSON.stringify(data));
+            setIsLoading(false);
+            setSuccess(succ.data.message);
+            setBookingHappen(!bookingHappen);
+            setTimeout(() => {
+              setSuccess("");
+            }, 2000);
+          })
+          .catch((err) => {
+            setIsLoading(false);
+            setErr(err.response.data.message);
+            setTimeout(() => {
+              setErr("");
+            }, 2000);
           })
           .catch((err) => {
             setIsLoading(false);
@@ -173,7 +139,7 @@ export default function VendorListItem({
           });
       }
     } else {
-      setErr("You don't have enough Balance for booking");
+      setErr("Needed Rs 29 bonusAmount and Rs 1 balanceAmount for Booking");
       setTimeout(() => {
         setErr("");
       }, 5000);
@@ -261,7 +227,7 @@ export default function VendorListItem({
         <button
           className="btn"
           style={{ marginTop: "1rem", position: "relative" }}
-          onClick={() => handleBookNow(data._id)}
+          onClick={() => handleBookNow(data._id, data.phoneNo)}
           onMouseEnter={handleMouseHoverEnter}
           onMouseLeave={handleMouseHoverLeave}
         >
@@ -269,7 +235,7 @@ export default function VendorListItem({
             className="popmsg"
             style={{ display: btnHovered ? "block" : "none" }}
           >
-            It will cost you Rs 30{" "}
+            It will cost you Rs 29 bonusAmount and Rs 1 balanceAmount{" "}
           </div>
           {isLoading ? <div className="loading"></div> : "Book Now"}
         </button>
@@ -279,7 +245,7 @@ export default function VendorListItem({
             <img src={rupee} alt="" style={{ width: "1.2rem" }} />{" "}
           </span>
           <span style={{ fontSize: "1.5rem", color: "green" }}>
-            {data.wageRate} / Day
+            {data.wageRate} / {data.wageRateType}
           </span>
         </h5>
       </div>

@@ -221,6 +221,7 @@ export default function OrderList({ element, orderStatus }) {
               }
             )
             .then((succ) => {
+              console.log(1, succ);
               setSuccess(succ.data.message);
               dispatch(setCancelOrder(!cancelOrder));
               setIsLoadingRating(false);
@@ -229,6 +230,7 @@ export default function OrderList({ element, orderStatus }) {
               }, 1000);
             })
             .catch((err) => {
+              console.log(2, err);
               setErr(err.response.data.message);
               setIsLoadingRating(false);
               setTimeout(() => {

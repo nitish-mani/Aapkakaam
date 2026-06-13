@@ -6,10 +6,14 @@ const vendorSlice = createSlice({
     data: [],
     isVisibleVendor: true,
     isPrVisibleVendor: false,
+    attendanceData: [],
   },
   reducers: {
     addDataVendor: (state, action) => {
       state.data[0] = action.payload;
+    },
+    addAttendanceDataVendor: (state, action) => {
+      state.attendanceData[0] = action.payload;
     },
     clearDataVendor: (state, action) => {
       state.data = [];
@@ -25,6 +29,7 @@ const vendorSlice = createSlice({
 
 export const {
   addDataVendor,
+  addAttendanceDataVendor,
   clearDataVendor,
   setIsVisibleVendor,
   setPrIsVisibleVendor,

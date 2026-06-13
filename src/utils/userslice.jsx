@@ -6,10 +6,15 @@ const userSlice = createSlice({
     data: [],
     isVisibleUser: true,
     isPrVisibleUser: false,
+    attendanceData: [],
   },
   reducers: {
     addDataUser: (state, action) => {
       state.data[0] = action.payload;
+    },
+
+    addAttendanceDataUser: (state, action) => {
+      state.attendanceData[0] = action.payload;
     },
     clearDataUser: (state, action) => {
       state.data = [];
@@ -25,6 +30,7 @@ const userSlice = createSlice({
 
 export const {
   addDataUser,
+  addAttendanceDataUser,
   clearDataUser,
   setIsVisibleUser,
   setPrIsVisibleUser,

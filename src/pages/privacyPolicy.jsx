@@ -88,7 +88,10 @@ const PrivacyPolicy = () => {
         commission from each completed order beyond the first 5 free orders.
         Only completed orders count; canceled orders do not contribute to
         earnings.Earnings may be affected due to discount given to vendors and
-        users. It will be based on discounted percentage.
+        users. It will be based on discounted percentage. Daily attendance is
+        mandatory needed 6 minutes in total per day and 2 minutes on each three
+        pages (Home Page, Share Page, View Share Page) with 100% to qualified
+        for withdraw.
       </p>
 
       <h2>9. Ratings and Reviews</h2>

@@ -172,9 +172,8 @@ const Address = () => {
     setIsLoading((prev) => ({ ...prev, submit: true }));
 
     try {
-      const villC = CamleCase({ element: formData.vill });
       const payload = {
-        vill: villC,
+        vill: formData.vill.toUpperCase(),
         post: formData.post,
         dist: formData.dist,
         state: formData.state,

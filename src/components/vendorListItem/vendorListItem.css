@@ -28,7 +28,7 @@
 }
 .popmsg {
   position: absolute;
-  top: -3rem;
+  top: -7rem;
   color: red;
   width: 15rem;
   border: 1px solid red;
@@ -42,7 +42,7 @@
   .available-vendor__child div button {
     order: 1;
   }
-  .popmsg{
+  .popmsg {
     top: -6rem;
   }
 }

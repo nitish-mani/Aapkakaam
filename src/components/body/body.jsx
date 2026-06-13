@@ -18,9 +18,7 @@ import NinethComponent from "../Nineth/NinethComponent";
 import TenthComponent from "../Tenth/TenthComponent";
 import AdsterraBanner from "../../ads/adsterraNativeBanner";
 import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
-import AdContainer from "../../ads/adContainer";
-import AdsterraBanner_ScriptOnly from "../../ads/adsterraSocialBar";
-import AdsterraBanner_728x90 from "../../ads/adsterraBanner_728_90";
+import Attendance from "../Attendance/attendance";
 
 export default function Body() {
   const navigate = useNavigate();
@@ -129,38 +127,31 @@ export default function Body() {
   };
 
   const renderBalanceMessage = () => {
-    const { balance } = userData[0] || {};
+    const { balance, commission } = userData[0] || {};
     if (!balance) return null;
     let message = "";
-    if (balance < 30) {
+    if (balance <= commission && category === "vendor") {
       message = (
         <div style={{ marginTop: "2rem", textAlign: "center" }}>
-          Your <span style={{ color: "blue" }}>Bonus Amount</span> is{" "}
-          <span style={{ color: "red" }}>0</span>. You can't do bookings .
-          Please{" "}
-          <span
-            style={{ color: "blue", cursor: "pointer" }}
-            onClick={() => navigate("/share")}
-          >
-            Share
+          Your <span style={{ color: "blue" }}>Balance</span> is{" "}
+          <span style={{ color: "red" }}>{balance}</span>. You can't do bookings
+          . Please{" "}
+          <span onClick={() => navigate("/addMoney")} style={{ color: "blue" }}>
+            Recharge
           </span>{" "}
-          to your friend or <span style={{ color: "blue" }}>Recharge</span> to
-          increase your Balance.
+          to increase your Balance.
         </div>
       );
-    } else if (balance <= 60) {
+    } else if (balance <= 2 && category === "user") {
       message = (
         <div style={{ marginTop: "2rem", textAlign: "center" }}>
-          Your <span style={{ color: "blue" }}>Balance</span> is less than 61
+          Your <span style={{ color: "blue" }}>Balance</span> is less than{" "}
+          {balance}
           Rs. Please{" "}
-          <span
-            style={{ color: "blue", cursor: "pointer" }}
-            onClick={() => navigate("/share")}
-          >
-            Share
+          <span onClick={() => navigate("/addMoney")} style={{ color: "blue" }}>
+            Recharge
           </span>{" "}
-          to your friend or <span style={{ color: "blue" }}>Recharge</span> to
-          increase your Balance.
+          to increase your Balance.
         </div>
       );
     }
@@ -180,6 +171,7 @@ export default function Body() {
       <ThirdComponent />
       <FourthComponent />
       <FifthComponent />
+      <Attendance pageNo={1} />
 
       <SixthComponent />
       <SeventhComponent />

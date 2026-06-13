@@ -8,13 +8,14 @@ import { useState } from "react";
 export default function BookingList({ data }) {
   const category = localStorage.getItem("category");
   const token = `Bearer ${JSON.parse(localStorage.getItem(category))?.token}`;
-
+  const user = JSON.parse(localStorage.getItem(category));
   const [isLoadingRatingPermission, setIsLoadingRatingPermission] =
     useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
 
   const handleGrantPermission = async (bookingId) => {
+    console.log(bookingId, data);
     if (!navigator.onLine) {
       setError("You are offline");
       setTimeout(() => setError(""), 3000);
@@ -28,6 +29,7 @@ export default function BookingList({ data }) {
         { bookingId },
         { headers: { Authorization: token } }
       );
+      console.log(result);
       setSuccess(result.data.message);
       setTimeout(() => setSuccess(""), 2000);
     } catch (err) {
@@ -61,7 +63,9 @@ export default function BookingList({ data }) {
         >
           <span>Name</span>
           <span>
-            <CamleCase element={data?.name} />
+            <CamleCase
+              element={data?.userId?.name || data?.name || user?.name}
+            />
           </span>
         </div>
 
@@ -74,7 +78,7 @@ export default function BookingList({ data }) {
           }}
         >
           <span>Mobile No</span>
-          <span>{data?.phoneNo}</span>
+          <span>{data?.userId?.phoneNo || data?.phoneNo || user?.phoneNo}</span>
         </div>
 
         {/* Address Section */}
@@ -94,7 +98,11 @@ export default function BookingList({ data }) {
             }}
           >
             <span style={{ marginLeft: "5rem" }}>Vill :-</span>
-            <span>{data.address.vill}</span>
+            <span>
+              {data.userId?.address[0].vill ||
+                data?.vill ||
+                user?.address[0]?.vill}
+            </span>
           </div>
           <div
             style={{
@@ -103,7 +111,11 @@ export default function BookingList({ data }) {
             }}
           >
             <span style={{ marginLeft: "5rem" }}>Post :-</span>
-            <span>{data.address.post}</span>
+            <span>
+              {data.userId?.address[0].post ||
+                data?.post ||
+                user?.address[0]?.post}
+            </span>
           </div>
           <div
             style={{
@@ -112,7 +124,11 @@ export default function BookingList({ data }) {
             }}
           >
             <span style={{ marginLeft: "5rem" }}>Dist :-</span>
-            <span>{data.address.dist}</span>
+            <span>
+              {data.userId?.address[0].dist ||
+                data?.dist ||
+                user?.address[0]?.dist}
+            </span>
           </div>
         </div>
 
@@ -125,9 +141,7 @@ export default function BookingList({ data }) {
           }}
         >
           <span>Date</span>
-          <span style={{ color: "blue" }}>
-            {`${data?.date}/${data.month + 1}/${data.year}`}
-          </span>
+          <span style={{ color: "blue" }}>{data.bookingDate}</span>
         </div>
 
         {/* Rating Section */}
@@ -150,7 +164,7 @@ export default function BookingList({ data }) {
                       color: "blue",
                       cursor: "pointer",
                     }}
-                    onClick={() => handleGrantPermission(data.bookingId)}
+                    onClick={() => handleGrantPermission(data._id)}
                   >
                     {isLoadingRatingPermission ? (
                       <div className="loading"></div>

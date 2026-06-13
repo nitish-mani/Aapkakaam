@@ -7,6 +7,9 @@ import linkedin from "../../resources/svg/linkedin-svgrepo-com.svg";
 import whatsapp from "../../resources/svg/whatsapp-svgrepo-com.svg";
 import telegram from "../../resources/svg/telegram-svgrepo-com.svg";
 import textMessage from "../../resources/svg/message-mid-text-svgrepo-com.svg";
+import Attendance from "../Attendance/attendance";
+import AdsterraBanner from "../../ads/adsterraNativeBanner";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
 
 const Share = () => {
   const category = localStorage.getItem("category");
@@ -60,28 +63,33 @@ const Share = () => {
   };
 
   return (
-    <div className="share">
-      <button onClick={shareOnTwitter}>
-        {" "}
-        <img src={twitter} alt="" />
-      </button>
-      <button onClick={shareOnFacebook}>
-        {" "}
-        <img src={facebook} alt="" />
-      </button>
-      <button onClick={shareOnLinkedIn}>
-        <img src={linkedin} alt="" />
-      </button>
-      <button onClick={shareOnWhatsApp}>
-        <img src={whatsapp} alt="" />
-      </button>
-      <button onClick={shareOnTelegram}>
-        <img src={telegram} alt="" />
-      </button>
-      <button onClick={handleShare}>
-        <img src={textMessage} alt="" />
-      </button>
-    </div>
+    <>
+      <AdsterraBanner_320x50 />
+      <div className="share">
+        <button onClick={shareOnTwitter}>
+          {" "}
+          <img src={twitter} alt="" />
+        </button>
+        <button onClick={shareOnFacebook}>
+          {" "}
+          <img src={facebook} alt="" />
+        </button>
+        <button onClick={shareOnLinkedIn}>
+          <img src={linkedin} alt="" />
+        </button>
+        <button onClick={shareOnWhatsApp}>
+          <img src={whatsapp} alt="" />
+        </button>
+        <button onClick={shareOnTelegram}>
+          <img src={telegram} alt="" />
+        </button>
+        <button onClick={handleShare}>
+          <img src={textMessage} alt="" />
+        </button>
+      </div>
+      <Attendance pageNo={2} />
+      <AdsterraBanner />
+    </>
   );
 };
 

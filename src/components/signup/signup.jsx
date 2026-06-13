@@ -190,14 +190,11 @@ export default function SignUp() {
           }));
           showMessage("success", res.data.message, 2000);
         } else {
-          showMessage(
-            "err",
-            "Too many OTP requests. Try after 30 minutes",
-            15000
-          );
+          showMessage("err", error.message, 15000);
         }
       } catch (error) {
-        showMessage("err", "Server error. Please try again.");
+        console.log(error);
+        showMessage("err", error.response.data.message);
       } finally {
         setUiState((prev) => ({ ...prev, isPhoneOtpLoading: false }));
       }

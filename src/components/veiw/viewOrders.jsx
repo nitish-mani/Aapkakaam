@@ -7,6 +7,8 @@ import axios from "axios";
 import { SERVER_URL } from "../../utils/base";
 import { useSelector } from "react-redux";
 import OrderList from "../orderList/orderList";
+import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
+import AdsterraBanner from "../../ads/adsterraNativeBanner";
 export default function ViewOrders() {
   const category = localStorage.getItem("category");
 
@@ -55,12 +57,14 @@ export default function ViewOrders() {
           headers: { Authorization: token },
         })
         .then((result) => {
+          console.log(result);
           setOrders(result.data.orders);
           const page = Math.floor(result.data.total / 12) + 1;
           setTotalPage(page);
           setIsLoading(false);
         })
         .catch((err) => {
+          console.log("View Order Error", err);
           setErr("something bad happens");
           setTimeout(() => {
             setErr("");
@@ -120,206 +124,219 @@ export default function ViewOrders() {
   }
 
   return (
-    <div className="views-P">
-      <div
-        className="err"
-        style={{
-          opacity: err ? "1" : "",
-          border: err ? "none" : "none",
-          top: "-3rem",
-        }}
-      >
-        {err}
-      </div>
-      <img src={cross} alt="cross" onClick={hanldeCrossInOrders} />
-      <h1
-        style={{
-          gridColumnEnd: "4",
-          gridColumnStart: "1",
-          marginBottom: "2rem",
-          paddingBottom: "1.5rem",
-          borderBottom: "1px solid rgba(105, 102, 102, 0.637)",
-        }}
-      >
-        Orders
-      </h1>
-      <div className="views">
-        <div id="views_child">
-          <div
-            style={{
-              border:
-                orderStatus != "pending" ? "3px solid #fff" : "3px solid black",
-              padding: ".3rem",
-              borderRadius: "5px",
-            }}
-            onClick={() => setOrderStatus("pending")}
-          >
-            {" "}
-            <button
-              className="btn"
-              style={{
-                backgroundColor: "blue",
-              }}
-            >
-              Pending
-            </button>
-          </div>
-
-          <div
-            style={{
-              border:
-                orderStatus != "complete"
-                  ? "3px solid #fff"
-                  : "3px solid black",
-              padding: ".3rem",
-              borderRadius: "5px",
-            }}
-            onClick={() => setOrderStatus("complete")}
-          >
-            {" "}
-            <button
-              className="btn"
-              style={{
-                backgroundColor: "green",
-              }}
-            >
-              Completed
-            </button>
-          </div>
-
-          <div
-            style={{
-              border:
-                orderStatus != "cancel" ? "3px solid #fff" : "3px solid black",
-              padding: ".3rem",
-              borderRadius: "5px",
-            }}
-            onClick={() => setOrderStatus("cancel")}
-          >
-            <button
-              className="btn"
-              style={{
-                backgroundColor: "red",
-              }}
-            >
-              Canceled
-            </button>
-          </div>
-        </div>
-
-        {isLoading ? (
-          <div
-            className="loading"
-            style={{ width: "80vw", height: "40rem" }}
-          ></div>
-        ) : orders.length === 0 ? (
-          <h1
-            style={{
-              width: "80vw",
-              height: "40rem",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            You haven't Ordered Yet !
-          </h1>
-        ) : pendingVendorData.length != 0 ||
-          completeVendorData.length != 0 ||
-          cancelVendorData.length != 0 ? (
-          <>
-            {orderStatus == "pending" && pendingVendorData.length != 0 ? (
-              pendingVendorData?.map((element, i) => {
-                return (
-                  <OrderList
-                    element={element}
-                    key={i}
-                    orderStatus={orderStatus}
-                  />
-                );
-              })
-            ) : orderStatus == "pending" ? (
-              <div style={{ margin: "5rem auto" }}>
-                You don't have any pending Order
-              </div>
-            ) : (
-              ""
-            )}
-            {orderStatus == "complete" && completeVendorData.length != 0 ? (
-              completeVendorData?.map((element, i) => {
-                return (
-                  <OrderList
-                    element={element}
-                    key={i}
-                    orderStatus={orderStatus}
-                  />
-                );
-              })
-            ) : orderStatus == "complete" ? (
-              <div style={{ margin: "5rem auto" }}>
-                You don't have any completed Order
-              </div>
-            ) : (
-              ""
-            )}{" "}
-            {orderStatus == "cancel" && cancelVendorData.length != 0 ? (
-              cancelVendorData?.map((element, i) => {
-                return (
-                  <OrderList
-                    element={element}
-                    key={i}
-                    orderStatus={orderStatus}
-                  />
-                );
-              })
-            ) : orderStatus == "cancel" ? (
-              <div style={{ margin: "5rem auto" }}>
-                You don't have any canceled Order
-              </div>
-            ) : (
-              ""
-            )}
-          </>
-        ) : (
-          ""
-        )}
-      </div>
-      <div className="pageHandler">
+    <>
+      <AdsterraBanner_320x50 />
+      <div className="views-P">
         <div
-          className="verify-btn"
+          className="err"
           style={{
-            width: "fit-content",
-            opacity: pageNo > 1 ? "1" : ".5",
-            cursor: pageNo > 1 ? "pointer" : "not-allowed",
-          }}
-          onClick={handlePrev}
-        >
-          Prev
-        </div>
-        <div
-          style={{
-            width: "2rem",
-            backgroundColor: "blue",
-            textAlign: "center",
-            color: "#fff",
-            padding: ".2rem",
-            borderRadius: "5px",
+            opacity: err ? "1" : "",
+            border: err ? "none" : "none",
+            top: "-3rem",
           }}
         >
-          {pageNo}
+          {err}
         </div>
-        <div
-          className="verify-btn"
+        <img
+          className="profile__close-button"
+          src={cross}
+          alt="cross"
+          onClick={hanldeCrossInOrders}
+        />
+        <h1
           style={{
-            width: "fit-content",
-            opacity: totalPage > pageNo ? "1" : ".5",
-            cursor: totalPage > pageNo ? "pointer" : "not-allowed",
+            gridColumnEnd: "4",
+            gridColumnStart: "1",
+            marginBottom: "2rem",
+            paddingBottom: "1.5rem",
+            borderBottom: "1px solid rgba(105, 102, 102, 0.637)",
           }}
-          onClick={handleNext}
         >
-          Next
+          Orders
+        </h1>
+        <div className="views">
+          <div id="views_child">
+            <div
+              style={{
+                border:
+                  orderStatus != "pending"
+                    ? "3px solid #fff"
+                    : "3px solid black",
+                padding: ".3rem",
+                borderRadius: "5px",
+              }}
+              onClick={() => setOrderStatus("pending")}
+            >
+              {" "}
+              <button
+                className="btn"
+                style={{
+                  backgroundColor: "blue",
+                }}
+              >
+                Pending
+              </button>
+            </div>
+
+            <div
+              style={{
+                border:
+                  orderStatus != "complete"
+                    ? "3px solid #fff"
+                    : "3px solid black",
+                padding: ".3rem",
+                borderRadius: "5px",
+              }}
+              onClick={() => setOrderStatus("complete")}
+            >
+              {" "}
+              <button
+                className="btn"
+                style={{
+                  backgroundColor: "green",
+                }}
+              >
+                Completed
+              </button>
+            </div>
+
+            <div
+              style={{
+                border:
+                  orderStatus != "cancel"
+                    ? "3px solid #fff"
+                    : "3px solid black",
+                padding: ".3rem",
+                borderRadius: "5px",
+              }}
+              onClick={() => setOrderStatus("cancel")}
+            >
+              <button
+                className="btn"
+                style={{
+                  backgroundColor: "red",
+                }}
+              >
+                Canceled
+              </button>
+            </div>
+          </div>
+
+          {isLoading ? (
+            <div
+              className="loading"
+              style={{ width: "80vw", height: "40rem" }}
+            ></div>
+          ) : orders.length === 0 ? (
+            <h1
+              style={{
+                width: "80vw",
+                height: "40rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              You haven't Ordered Yet !
+            </h1>
+          ) : pendingVendorData.length != 0 ||
+            completeVendorData.length != 0 ||
+            cancelVendorData.length != 0 ? (
+            <>
+              {orderStatus == "pending" && pendingVendorData.length != 0 ? (
+                pendingVendorData?.map((element, i) => {
+                  return (
+                    <OrderList
+                      element={element}
+                      key={i}
+                      orderStatus={orderStatus}
+                    />
+                  );
+                })
+              ) : orderStatus == "pending" ? (
+                <div style={{ margin: "5rem auto" }}>
+                  You don't have any pending Order
+                </div>
+              ) : (
+                ""
+              )}
+              {orderStatus == "complete" && completeVendorData.length != 0 ? (
+                completeVendorData?.map((element, i) => {
+                  return (
+                    <OrderList
+                      element={element}
+                      key={i}
+                      orderStatus={orderStatus}
+                    />
+                  );
+                })
+              ) : orderStatus == "complete" ? (
+                <div style={{ margin: "5rem auto" }}>
+                  You don't have any completed Order
+                </div>
+              ) : (
+                ""
+              )}{" "}
+              {orderStatus == "cancel" && cancelVendorData.length != 0 ? (
+                cancelVendorData?.map((element, i) => {
+                  return (
+                    <OrderList
+                      element={element}
+                      key={i}
+                      orderStatus={orderStatus}
+                    />
+                  );
+                })
+              ) : orderStatus == "cancel" ? (
+                <div style={{ margin: "5rem auto" }}>
+                  You don't have any canceled Order
+                </div>
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            ""
+          )}
+        </div>
+        <div className="pageHandler">
+          <div
+            className="verify-btn"
+            style={{
+              width: "fit-content",
+              opacity: pageNo > 1 ? "1" : ".5",
+              cursor: pageNo > 1 ? "pointer" : "not-allowed",
+            }}
+            onClick={handlePrev}
+          >
+            Prev
+          </div>
+          <div
+            style={{
+              width: "2rem",
+              backgroundColor: "blue",
+              textAlign: "center",
+              color: "#fff",
+              padding: ".2rem",
+              borderRadius: "5px",
+            }}
+          >
+            {pageNo}
+          </div>
+          <div
+            className="verify-btn"
+            style={{
+              width: "fit-content",
+              opacity: totalPage > pageNo ? "1" : ".5",
+              cursor: totalPage > pageNo ? "pointer" : "not-allowed",
+            }}
+            onClick={handleNext}
+          >
+            Next
+          </div>
         </div>
       </div>
-    </div>
+      <AdsterraBanner />
+    </>
   );
 }

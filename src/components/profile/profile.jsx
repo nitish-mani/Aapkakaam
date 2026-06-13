@@ -29,6 +29,7 @@ import rupee from "../../resources/svg/rupee-1-frame-svgrepo-com.svg";
 import { SERVER_URL } from "../../utils/base";
 import AdsterraBanner_320x50 from "../../ads/adsterraInFrameBanner";
 import AdsterraBanner from "../../ads/adsterraNativeBanner";
+import Attendance from "../Attendance/attendance";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -53,12 +54,14 @@ const Profile = () => {
     email: false,
     phoneNo: false,
     wageRate: false,
+    wageRateType: false,
   });
   const [formData, setFormData] = useState({
     name: userData[0]?.name || "",
     email: userData[0]?.email || "",
     phoneNo: userData[0]?.phoneNo || "",
     wageRate: userData[0]?.wageRate || "",
+    wageRateType: userData[0]?.wageRateType || "",
   });
   const [isLoading, setIsLoading] = useState({
     name: false,
@@ -66,10 +69,14 @@ const Profile = () => {
     phoneNo: false,
     shareNo: false,
     wageRate: false,
+    wageRateType: false,
   });
   const [err, setErr] = useState("");
 
   // Handlers
+  const takeLeave = () => {
+    navigate("/takeLeave");
+  };
   const handleLogout = useCallback(() => {
     if (category === "user") {
       dispatch(clearDataUser());
@@ -97,6 +104,7 @@ const Profile = () => {
       email: false,
       phoneNo: false,
       wageRate: false,
+      wageRateType: false,
     });
   }, [category, dispatch]);
 
@@ -163,20 +171,27 @@ const Profile = () => {
       showError("You are offline");
       return;
     }
-
+    // console.log(wageRateType, wageRate);
     setIsLoading((prev) => ({ ...prev, wageRate: true }));
+    setIsLoading((prev) => ({ ...prev, wageRateType: true }));
 
     try {
+      console.log(formData.wageRateType, formData.wageRate);
       const response = await axios.patch(
         `${SERVER_URL}/${category}/wageRate`,
         {
           wageRate: formData.wageRate,
+          wageRateType: formData.wageRateType,
           vendorId: userData[0].vendorId,
         },
         { headers: { Authorization: token } }
       );
 
-      const updatedData = { ...userData[0], wageRate: response.data.wageRate };
+      const updatedData = {
+        ...userData[0],
+        wageRate: response.data.wageRate,
+        wageRateType: response.data.wageRateType,
+      };
       dispatch(addDataVendor(updatedData));
       localStorage.setItem(category, JSON.stringify(updatedData));
       handleEditToggle("wageRate");
@@ -184,10 +199,12 @@ const Profile = () => {
       showError("Something went wrong");
     } finally {
       setIsLoading((prev) => ({ ...prev, wageRate: false }));
+      setIsLoading((prev) => ({ ...prev, wageRateType: false }));
     }
   }, [
     category,
     formData.wageRate,
+    formData.wageRateType,
     userData,
     token,
     dispatch,
@@ -208,10 +225,6 @@ const Profile = () => {
     [category, dispatch, navigate]
   );
 
-  const handlePhoneNoEdit = useCallback(() => {
-    navigateTo("/editPhoneEmail", { editType: "phoneNo" });
-  }, [navigateTo]);
-
   const handleEmailEdit = useCallback(() => {
     navigateTo("/editPhoneEmail", { editType: "email" });
   }, [navigateTo]);
@@ -227,6 +240,9 @@ const Profile = () => {
   const handleShare = useCallback(() => {
     navigateTo("/share");
   }, [navigateTo]);
+  const handleAttendanceReport = useCallback(() => {
+    navigateTo("/attendanceReport");
+  }, [navigateTo]);
 
   const handleBookingsView = useCallback(() => {
     navigateTo("/viewBookings", { bookingsType: "view" });
@@ -239,14 +255,17 @@ const Profile = () => {
   const handleAddAddress = useCallback(() => {
     navigateTo("/address");
   }, [navigateTo]);
+  const handleEarnings = useCallback(() => {
+    navigateTo("/earnings");
+  }, [navigateTo]);
 
   const handleAddMoney = useCallback(() => {
     navigateTo("/addMoney");
   }, [navigateTo]);
 
-  const handleProfileImage = useCallback(() => {
-    navigateTo("/uploads");
-  }, [navigateTo]);
+  // const handleProfileImage = useCallback(() => {
+  //   navigateTo("/uploads");
+  // }, [navigateTo]);
 
   // Memoized profile image component
   const ProfileImage = useMemo(() => {
@@ -265,14 +284,12 @@ const Profile = () => {
           src={imgURL}
           alt=""
           style={imgStyle}
-          onClick={handleProfileImage}
         />
       ) : (
         <img
           src={male}
           alt=""
           style={{ width: "5rem", cursor: "pointer" }}
-          onClick={handleProfileImage}
         />
       );
     } else {
@@ -281,18 +298,16 @@ const Profile = () => {
           src={`${imgURL}?t=${Date.now()}`}
           alt=""
           style={imgStyle}
-          onClick={handleProfileImage}
         />
       ) : (
         <img
           src={female}
           alt=""
           style={{ width: "5rem", cursor: "pointer" }}
-          onClick={handleProfileImage}
         />
       );
     }
-  }, [userData, handleProfileImage]);
+  }, [userData]);
 
   if (!isPrVisible) return null;
 
@@ -318,7 +333,7 @@ const Profile = () => {
       >
         {ProfileImage}
       </div>
-      <p
+      {/* <p
         onClick={handleProfileImage}
         style={{
           color: "blue",
@@ -329,7 +344,7 @@ const Profile = () => {
         }}
       >
         Upload Profile Image
-      </p>
+      </p> */}
       <h2>
         <CamleCase element={category} /> Profile
       </h2>
@@ -401,10 +416,6 @@ const Profile = () => {
         <span className="span email-grid ">
           {userData[0]?.phoneNo}
 
-          <span className="verify-btn span-child" onClick={handlePhoneNoEdit}>
-            Edit
-          </span>
-
           <span
             className="verify-btn"
             style={{
@@ -457,28 +468,7 @@ const Profile = () => {
             </span>
           </div>
 
-          {/* Balance Field */}
-          <div>
-            <span className="span email-grid ">Balance</span>
-            <span>
-              <span
-                className="verify-btn"
-                style={{ border: "none", margin: "0 .3rem" }}
-              >
-                <img src={rupee} alt="" style={{ width: "1.15rem" }} />
-                <span style={{ color: userData[0]?.balance ? "green" : "red" }}>
-                  {userData[0]?.balance || 0}
-                </span>
-              </span>
-              <span
-                className="verify-btn btn1"
-                onClick={handleAddMoney}
-                style={{ padding: ".4rem" }}
-              >
-                Add Money
-              </span>
-            </span>
-          </div>
+        
 
           {/* Ratings Field */}
           <div>
@@ -496,28 +486,53 @@ const Profile = () => {
             <span className="span email-grid ">
               <span>
                 {editStates.wageRate ? (
-                  <input
-                    type="Number"
-                    placeholder="Wage Rate"
-                    autoFocus
-                    value={formData.wageRate}
-                    onChange={(e) =>
-                      handleInputChange("wageRate", e.target.value)
-                    }
-                    style={{
-                      height: "2.5rem",
-                      border: "2px solid black",
-                      paddingLeft: "1rem",
-                      borderRadius: ".5rem",
-                    }}
-                  />
+                  <>
+                    <input
+                      type="Number"
+                      placeholder="Wage Rate"
+                      autoFocus
+                      value={formData.wageRate}
+                      onChange={(e) =>
+                        handleInputChange("wageRate", e.target.value)
+                      }
+                      style={{
+                        height: "2.5rem",
+                        border: "2px solid black",
+                        paddingLeft: "1rem",
+                        borderRadius: ".5rem",
+                      }}
+                    />
+                    <div style={{ display: "inline", margin: "0 5px" }}>/</div>
+                    <select
+                      value={formData.wageRateType}
+                      onChange={(e) => {
+                        if (!e.target.value == "")
+                          handleInputChange("wageRateType", e.target.value);
+                        else {
+                        }
+                      }}
+                      style={{
+                        height: "2.5rem",
+                        border: "2px solid black",
+                        paddingLeft: "1rem",
+                        borderRadius: ".5rem",
+                      }}
+                    >
+                      <option value="">Select</option>
+                      <option value="Day">Day</option>
+                      <option value="Hour">Hour</option>
+                      <option value="Km">Km</option>
+                      <option value="1k People">1k People</option>
+                      <option value="Service">Service</option>
+                    </select>
+                  </>
                 ) : (
                   <span>
-                    {userData[0]?.wageRate ? (
+                    {userData[0]?.wageRate && userData[0]?.wageRateType ? (
                       <span>
                         <img src={rupee} alt="" style={{ width: "1.15rem" }} />
                         <span style={{ color: "blue" }}>
-                          {userData[0]?.wageRate} / Day
+                          {userData[0]?.wageRate} / {userData[0]?.wageRateType}
                         </span>
                       </span>
                     ) : (
@@ -554,8 +569,39 @@ const Profile = () => {
               </span>
             </span>
           </div>
+          {/* Job commission Field */}
+          <div>
+            <span className="border-bottom">Commission </span>
+            <span className="span email-grid ">
+              <span style={{ color: "red" }}>
+                {userData[0]?.commission} / Order
+              </span>
+            </span>
+          </div>
         </>
       )}
+        {/* Balance Field */}
+          <div>
+            <span className="span email-grid ">Balance</span>
+            <span>
+              <span
+                className="verify-btn"
+                style={{ border: "none", margin: "0 .3rem" }}
+              >
+                <img src={rupee} alt="" style={{ width: "1.15rem" }} />
+                <span style={{ color: userData[0]?.balance ? "green" : "red" }}>
+                  {userData[0]?.balance || 0}
+                </span>
+              </span>
+              <span
+                className="verify-btn btn1"
+                onClick={handleAddMoney}
+                style={{ padding: ".4rem" }}
+              >
+                Add Money
+              </span>
+            </span>
+          </div>
       {/* Bonus Amount Field */}
       <div>
         <span className="span email-grid ">Bonus Amount </span>
@@ -570,6 +616,30 @@ const Profile = () => {
             </span>
           </span>
         </span>
+      </div>
+
+      {/* Earnings Field */}
+      <div>
+        <span className="span email-grid ">Earnings </span>
+        <button
+          className="verify-btn btn1 b600"
+          onClick={handleEarnings}
+          style={{ padding: ".4rem", marginLeft: "0", marginRight: "0" }}
+        >
+          View
+        </button>
+      </div>
+
+      {/* AttendanceReport Field */}
+      <div>
+        <span className="span email-grid ">AttendanceReport </span>
+        <button
+          className="verify-btn btn1 b600"
+          onClick={handleAttendanceReport}
+          style={{ padding: ".4rem", marginLeft: "0", marginRight: "0" }}
+        >
+          View
+        </button>
       </div>
 
       {/* Address Field */}
@@ -601,6 +671,9 @@ const Profile = () => {
         )}
       </div>
 
+      {/* <button className="btn" onClick={takeLeave}>
+        Take Leave
+      </button> */}
       <AdsterraBanner />
       {/* Logout Button */}
       <button className="btn" onClick={handleLogout}>

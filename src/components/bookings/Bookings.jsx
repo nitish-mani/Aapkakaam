@@ -87,16 +87,35 @@ export default function Bookings() {
     const cancelData = [];
 
     if (Array.isArray(bookings)) {
-      bookings.forEach(({ booking }) => {
-        if (booking.year === year && booking.month === month) {
+      bookings.forEach((booking) => {
+        const parts = booking.bookingDate.split(" "); // ["Wed", "Oct", "22", "2025"]
+        const monthNames = {
+          Jan: 1,
+          Feb: 2,
+          Mar: 3,
+          Apr: 4,
+          May: 5,
+          Jun: 6,
+          Jul: 7,
+          Aug: 8,
+          Sep: 9,
+          Oct: 10,
+          Nov: 11,
+          Dec: 12,
+        };
+        const day = parseInt(parts[2], 10);
+        const bookingYear = parseInt(parts[3], 10);
+        const bookingMonth = monthNames[parts[1]];
+
+        if (bookingYear == year && bookingMonth == month + 1) {
           if (!booking.cancelOrder && !booking.orderCompleted) {
-            pendingDates.push(booking.date);
+            pendingDates.push(day);
             pendingData.push(booking);
           } else if (!booking.cancelOrder && booking.orderCompleted) {
-            completeDates.push(booking.date);
+            completeDates.push(day);
             completeData.push(booking);
           } else if (booking.cancelOrder && !booking.orderCompleted) {
-            cancelDates.push(booking.date);
+            cancelDates.push(day);
             cancelData.push(booking);
           }
         }
@@ -124,13 +143,6 @@ export default function Bookings() {
 
   // Fetch bookings data
   const fetchBookings = useCallback(async () => {
-    if (!navigator.onLine) {
-      setError("You are offline");
-      setTimeout(() => setError(""), 3000);
-      setIsLoading(false);
-      return;
-    }
-
     try {
       setIsLoading(true);
       const response = await axios.get(
@@ -152,12 +164,6 @@ export default function Bookings() {
 
   // Handle booking submission
   const handleBookings = useCallback(async () => {
-    if (!navigator.onLine) {
-      setError("You are offline");
-      setTimeout(() => setError(""), 3000);
-      return;
-    }
-
     if (completeDates.includes(date) || pendingDates.includes(date)) return;
 
     try {
@@ -170,28 +176,13 @@ export default function Bookings() {
           userId: userData[0].vendorId,
           vendorId: userData[0].vendorId,
           bookingDate: bookedDate,
-          pincode,
-          type: userData[0].type,
-          isSelfBooking: true,
-        },
-        { headers: { Authorization: token } }
-      );
-
-      // Second API call to update booking details
-      await axios.patch(
-        `${SERVER_URL}/vendor/bookNowV/${userId}`,
-        {
-          bookingId: bookingResponse.data.bookingId,
-          vendorUser: userData[0].vendorId,
           name,
+          pincode,
           phoneNo,
           vill,
           post,
           dist,
-          pincode,
-          date,
-          month,
-          year,
+          type: userData[0].type,
           isSelfBooking: true,
         },
         { headers: { Authorization: token } }
@@ -300,7 +291,7 @@ export default function Bookings() {
         <img
           src={cross}
           alt="Close"
-          className="bookings__close-button"
+          className="profile__close-button"
           onClick={handleCrossClick}
         />
         <h1

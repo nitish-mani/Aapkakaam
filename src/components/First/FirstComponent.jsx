@@ -1,5 +1,5 @@
 import "./FirstComponent.css";
-import labour from "../../resources/img/labour.jpg";
+import labour from "../../resources/img/labour.png";
 import mason from "../../resources/img/mason.jpg";
 import electrician from "../../resources/img/electrician.jpg";
 import plumber from "../../resources/img/plumber.jpg";

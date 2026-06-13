@@ -71,7 +71,7 @@
 /* Vendor List Styles */
 .available-vendor__list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: 1;
   gap: 2rem;
   margin: 2rem 0;
 }
@@ -197,10 +197,10 @@
     padding: 1rem;
   }
 
-  .available-vendor__list {
+  /* .available-vendor__list {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1rem;
-  }
+  } */
 
   .available-vendor__header {
     font-size: 1.5rem;

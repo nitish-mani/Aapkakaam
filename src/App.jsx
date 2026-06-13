@@ -23,6 +23,9 @@ import ContactUs from "./pages/contactUs";
 import DiscountCard from "./payments/checkoutPage";
 import PaymentSuccess from "./payments/paymentSuccessful";
 import PaymentFailed from "./payments/failedPayment";
+import TakeLeave from "./components/bookings/takeLeave";
+import Earnings from "./components/share/earnings";
+import AttendanceReport from "./components/Attendance/attendanceReport";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -110,6 +113,18 @@ export default function App() {
         {
           path: "/addMoney",
           element: <DiscountCard />,
+        },
+        {
+          path: "/TakeLeave",
+          element: <TakeLeave />,
+        },
+        {
+          path: "/earnings",
+          element: <Earnings />,
+        },
+        {
+          path: "/attendanceReport",
+          element: <AttendanceReport />,
         },
       ],
     },
